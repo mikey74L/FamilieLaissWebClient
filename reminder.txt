@@ -1,0 +1,4 @@
+Beim abrufen von material-design-iconic-font per NPM muss danach die Package.json Datei im entsprechenden Node_modules
+Folder angepasst werden.
+
+Hier gibt es einen Eintrag Main welcher rauselöscht werden muss.
