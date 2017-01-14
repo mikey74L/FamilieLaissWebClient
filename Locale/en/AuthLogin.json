@@ -1,0 +1,20 @@
+﻿{
+  "Labels": {
+    "Header": "Familie Laiss - Anmeldung",
+    "Benutzername": "Benutzername",
+    "Passwort": "Passwort"
+  },
+  "Buttons": {
+    "Register": {
+      "Text": "Registrieren ",
+      "Tooltip": ""
+    },
+    "ForgotPassword": {
+      "Text": "Passwort vergessen ",
+      "Tooltip": ""
+    },
+    "Login": {
+      "Tooltip": "Mit den angegebenen Benutzerdaten anmelden"
+    }
+  }
+}

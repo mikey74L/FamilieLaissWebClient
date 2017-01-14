@@ -1,0 +1,136 @@
+﻿{
+  "Message": {
+    "Class_Name": {
+      "DisplayName": "Nachrichtenklasse"
+    },
+    "Text": {
+      "DisplayName": "Nachricht"
+    },
+    "Additional_Text_1": {
+      "DisplayName": "1. Zusatztext"
+    },
+    "Additional_Text_2": {
+      "DisplayName": "2.Zusatztext"
+    },
+    "Additional_Text_3": {
+      "DisplayName": "3. Zusatztext"
+    },
+    "DDL_Create": {
+      "DisplayName": "Erstellungszeitpunkt"
+    }
+  },
+  "Facet_Group": {
+    "Type": {
+      "DisplayName": "Kategorietyp"
+    },
+    "Name_German": {
+      "DisplayName": "Name (Deutsch)"
+    },
+    "Name_English": {
+      "DisplayName": "Name (Englisch)"
+    }
+  },
+  "Facet_Value": {
+    "Name_German": {
+      "DisplayName": "Name (Deutsch)"
+    },
+    "Name_English": {
+      "DisplayName": "Name (Englisch)"
+    }
+  },
+  "Media_Group": {
+    "Typ": {
+      "DisplayName": "Albumtyp"
+    },
+    "Name": {
+      "DisplayName": "Name"
+    },
+    "Description": {
+      "DisplayName": "Beschreibung"
+    }
+  },
+  "Account": {
+    "UserName": {
+      "DisplayName": "Benutzername"
+    },
+    "Gender": {
+      "DisplayName": "Geschlecht"
+    },
+    "FirstName": {
+      "DisplayName": "Vorname"
+    },
+    "FamilyName": {
+      "DisplayName": "Familienname"
+    },
+    "Street": {
+      "DisplayName": "Straße"
+    },
+    "HNR": {
+      "DisplayName": "Hausnummer"
+    },
+    "PLZ": {
+      "DisplayName": "Postleitzahl"
+    },
+    "City": {
+      "DisplayName": "Stadt"
+    },
+    "Country": {
+      "DisplayName": "Land"
+    },
+    "Mail": {
+      "DisplayName": "eMail"
+    },
+    "IsConfirmed": {
+      "DisplayName": "Ist bestätigt?"
+    },
+    "IsAllowed": {
+      "DisplayName": "Ist freigeschalten?"
+    }
+  },
+  "Media_Item": {
+    "Name": {
+      "DisplayName": "Name"
+    },
+    "Description": {
+      "DisplayName": "Beschreibung"
+    }
+  },
+  "Upload_Video_Item": {
+    "Original_Name": {
+      "DisplayName": "Original-Name"
+    },
+    "Upload_Date": {
+      "DisplayName": "Upload-Datum"
+    },
+    "Width": {
+      "DisplayName": "Breite"
+    },
+    "Height": {
+      "DisplayName": "Höhe"
+    },
+    "StartedMP4": {
+      "DisplayName": "Beginn-Zeit MP4"
+    },
+    "FinishedMP4": {
+      "DisplayName": "Ende-Zeit MP4"
+    },
+    "StartedWEBM": {
+      "DisplayName": "Beginn-Zeit WEBM"
+    },
+    "FinishedWEBM": {
+      "DisplayName": "Ende-Zeit WEBM"
+    },
+    "StartedThumbnail": {
+      "DisplayName": "Beginn-Zeit Thumbnail"
+    },
+    "FinishedThumbnail": {
+      "DisplayName": "Ende-Zeit Thumbnail"
+    },
+    "Status": {
+      "DisplayName": "Status"
+    },
+    "Fehlertext": {
+      "DisplayName": "Fehlertext"
+    }
+  }
+}

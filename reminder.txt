@@ -2,3 +2,11 @@ Beim abrufen von material-design-iconic-font per NPM muss danach die Package.jso
 Folder angepasst werden.
 
 Hier gibt es einen Eintrag Main welcher rauselöscht werden muss.
+
+
+Für GIT mit GITHUB verbinden folgendes ausführen
+
+git remote add origin https://github.com/mbcrump/SampleProject.git
+git push -u origin master
+
+Es muss der GIT Credential Manger für Windows installiert sein

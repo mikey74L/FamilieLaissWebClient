@@ -1,0 +1,42 @@
+﻿{
+  "Header": {
+    "Text": "Photos hochladen",
+    "Description": "Hier können neue Photos hochgeladen werden. Außerdem können Sie die bisher hochgeladenen Photos anschauen und auch ggf. löschen."
+  },
+  "Card": {
+    "Header": {
+      "TextUpload": "Photos hochladen",
+      "DescriptionUpload": "Hier können neue Photos hochgeladen werden. Nach erfolgreichem Upload erscheinen die Photos in der Liste der hochgeladenen Photos.",
+      "TextListe": "Hochgeladene Photos",
+      "DescriptionListe": "Hier können die bereits hochgeladenen Bilder angesehen und ggf. gelöscht werden.",
+      "SortMenuItems": {
+        "NameAscending": "Name aufsteigend",
+        "NameDescending": "Name absteigend",
+        "UploadDateAscending": "Upload-Datum aufsteigend",
+        "UploadDateDescending": "Upload-Datum absteigend"
+      },
+      "Tooltips": {
+        "Sort": "Sortierreihenfolge",
+        "Refresh": "Aktualisieren"
+      },
+      "SortCriteriaHeader": {
+        "Header_Name_ascending": "Liste ist aufsteigend nach dem Namen sortiert",
+        "Header_Name_descending": "Liste ist absteigend nach dem Namen sortiert",
+        "Header_UploadDate_ascending": "Liste ist aufsteigend nach dem Upload-Datum sortiert",
+        "Header_UploadDate_descending": "Liste ist absteigend nach dem Upload-Datum sortiert"
+      },
+      "TabPages": {
+        "Upload": "Photos hochladen",
+        "List": "Hochgeladene Photos"
+      }
+    },
+    "Body": {
+      "Labels": {
+      },
+      "Buttons": {
+      },
+      "Tooltips": {
+      }
+    }
+  }
+}

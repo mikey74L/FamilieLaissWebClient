@@ -1,0 +1,61 @@
+﻿{
+  "VideoPlayer": {
+    "Title": "Videoplayer",
+    "Buttons": {
+      "Close": "Schließen"
+    },
+    "Tooltips": {
+      "Close": "Dialog schließen und die Wiedergabe des aktuellen Videos stoppen"
+    }
+  },
+  "ChooseAlbum": {
+    "Title": "Album auswählen",
+    "Buttons": {
+      "OK": "OK",
+      "Cancel": "Abbrechen"
+    },
+    "Tooltips": {
+      "OK": "Album auswählen und den Dialog schließen",
+      "Cancel": "Dialog schließen ohne ein Album auszuwählen"
+    }
+  },
+  "ChooseUploadPicture": {
+    "Title": "Photo auswählen",
+    "Buttons": {
+      "Close": "Schließen"
+    },
+    "Tooltips": {
+      "Close": "Dialog schließen ohne ein Photo auszuwählen"
+    }
+  },
+  "ChooseUploadVideo": {
+    "Title": "Video auswählen",
+    "Buttons": {
+      "Close": "Schließen"
+    },
+    "Tooltips": {
+      "Close": "Dialog schließen ohne ein Video auszuwählen"
+    }
+  },
+  "ShowPicture": {
+    "Title": "Photo anzeigen",
+    "Buttons": {
+      "Close": "Schließen"
+    },
+    "Tooltips": {
+      "Close": "Dialog schließen"
+    }
+  },
+  "ChangeImageProperties": {
+    "Title": "Bildbearbeitung",
+    "Labels": {
+      "ImageOriginal": "Original-Bild:",
+      "ImageModified": "Angepasstes-Bild:",
+      "Rotation": "Drehung:"
+    },
+    "Tooltips": {
+      "Save": "Die geänderten Bildparameter speichern und Dialog schließen",
+      "Cancel": "Den Dialog schließen ohne Bildparameter zu speichern"
+    }
+  }
+}

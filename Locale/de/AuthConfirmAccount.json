@@ -1,0 +1,12 @@
+﻿{
+  "Labels": {
+    "Header": "Familie Laiss - Konto bestätigen",
+    "Information": "Bitte schließen Sie die Bestätigung Ihres Benutzerkontos '{{user}}' mit dem Betätigen des Buttons ab."
+  },
+  "Buttons": {
+    "Confirm": {
+      "Text": "Bestätigen",
+      "Tooltip": "Das Benutzerkonto bestätigen"
+    }
+  }
+}

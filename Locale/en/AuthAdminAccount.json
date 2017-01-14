@@ -1,0 +1,20 @@
+﻿{
+  "Header": "Benutzerkonten",
+  "Card": {
+    "Header": {
+      "Text": "Liste der Benutzerkonten",
+      "Description": "Hier können Sie Benutzerkonten löschen, freigeben und sperren. Sie können außerdem die Rollen für ein Benuzerkonto vergeben."
+    },
+    "Body": {
+      "Tooltips": {
+        "Delete": "Das aktuell selektierte Benutzerkonto löschen",
+        "Allow": "Das aktuell selektierte Benutzerkonto freigeben",
+        "Lock": "Das aktuell selektierte Benutzerkonto sperren"
+      },
+      "Buttons": {
+        "Allow": "Freigeben",
+        "Lock": "Sperren"
+      }
+    }
+  }
+}

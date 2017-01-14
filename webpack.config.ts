@@ -62,7 +62,11 @@ const coreBundles = {
     'aurelia-templating',
     'aurelia-templating-binding',
     'aurelia-templating-router',
-    'aurelia-templating-resources'
+    'aurelia-templating-resources',
+    'aurelia-i18n',
+    'aurelia-dialog',
+    'aurelia-validation',
+    'aurelia-animator-css'
   ]
 }
 

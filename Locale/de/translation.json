@@ -1,0 +1,56 @@
+﻿{
+  "Application": {
+    "Title": "Familie-Laiß"
+  },
+
+  "Wijmo": {
+    "Grid": {
+      "Grouppanel": "Spalten hierher ziehen um Gruppen zu bilden"
+    }
+  },
+
+  "TopBar": {
+    "ToggleFullscreen": "Vollbildmodus aktivieren",
+    "DeleteLocalStorage": "Local-Storage zurücksetzen",
+    "Settings": "Globale-Einstellungen",
+    "Login": "Anmelden",
+    "Register": "Registrieren",
+    "MessagePrio1_Header": "Nachrichten - Fehler",
+    "MessagePrio2_Header": "Nachrichten - Warnung",
+    "MessagePrio3_Header": "Nachrichten - Info",
+    "Show_Message_Info": "Nachrichtenübersicht anzeigen"
+  },
+
+  "Grid": {
+    "General": {
+      "Buttons": {
+        "Add": "Hinzufügen",
+        "Edit": "Editieren",
+        "Delete": "Löschen",
+        "Refresh": "Aktualisieren"
+      },
+      "Tooltips": {
+        "Refresh": "Die Daten vom Server aktualisieren"
+      }
+    }
+  },
+
+  "General": {
+    "Buttons": {
+      "Save": "Speichern",
+      "Cancel": "Abbrechen"
+    },
+    "NoUserName": "Unbekannt"
+  },
+
+  "Validator": {
+    "Required": "Es muss ein Wert für '%displayName%' eingegeben werden",
+    "MaxLength": "%displayName%' darf maximal %maxLength% Zeichen sein",
+    "Custom": {
+      "MediaItem": {
+        "UploadPhoto": "Es muss ein Photo ausgewählt werden",
+        "UploadVideo": "Es muss ein Video ausgewählt werden"
+      }
+    }
+  }
+}

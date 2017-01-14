@@ -1,0 +1,28 @@
+﻿{
+  "Liste": {
+    "Header": "Nachrichten",
+    "Card": {
+      "Header": {
+        "Text": "Liste der Nachrichten",
+        "Description": "Hier können alle Nachrichten der unterschiedlichen Prioritäten mit ihren Zusatzinformationen eingesehen werden."
+      },
+      "Body": {
+        "TabPages": {
+          "Prio1": "Nachrichten - Fehler",
+          "Prio2": "Nachrichten - Warnung",
+          "Prio3": "Nachrichten - Info"
+        },
+        "Buttons": {
+          "Confirm": {
+            "Caption": "Nachricht quittieren",
+            "Tooltip": "Die Nachricht als gelesen markieren"
+          },
+          "ConfirmAll": {
+            "Caption": "Nachricht quittieren - Alle Benutzer",
+            "Tooltip": "Die Nachricht für alle Benutzer als gelsen markieren"
+          }
+        }
+      }
+    }
+  }
+}

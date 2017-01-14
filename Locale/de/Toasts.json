@@ -1,0 +1,104 @@
+﻿{
+  "Category": {
+    "Save": {
+      "Success": "Die Kategorie wurde erfolgreich gespeichert.",
+      "Error": "Beim Speichern der Kategorie ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    },
+    "Cancel": {
+      "Success_new": "Anlegen einer neuen Kategorie abgebrochen",
+      "Success_edit": "Editieren der Kategorie abgebrochen"
+    },
+    "Delete": {
+      "Success": "Die Kategorie wurde erfolgreich gelöscht.",
+      "Error": "Beim Löschen der Kategorie ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    }
+  },
+  "CategoryValue": {
+    "Save": {
+      "Success": "Der Kategorie-Wert wurde erfolgreich gespeichert.",
+      "Error": "Beim Speichern des Kategorie-Wertes ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    },
+    "Cancel": {
+      "Success_new": "Anlegen eines neuen Kategorie-Wertes abgebrochen",
+      "Success_edit": "Editieren des Kategorie-Wertes abgebrochen"
+    },
+    "Delete": {
+      "Success": "Der Kategorie-Wert wurde erfolgreich gelöscht.",
+      "Error": "Beim Löschen des Kategorie-Wertes ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    }
+  },
+  "Album": {
+    "Save": {
+      "Success": "Das Album wurde erfolgreich gespeichert.",
+      "Error": "Beim Speichern des Album ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    },
+    "Cancel": {
+      "Success_new": "Anlegen eines neuen Album abgebrochen",
+      "Success_edit": "Editieren des Album abgebrochen"
+    },
+    "Delete": {
+      "Success": "Das Album wurde erfolgreich gelöscht.",
+      "Error": "Beim Löschen des Album ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    }
+  },
+  "PictureUpload": {
+    "Delete": {
+      "Success": "Photo wurde erfolgreich aus dem Upload-Bereich gelöscht",
+      "Error": "Beim Löschen des Photo aus dem Upload-Bereich ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    }
+  },
+  "VideoUpload": {
+    "Delete": {
+      "Success": "Video wurde erfolgreich aus dem Upload-Bereich gelöscht",
+      "Error": "Beim Löschen des Video aus dem Upload-Bereich ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    }
+  },
+  "PictureAdmin": {
+    "Save": {
+      "Success": "Das Photo wurde erfolgreich gespeichert.",
+      "Error": "Beim Speichern des Photo ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    },
+    "Cancel": {
+      "Success_new": "Hinzufügen eines neuen Photos abgebrochen",
+      "Success_edit": "Editieren des Photos abgebrochen"
+    },
+    "Delete": {
+      "Success": "Photo '{{namePicture}}' wurde erfolgreich aus dem Album '{{nameAlbum}}' gelöscht",
+      "Error": "Beim Löschen des Photo '{{namePicture}}' aus dem Album '{{nameAlbum}}' ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    }
+  },
+  "VideoAdmin": {
+    "Save": {
+      "Success": "Das Video wurde erfolgreich gespeichert.",
+      "Error": "Beim Speichern des Video ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    },
+    "Cancel": {
+      "Success_new": "Hinzufügen eines neuen Video abgebrochen",
+      "Success_edit": "Editieren des Videos abgebrochen"
+    },
+    "Delete": {
+      "Success": "Video '{{nameVideo}}' wurde erfolgreich aus dem Album '{{nameAlbum}}' gelöscht",
+      "Error": "Beim Löschen des Video '{{nameVideo}}' aus dem Album '{{nameAlbum}}' ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    }
+  },
+  "AdminAccount": {
+    "Allow": {
+      "Success": "Benutzerkonto '{{nameKonto}}' wurde erfolgreich freigeschalten.",
+      "Error": "Benutzerkonto '{{nameKonto}}' konnte wegen eines unerwarteten Fehlers nicht freigeschalten werden."
+    },
+    "Lock": {
+      "Success": "Benutzerkonto '{{nameKonto}}' wurde erfolgreich gesperrt.",
+      "Error": "Benutzerkonto '{{nameKonto}}' konnte wegen eines unerwarteten Fehlers nicht gesperrt werden."
+    },
+    "Delete": {
+      "Success": "Benutzerkonto '{{nameKonto}}' wurde erfolgreich gelöscht.",
+      "Error": "Benutzerkonto '{{nameKonto}}' konnte wegen eines unerwarteten Fehlers nicht gelöscht werden."
+    }
+  },
+  "Message": {
+    "Quit": {
+      "Success": "Nachricht erfolgreich quittiert",
+      "Error": "Nachricht konnte nicht quittiert werden, da ein unerwarteter Fehler aufgetreten ist."
+    }
+  }
+}
