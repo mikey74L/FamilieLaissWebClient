@@ -1,0 +1,38 @@
+﻿{
+  "Home": "Home",
+  "Stammdaten": {
+    "Text": "Stammdaten",
+    "Category": "Kategorien",
+    "CategoryEdit": "Kategorie editieren",
+    "CategoryValue": "Kategoriewerte",
+    "CategoryValueEdit": "Kategoriewert editieren",
+    "Album": "Alben",
+    "AlbumEdit": "Album editieren",
+    "PictureUploadList": "Photos hochladen",
+    "PictureAdminList": "Photos verwalten",
+    "PictureAdminEdit": "Photo editieren",
+    "VideoUploadList": "Videos hochladen",
+    "VideoAdminList": "Videos verwalten",
+    "VideoAdminEdit": "Video editieren",
+    "Blog": "Blog"
+  },
+  "Services": {
+    "Text": "Services",
+    "VideoConverter": "Video-Konvertierer"
+  },
+  "Authorization": {
+    "Login": "Anmeldung",
+    "Register": "Registrierung",
+    "ForgotPassword": "Passwort vergessen",
+    "ConfirmAccount": "Benutzerkonto bestätigen",
+    "UserAdministration": "Benutzerverwaltung",
+    "NewPassword": "Neues Passwort"
+  },
+  "UserMenu": {
+    "Profile": "Benutzerprofil anzeigen",
+    "Logout": "Abmelden"
+  },
+  "Messages": {
+    "Overview": "Nachrichtenübersicht"
+  }
+}

@@ -1,0 +1,76 @@
+﻿{
+  "AdminList": {
+    "ChooseAlbum": "Bitte ein Album auswählen",
+    "Header": {
+      "Text": "Photos verwalten"
+    },
+    "Card": {
+      "Header": {
+        "Text_notchoosed": "Liste der zugordneten Photos",
+        "Text_choosed": "Liste der zugordneten Photos für das Album '{{album}}'",
+        "Description_notchoosed": "Hier können Sie Photos zu Alben hinzufügen, löschen oder die Daten von schon zugeordneten Photos editieren.",
+        "Description_choosed": "Hier können Sie Photos zum ausgewählten Album hinzufügen, löschen oder die Daten von schon zugeordneten Photos editieren.",
+        "Tooltips": {
+          "Sort": "Sortierreihenfolge ändern",
+          "Refresh": "Liste der zugeordneten Photos aktualisieren",
+          "SelectAlbum": "Album auswählen für welches die Photos hinzugefügt werden sollen",
+          "AddPhoto": "Ein Photo aus dem Upload-Bereich zum aktuell ausgewählten Album hinzufügen"
+        },
+        "SortMenuItems": {
+          "NameAscending": "Name aufsteigend",
+          "NameDescending": "Name absteigend",
+          "AssignDateAscending": "Zuweisungs-Datum aufsteigend",
+          "AssignDateDescending": "Zuweisungs-Datum absteigend",
+          "UploadDateAscending": "Upload-Datum aufsteigend",
+          "UploadDateDescending": "Upload-Datum absteigend"
+        },
+        "SortCriteriaHeader": {
+          "Header_Name_ascending": "Liste ist aufsteigend nach dem Namen sortiert",
+          "Header_Name_descending": "Liste ist absteigend nach dem Namen sortiert",
+          "Header_AssignDate_ascending": "Liste ist aufsteigend nach dem Zuweisungs-Datum sortiert",
+          "Header_AssignDate_descending": "Liste ist absteigend nach dem Zuweisungs-Datum sortiert",
+          "Header_UploadDate_ascending": "Liste ist aufsteigend nach dem Upload-Datum sortiert",
+          "Header_UploadDate_descending": "Liste ist absteigend nach dem Upload-Datum sortiert"
+        }
+      }
+    }
+  },
+  "Edit": {
+    "Header": "Photos",
+    "Card": {
+      "Header": {
+        "Text_new": "Photo zum Album '{{album}}' hinzufügen",
+        "Text_edit": "Photo für Album '{{album}}' editieren",
+        "Description_new": "Bitte geben Sie die Daten für das neue Photo ein",
+        "Description_edit": "Bitte geben Sie die geänderten Daten für das bestehende Photo ein"
+      },
+      "Body": {
+        "Form": {
+          "Labels": {
+            "Photo": "Zugewiesenes Photo",
+            "FamilyType": "Familienstatus",
+            "Category": "Kategorien"
+          },
+          "Checkboxes": {
+            "OnlyFamily": "Nur für Familienmitglieder"
+          },
+          "Tooltips": {
+            "Submit": "Die Daten des Photo speichern und Maske verlassen",
+            "Cancel": "Maske ohne speichern des Photo verlassen",
+            "ChoosePicture": "Ein Photo aus dem Upload-Bereich auswählen",
+            "ImageParameter": "Die Bildbearbeitung für das ausgewählte Bild aufrufen"
+          },
+          "Selects": {
+            "Category": {
+              "Placeholder":  "Bitte eine oder mehrere Kategorien auswählen"
+            }
+          },
+          "Buttons": {
+            "ChoosePicture": "Photo auswählen",
+            "ImageParameter": "Bildbearbeitung"
+          }
+        }
+      }
+    }
+  }
+}

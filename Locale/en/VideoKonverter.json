@@ -1,0 +1,41 @@
+﻿{
+  "Liste": {
+    "Header": "Video-Konvertierer Service",
+    "Card": {
+      "Header": {
+        "Text": "Status des Video-Konvertierer Service",
+        "Description": "Hier kann der Status des Video-Konvertierer Service eingesehen werden. Dabei kann zwischen aktuellen Aufträgen, noch ausstehenden Aufträgen und erledigten Aufträgen gewechselt werden."
+      },
+      "Body": {
+        "Tabs": {
+          "Current": {
+            "Header": "Aktuell",
+            "Labels": {
+              "Name": "Original-Name:",
+              "UploadDate": "Upload-Datum:",
+              "Width": "Breite:",
+              "Height": "Höhe:",
+              "Length": "Länge:",
+              "StartTime_MP4": "Start-Zeitpunkt MP4:",
+              "EndTime_MP4": "End-Zeitpunkt MP4:",
+              "StartTime_WEBM": "Start-Zeitpunkt WEBM:",
+              "EndTime_WEBM": "End-Zeitpunkt WEBM:",
+              "StartTime_Thumbnail": "Start-Zeitpunkt Thumbnail:",
+              "EndTime_Thumbnail": "End-Zeitpunkt Thumbnail:",
+              "Progress": "Fortschritt:",
+              "Status": "Status:",
+              "Rest": "Geschätzte Restdauer:",
+              "NoActive": "Zur Zeit ist kein Video in Bearbeitung"
+            }
+          },
+          "ToDo": {
+            "Header": "Ausstehend"
+          },
+          "Done": {
+            "Header": "Abgeschlossen"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+﻿{
+  "Liste": {
+    "Header": "Kategorien",
+    "Card": {
+      "Header": {
+        "Text": "Liste der Kategorien",
+        "Description": "Hier können Sie Kategorien hinzufügen, editieren und löschen."
+      },
+      "Body": {
+        "Tooltips": {
+          "Add": "Eine neue Kategorie hinzufügen",
+          "Edit": "Die aktuell selektierte Kategorie editieren",
+          "Delete": "Die aktuell selektierte Kategorie löschen",
+          "Values": "Die Kategorie-Werte für die selektierte Kategorie editieren"
+        },
+        "Buttons": {
+          "Values": "Kategorie-Werte"
+        }
+      }
+    }
+  },
+  "Edit": {
+    "Header": "Kategorien",
+    "Card": {
+      "Header": {
+        "Text_new": "Kategorie hinzufügen",
+        "Text_edit": "Kategorie editieren",
+        "Description_new": "Bitte geben Sie die Daten für die neue Kategorie ein",
+        "Description_edit": "Bitte geben Sie die geänderten Daten für die bestehende Kategorie ein"
+      },
+      "Body": {
+        "Form": {
+          "Labels": {
+            "CategoryType": "Kategorie-Typ"
+          },
+          "Radiobuttons": {
+            "Both": "Foto / Video",
+            "Photo": "Foto",
+            "Video": "Video"
+          },
+          "Tooltips": {
+            "Submit": "Die Daten der Kategorie speichern",
+            "Cancel": "Maske ohne speichern der Kategorie verlassen"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+﻿{
+  "Liste": {
+    "Header": "Kategorie-Werte",
+    "Card": {
+      "Header": {
+        "Text": "Liste der Kategorie-Werte für die Kategorie '{{category}}'",
+        "Description": "Hier können Sie Kategorie-Werte hinzufügen, editieren und löschen."
+      },
+      "Body": {
+        "Tooltips": {
+          "Add": "Einen neuen Kategorie-Wert hinzufügen",
+          "Edit": "Den aktuell selektierten Kategorie-Wert editieren",
+          "Delete": "Den aktuell selektierten Kategorie-Wert löschen",
+          "Back": "Zurück zur Liste der Kategorien springen"
+        },
+        "Buttons": {
+          "Back": "Zurück zu Kategorien"
+        }
+      }
+    }
+  },
+  "Edit": {
+    "Header": "Kategorie-Werte",
+    "Card": {
+      "Header": {
+        "Text_new": "Kategoriewert für Kategorie '{{category}}' hinzufügen",
+        "Text_edit": "Kategoriewert für Kategorie '{{category}}' editieren",
+        "Description_new": "Bitte geben Sie die Daten für den neuen Kategoriewert ein",
+        "Description_edit": "Bitte geben Sie die geänderten Daten für den bestehenden Kategoriewert ein"
+      },
+      "Body": {
+        "Form": {
+          "Tooltips": {
+            "Submit": "Die Daten des Kategoriewerts speichern",
+            "Cancel": "Maske ohne speichern des Kategoriewerts verlassen"
+          }
+        }
+      }
+    }
+  }
+}

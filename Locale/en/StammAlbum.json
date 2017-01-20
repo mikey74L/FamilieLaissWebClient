@@ -1,0 +1,44 @@
+﻿{
+  "Liste": {
+    "Header": "Alben",
+    "Card": {
+      "Header": {
+        "Text": "Liste der Alben",
+        "Description": "Hier können Sie Alben hinzufügen, editieren und löschen."
+      },
+      "Body": {
+        "Tooltips": {
+          "Add": "Ein neues Album hinzufügen",
+          "Edit": "Das aktuell selektierte Album editieren",
+          "Delete": "Das aktuell selektierte Album löschen"
+        }
+      }
+    }
+  },
+  "Edit": {
+    "Header": "Alben",
+    "Card": {
+      "Header": {
+        "Text_new": "Album hinzufügen",
+        "Text_edit": "Album editieren",
+        "Description_new": "Bitte geben Sie die Daten für das neue Album ein",
+        "Description_edit": "Bitte geben Sie die geänderten Daten für das bestehende Album ein"
+      },
+      "Body": {
+        "Form": {
+          "Labels": {
+            "AlbumType": "Album-Typ"
+          },
+          "Radiobuttons": {
+            "Photo": "Foto",
+            "Video": "Video"
+          },
+          "Tooltips": {
+            "Submit": "Die Daten des Album speichern",
+            "Cancel": "Maske ohne speichern des Album verlassen"
+          }
+        }
+      }
+    }
+  }
+}

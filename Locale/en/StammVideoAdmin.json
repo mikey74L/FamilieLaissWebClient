@@ -1,0 +1,74 @@
+﻿{
+  "AdminList": {
+    "ChooseAlbum": "Bitte ein Album auswählen",
+    "Header": {
+      "Text": "Videos verwalten"
+    },
+    "Card": {
+      "Header": {
+        "Text_notchoosed": "Liste der zugordneten Videos",
+        "Text_choosed": "Liste der zugordneten Videos für das Album '{{album}}'",
+        "Description_notchoosed": "Hier können Sie Videos zu Alben hinzufügen, löschen oder die Daten von schon zugeordneten Videos editieren.",
+        "Description_choosed": "Hier können Sie Videos zum ausgewählten Album hinzufügen, löschen oder die Daten von schon zugeordneten Videos editieren.",
+        "Tooltips": {
+          "Sort": "Sortierreihenfolge ändern",
+          "Refresh": "Liste der zugeordneten Videos aktualisieren",
+          "SelectAlbum": "Album auswählen für welches die Videos hinzugefügt werden sollen",
+          "AddVideo": "Ein Video aus dem Upload-Bereich zum aktuell ausgewählten Album hinzufügen"
+        },
+        "SortMenuItems": {
+          "NameAscending": "Name aufsteigend",
+          "NameDescending": "Name absteigend",
+          "AssignDateAscending": "Zuweisungs-Datum aufsteigend",
+          "AssignDateDescending": "Zuweisungs-Datum absteigend",
+          "UploadDateAscending": "Upload-Datum aufsteigend",
+          "UploadDateDescending": "Upload-Datum absteigend"
+        },
+        "SortCriteriaHeader": {
+          "Header_Name_ascending": "Liste ist aufsteigend nach dem Namen sortiert",
+          "Header_Name_descending": "Liste ist absteigend nach dem Namen sortiert",
+          "Header_AssignDate_ascending": "Liste ist aufsteigend nach dem Zuweisungs-Datum sortiert",
+          "Header_AssignDate_descending": "Liste ist absteigend nach dem Zuweisungs-Datum sortiert",
+          "Header_UploadDate_ascending": "Liste ist aufsteigend nach dem Upload-Datum sortiert",
+          "Header_UploadDate_descending": "Liste ist absteigend nach dem Upload-Datum sortiert"
+        }
+      }
+    }
+  },
+  "Edit": {
+    "Header": "Videos",
+    "Card": {
+      "Header": {
+        "Text_new": "Video zum Album '{{album}}' hinzufügen",
+        "Text_edit": "Video für Album '{{album}}' editieren",
+        "Description_new": "Bitte geben Sie die Daten für das neue Video ein",
+        "Description_edit": "Bitte geben Sie die geänderten Daten für das bestehende Video ein"
+      },
+      "Body": {
+        "Form": {
+          "Labels": {
+            "Video": "Zugewiesenes Video",
+            "FamilyType": "Familienstatus",
+            "Category": "Kategorien"
+          },
+          "Checkboxes": {
+            "OnlyFamily": "Nur für Familienmitglieder"
+          },
+          "Tooltips": {
+            "Submit": "Die Daten des Video speichern und Maske verlassen",
+            "Cancel": "Maske ohne speichern des Video verlassen",
+            "ChooseVideo": "Ein Video aus dem Upload-Bereich auswählen"
+          },
+          "Selects": {
+            "Category": {
+              "Placeholder": "Bitte eine oder mehrere Kategorien auswählen"
+            }
+          },
+          "Buttons": {
+            "ChooseVideo": "Video auswählen"
+          }
+        }
+      }
+    }
+  }
+}

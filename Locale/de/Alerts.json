@@ -1,0 +1,188 @@
+﻿{
+  "Delete_Local_Storage": {
+    "Question": {
+      "Header": "Local-Storage zurücksetzen?",
+      "Body": "Sind Sie sicher, dass Sie alle Daten im Local-Storage des Browsers zurücksetzen möchten?",
+      "Confirm_Button": "Zurücksetzen",
+      "Cancel_Button": "Nicht zurücksetzen"
+    },
+    "Success": {
+      "Header": "Local-Storage zurückgesetzt",
+      "Body": "Der Local-Storage des Browsers wurde erfolgreich zurückgesetzt."
+    }
+  },
+  "Leave_Page": {
+    "Question": {
+      "Header": "Eingaben verwerfen?",
+      "Body": "Wenn Sie diese Seite jetzt verlassen gehen Ihre Eingaben verloren. Sind Sie sicher, dass Sie die Seite verlassen möchten? ",
+      "Confirm_Button": "Seite verlassen",
+      "Cancel_Button": "Seite nicht verlassen"
+    }
+  },
+  "Cancel_Edit": {
+    "Question": {
+      "Header": "Eingaben verwerfen?",
+      "Body": "Sind Sie sicher, dass Sie Ihre aktuell getätigten Eingaben verwerfen möchten?",
+      "Confirm_Button": "Eingaben verwerfen",
+      "Cancel_Button": "Eingaben nicht verwerfen"
+    }
+  },
+  "Save": {
+    "AdminPicture": {
+      "NoPhoto": {
+        "Header": "Kein Photo ausgewählt",
+        "Body": "Bevor Sie das Photo speichern können, müssen Sie ein Upload-Photo auswählen."
+      }
+    }
+  },
+  "Delete": {
+    "Facet_Group": {
+      "Header": "Kategorie löschen?",
+      "Body": "Sind Sie sicher, dass Sie die aktuell selektierte Kategorie löschen möchten?",
+      "Confirm_Button": "Kategorie löschen",
+      "Cancel_Button": "Kategorie nicht löschen"
+    },
+    "Facet_Value": {
+      "Header": "Kategorie-Wert löschen?",
+      "Body": "Sind Sie sicher, dass Sie den aktuell selektierten Kategorie-Wert löschen möchten?",
+      "Confirm_Button": "Kategorie-Wert löschen",
+      "Cancel_Button": "Kategorie-Wert nicht löschen"
+    },
+    "Media_Group": {
+      "Header": "Album löschen?",
+      "Body": "Sind Sie sicher, dass Sie das aktuell selektierte Album löschen möchten?",
+      "Confirm_Button": "Album löschen",
+      "Cancel_Button": "Album nicht löschen"
+    },
+    "UploadPicture": {
+      "Header": "Photo löschen?",
+      "Body": "Sind Sie sicher, dass Sie das Photo '{{name}}' wirklich aus dem Upload-Bereich löschen möchten?",
+      "Confirm_Button": "Photo löschen",
+      "Cancel_Button": "Photo nicht löschen"
+    },
+    "UploadVideo": {
+      "Header": "Video löschen?",
+      "Body": "Sind Sie sicher, dass Sie das Video '{{name}}' wirklich aus dem Upload-Bereich löschen möchten?",
+      "Confirm_Button": "Video löschen",
+      "Cancel_Button": "Video nicht löschen"
+    },
+    "AdminPicture": {
+      "Header": "Photo löschen?",
+      "Body": "Sind Sie sicher, dass Sie das Photo '{{namePicture}}' wirklich aus dem Album '{{nameAlbum}}' löschen möchten?",
+      "Confirm_Button": "Photo löschen",
+      "Cancel_Button": "Photo nicht löschen"
+    },
+    "AdminVideo": {
+      "Header": "Video löschen?",
+      "Body": "Sind Sie sicher, dass Sie das Video '{{nameVideo}}' wirklich aus dem Album '{{nameAlbum}}' löschen möchten?",
+      "Confirm_Button": "Video löschen",
+      "Cancel_Button": "Video nicht löschen"
+    },
+    "Account": {
+      "Header": "Benutzerkonto löschen?",
+      "Body": "Sind Sie sicher, dass Sie das Benutzerkonto '{{nameKonto}}' wirklich löschen möchten? Alle benutzerbezogenen Daten wie Bewertungen und Kommentare gehen ebenfalls verloren.",
+      "Confirm_Button": "Benutzerkonto löschen",
+      "Cancel_Button": "Benutzerkonto nicht löschen"
+    }
+  },
+  "Upload": {
+    "Picture": {
+      "Error": {
+        "Header": "Upload Fehlerhaft",
+        "Body": "Der Upload einer order mehrerer Photos wurde mit Fehlern beendet. Bitte überprüfen Sie welche der Photos in den Upload-Ordner hochgeladen wurden.",
+        "Confirm_Button": "OK"
+      },
+      "Success": {
+        "Header": "Upload erfolgreich",
+        "Body": "Der Upload der ausgewählten Photos wurde erfolgreich beendet. Die hochgeladenen Photos stehen jetzt zur weiteren Verarbeitung zur Verfügung.",
+        "Confirm_Button": "OK"
+      },
+      "LeavePage": {
+        "Header": "Upload wird durchgeführt",
+        "Body": "Die aktuelle Seite kann nicht verlassen werden solange der Upload der Photos noch läuft. Sie müssen den vollständigen Upload der Photos abwarten, bevor Sie diese Seite verlassen können.",
+        "Confirm_Button": "OK"
+      }
+    },
+    "Video": {
+      "Error": {
+        "Header": "Upload Fehlerhaft",
+        "Body": "Der Upload einer order mehrerer Videos wurde mit Fehlern beendet.",
+        "Confirm_Button": "OK"
+      },
+      "Success": {
+        "Header": "Upload erfolgreich",
+        "Body": "Der Upload der ausgewählten Videos wurde erfolgreich beendet. Die hochgeladenen Videos werden jetzt automatisch konvertiert.",
+        "Confirm_Button": "OK"
+      },
+      "LeavePage": {
+        "Header": "Upload wird durchgeführt",
+        "Body": "Die aktuelle Seite kann nicht verlassen werden solange der Upload der Videos noch läuft. Sie müssen den vollständigen Upload der Videos abwarten, bevor Sie diese Seite verlassen können.",
+        "Confirm_Button": "OK"
+      }
+    }
+  },
+  "AuthRegister": {
+    "Sucess": {
+      "Header": "Registrierung erfolgreich",
+      "Body": "Ihre Registrierung wurde erfolgreich durchgeführt. Sie haben von uns eine eMail mit weiteren Instruktionen zum Abschluss Ihrer Registrierung erhalten. Vor Abschluss der Registrierung können Sie sich noch nicht an unserer Seite anmelden."
+    },
+    "Error": {
+      "Header": "Registrierung nicht erfolgreich",
+      "Body": "Bei der Registrierung ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie den Administrator.",
+      "Body_With_Error": "Bei der Registrierung ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie den Administrator. Aufgetretener Fehler: "
+    }
+  },
+  "AuthConfirmAccount": {
+    "Success": {
+      "Header": "Bestätigung erfolgreich",
+      "Body": "Die Bestätigung Ihres Benutzerkonto wurde erfolgreich durchgeführt. Sie werden jetzt auf die Login-Seite weitergeleitet."
+    },
+    "Error": {
+      "Header": "Bestätigung nicht erfolgreich",
+      "Body": "Bei der Bestätigung Ihres Benutzerkonto ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie den Administrator."
+    }
+  },
+  "AuthLogin": {
+    "Error": {
+      "Header": "Anmeldung nicht erfolgreich",
+      "Body": "Bei der Anmeldung ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie den Administrator."
+    }
+  },
+  "AuthForgotPassword": {
+    "Success": {
+      "Header": "Zurücksetzen des Passwort erfolgreich",
+      "Body": "Das Zurücksetzen Ihres Passworts wurde erfolgreich abgeschlossen. Sie haben von uns eine Mail mit weiteren Instruktionen erhalten."
+    },
+    "Error": {
+      "Header": "Zurücksetzen des Passwort nicht erfolgreich",
+      "Body": "Beim Zurücksetzen des Passworts ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator.",
+      "Body_With_Error": "Beim Zurücksetzen des Passworts ist folgender Fehler aufgetreten: "
+    }
+  },
+  "AuthNewPassword": {
+    "Success": {
+      "Header": "Passwort erfolgreich geändert",
+      "Body": "Ihr neues Passwort wurde erfolgreich gesetzt. Sie können sich jetzt mit Ihrem neuen Passwort anmelden."
+    },
+    "Error": {
+      "Header": "Ändern des Passwort nicht erfolgreich",
+      "Body": "Beim übernehmen Ihre neuen Passworts ist ein unerwarteter Fehler aufgetreten. Bitte verständigen Sie Ihren Administrator."
+    }
+  },
+  "Message": {
+    "Quit": {
+      "Error": {
+        "Header": "Fehler bei Quittierung",
+        "Body": "Die Nachricht konnte nicht quittiert werden, da ein unerwarteter Fehler aufgetreten ist. Bitte verständigen Sie Ihren Administrator."
+      }
+    }
+  },
+  "Messages": {
+    "Quit": {
+      "Error": {
+        "Header": "Fehler bei Quittierung",
+        "Body": "Die Nachrichten der Prio {{prio}} konnten nicht alle quittiert werden, da ein unerwarteter Fehler aufgetreten ist. Bitte verständigen Sie Ihren Administrator."
+      }
+    }
+  }
+}

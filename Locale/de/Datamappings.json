@@ -1,0 +1,27 @@
+﻿{
+  "Facet_Group": {
+    "Type": {
+      "0": "Photo / Video",
+      "1": "Video",
+      "2": "Photo"
+    }
+  },
+  "Media_Group": {
+    "Type": {
+      "0": "Photo",
+      "1": "Video"
+    }
+  },
+  "Video_Upload": {
+    "Status": {
+      "0": "Zur Konvertierung ausstehend",
+      "1": "MP4-Video wird erstellt",
+      "2": "MP4-Video erfolgreich erstellt",
+      "3": "WEBM-Video wird erstellt",
+      "4": "WEBM-Video erfolgreich erstellt",
+      "5": "Thumbnail wird erstellt",
+      "6": "Video erfolgreich konvertiert",
+      "7": "Fehler bei der Konvertierung aufgetreten"
+    }
+  }
+}

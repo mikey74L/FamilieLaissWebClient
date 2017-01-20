@@ -1,0 +1,33 @@
+﻿{
+  "Labels": {
+    "Header": "Familie Laiss - Registrierung",
+    "Benutzername": "Benutzername",
+    "Vorname": "Vorname",
+    "Familienname": "Familienname",
+    "Strasse": "Straße",
+    "Hausnummer": "Hausnummer",
+    "Postleitzahl": "Postleitzahl",
+    "Ort": "Ort",
+    "Passwort": "Passwort",
+    "PasswortConfirmation": "Passwort-Bestätigung",
+    "SecurityAnswer": "Sicherheitsantwort",
+    "eMail": "eMail"
+  },
+  "Gender": {
+    "Male": "Männlich",
+    "Female": "Weiblich"
+  },
+  "Buttons": {
+    "Register": {
+      "Tooltip": "Neues Benutzerprofil mit den eingegebenen Daten anlegen"
+    },
+    "ForgotPassword": {
+      "Text": "Passwort vergessen ",
+      "Tooltip": ""
+    },
+    "Login": {
+      "Text": "Anmelden",
+      "Tooltip": ""
+    }
+  }
+}

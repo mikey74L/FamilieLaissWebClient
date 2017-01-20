@@ -1,0 +1,65 @@
+﻿{
+  "Uploadcontrol": {
+    "Status": {
+      "Added": "Hinzugefügt",
+      "Upload": "Wird hochgeladen",
+      "Success": "Erfolgreich hochgeladen"
+    },
+    "Columns": {
+      "Name": "Dateiname",
+      "Size": "Dateigröße",
+      "Percentage": "% hochgeladen",
+      "Status": "Status"
+    },
+    "Buttons": {
+      "Text": {
+        "Add": "Datei(en) auswählen",
+        "Clear": "Liste leeren",
+        "Upload": "Hochladen",
+        "Delete": "Entfernen"
+      },
+      "Tooltip": {
+        "Add": "Eine oder mehrere Dateien zum Upload auswählen",
+        "Clear": "Alle Dateien aus der Uploadliste entfernen",
+        "Upload": "Alle Dateien auf den Server hochladen",
+        "Delete": "Die aktuell selektierte Datei aus der Liste entfernen"
+      }
+    }
+  },
+  "Picturecontrol": {
+    "Labels": {
+      "UploadDate": "Upload-Datum:",
+      "AssignDate": "Zuweisungs-Datum:"
+    },
+    "Buttons": {
+      "Delete": "Löschen",
+      "Choose": "Auswählen",
+      "Edit": "Editieren"
+    },
+    "Tooltips": {
+      "Delete_Upload": "Löschen des Photos aus dem Upload-Bereich",
+      "Delete_Album": "Löschen des Photos aus dem Album",
+      "Choose": "Auswählen des Photos",
+      "Edit": "Editieren der Daten des Photos"
+    }
+  },
+  "Videocontrol": {
+    "Labels": {
+      "UploadDate": "Upload-Datum:",
+      "AssignDate": "Zuweisungs-Datum:",
+      "Resolution": "Auflösung:",
+      "Duration": "Dauer:"
+    },
+    "Buttons": {
+      "Delete": "Löschen",
+      "Choose": "Auswählen",
+      "Edit": "Editieren"
+    },
+    "Tooltips": {
+      "Delete_Upload": "Löschen des Videos aus dem Upload-Bereich",
+      "Delete_Album": "Löschen des Videos aus dem Album",
+      "Choose": "Auswählen des Videos",
+      "Edit": "Editieren der Daten des Videos"
+    }
+  }
+}

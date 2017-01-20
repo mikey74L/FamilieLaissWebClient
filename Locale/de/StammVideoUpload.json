@@ -1,0 +1,36 @@
+﻿{
+  "Header": {
+    "Text": "Videos hochladen",
+    "Description": "Hier können neue Videos hochgeladen werden. Außerdem können Sie die bisher hochgeladenen Videos anschauen und auch ggf. löschen."
+  },
+  "Card": {
+    "Header": {
+      "TextUpload": "Videos hochladen",
+      "DescriptionUpload": "Hier können neue Videos hochgeladen werden. Nach erfolgreichem Upload erscheinen die Videos in der Liste der hochgeladenen Videos.",
+      "TextListe": "Hochgeladene Videos",
+      "DescriptionListe": "Hier können bereits hochgeladene Videos angesehen und ggf. gelöscht werden.",
+      "SortMenuItems": {
+        "NameAscending": "Name aufsteigend",
+        "NameDescending": "Name absteigend",
+        "UploadDateAscending": "Upload-Datum aufsteigend",
+        "UploadDateDescending": "Upload-Datum absteigend"
+      },
+      "Tooltips": {
+        "Sort": "Sortierreihenfolge",
+        "Refresh": "Aktualisieren"
+      },
+      "SortCriteriaHeader": {
+        "Header_Name_ascending": "Liste ist aufsteigend nach dem Namen sortiert",
+        "Header_Name_descending": "Liste ist absteigend nach dem Namen sortiert",
+        "Header_UploadDate_ascending": "Liste ist aufsteigend nach dem Upload-Datum sortiert",
+        "Header_UploadDate_descending": "Liste ist absteigend nach dem Upload-Datum sortiert"
+      },
+      "TabPages": {
+        "Upload": "Videos hochladen",
+        "List": "Hochgeladene Videos"
+      }
+    },
+    "Body": {
+    }
+  }
+}

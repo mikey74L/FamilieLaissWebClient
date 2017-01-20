@@ -1,0 +1,219 @@
+<template>
+    <require from='./Customcontrols/side-menu'></require>
+    <require from="./Converter/date-time-format"></require>
+
+    <!-- Den Indicator für das Laden ausgeben -->
+    <!--<loading-indicator loading.bind="isBusy"></loading-indicator>-->
+
+    <!-- Anzeigen des Header-Bars. Aber nur wenn die Navigation aktiv ist -->
+    <header if.bind="showNavigation" id="header" class="clearfix" data-ma-theme.bind="currentSkin">
+        <ul class="h-inner">
+            <li class="hi-trigger ma-trigger" data-ma-action="sidebar-open" data-ma-target="#sidebar">
+                <div class="line-wrap">
+                    <div class="line top"></div>
+                    <div class="line center"></div>
+                    <div class="line bottom"></div>
+                </div>
+            </li>
+
+            <!-- Das Logo ausgeben -->
+            <li class="hi-logo hidden-xs">
+                <a t="Application.Title" href="index.html"></a>
+            </li>
+
+            <!-- Die Buttons auf der rechten Seite in der Title-Bar ausgeben-->
+            <li class="pull-right">
+                <div if.bind="dropdownMessagePrio1Visible || dropdownMessagePrio2Visible || dropdownMessagePrio3Visible || dropdownSettingsVisible" class="messages-dropdown-background" click.trigger="toolbarBackdropClicked()"></div>
+                <ul class="hi-menu">
+                    <!-- Dropdown für Messages Prio 1 -->
+                    <li if.bind="userInfoExists" class.bind="dropdownMessagePrio1Visible == false ? 'dropdown' : 'dropdown open'" click.trigger="messagePrio1Clicked()">
+                        <a href="">
+                            <i class="him-icon zmdi zmdi-notifications"></i>
+                            <i class="him-counts-error">${countMessagesPrio1}</i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg pull-right">
+                            <div class="list-group him-notification">
+                                <div class="lg-header">
+                                    ${'TopBar.MessagePrio1_Header' | t: { ns: 'translation' }}
+                                    <ul class="actions">
+                                        <li class="dropdown">
+                                            <a href="#" click.trigger="confirmAllMessages(1)">
+                                                <i class="zmdi zmdi-check-all"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="lg-body">
+                                    <a repeat.for="messageItem of messagesPrio1" class="list-group-item media" href="#" click.trigger="confirmMessage(messageItem.ID)">
+                                        <div class="media-body">
+                                            <div class="lgi-heading">${messageItem.Text}</div>
+                                            <small class="lgi-text">${messageItem.DDL_Create | dateTimeFormat }</small>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <!--<a class="view-more" href="#" click.trigger="showMessageOverview(1)">${'TopBar.Show_Message_Info' | t: { ns: 'translation' }}</a>-->
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- Dropdown für Messages Prio 2 -->
+                    <li if.bind="userInfoExists" class.bind="dropdownMessagePrio2Visible == false ? 'dropdown' : 'dropdown open'" click.trigger="messagePrio2Clicked()">
+                        <a href="">
+                            <i class="him-icon zmdi zmdi-notifications"></i>
+                            <i class="him-counts-warning">${countMessagesPrio2}</i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg pull-right">
+                            <div class="list-group him-notification">
+                                <div class="lg-header">
+                                    ${'TopBar.MessagePrio2_Header' | t: { ns: 'translation' }}
+                                    <ul class="actions">
+                                        <li class="dropdown">
+                                            <a href="#" click.trigger="confirmAllMessages(2)">
+                                                <i class="zmdi zmdi-check-all"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="lg-body">
+                                    <a repeat.for="messageItem of messagesPrio2" class="list-group-item media" href="#" click.trigger="confirmMessage(messageItem.ID)">
+                                        <div class="media-body">
+                                            <div class="lgi-heading">${messageItem.Text}</div>
+                                            <small class="lgi-text">${messageItem.DDL_Create | dateTimeFormat }</small>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <!--<a class="view-more" href="#" click.trigger="showMessageOverview(2)">${'TopBar.Show_Message_Info' | t: { ns: 'translation' }}</a>-->
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- Dropdown für Messages Prio 3 -->
+                    <li if.bind="userInfoExists" class.bind="dropdownMessagePrio3Visible == false ? 'dropdown' : 'dropdown open'" click.trigger="messagePrio3Clicked()">
+                        <a href="">
+                            <i class="him-icon zmdi zmdi-notifications"></i>
+                            <i class="him-counts-info">${countMessagesPrio3}</i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg pull-right">
+                            <div class="list-group him-notification">
+                                <div class="lg-header">
+                                    ${'TopBar.MessagePrio3_Header' | t: { ns: 'translation' }}
+                                    <ul class="actions">
+                                        <li class="dropdown">
+                                            <a href="#" click.trigger="confirmAllMessages(3)">
+                                                <i class="zmdi zmdi-check-all"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="lg-body">
+                                    <a repeat.for="messageItem of messagesPrio3" class="list-group-item media" href="#" click.trigger="confirmMessage(messageItem.ID)">
+                                        <div class="media-body">
+                                            <div class="lgi-heading">${messageItem.Text}</div>
+                                            <small class="lgi-text">${messageItem.DDL_Create | dateTimeFormat }</small>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <!--<a class="view-more" href="#" click.trigger="showMessageOverview(3)">${'TopBar.Show_Message_Info' | t: { ns: 'translation' }}</a>-->
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- Button für die Settings ausgeben -->
+                    <li style="margin-right:15px;" class.bind="dropdownSettingsVisible == false ? 'dropdown' : 'dropdown open'" click.trigger="settingsDropDownClicked($event)">
+                        <a href="">
+                            <i class="him-icon zmdi zmdi-more-vert"></i>
+                        </a>
+                        <ul class="dropdown-menu dm-icon pull-right">
+                            <li class="skin-switch hidden-xs">
+                                <span class="ss-skin bgm-lightblue" click.trigger="skinChangeClicked('lightblue')"></span>
+                                <span class="ss-skin bgm-bluegray" click.trigger="skinChangeClicked('bluegray')"></span>
+                                <span class="ss-skin bgm-cyan" click.trigger="skinChangeClicked('cyan')"></span>
+                                <span class="ss-skin bgm-teal" click.trigger="skinChangeClicked('teal')"></span>
+                                <span class="ss-skin bgm-orange" click.trigger="skinChangeClicked('orange')"></span>
+                                <span class="ss-skin bgm-blue" click.trigger="skinChangeClicked('blue')"></span>
+                            </li>
+                            <li class="divider hidden-xs"></li>
+                            <li class="hidden-xs">
+                                <a t="[append]TopBar.ToggleFullscreen" href="" click.trigger="fullScreenToggleClicked($event)"><i class="zmdi zmdi-fullscreen"></i></a>
+                            </li>
+                            <li>
+                                <a t="[append]TopBar.DeleteLocalStorage" href="" click.trigger="clearLocalStorageClicked($event)"><i class="zmdi zmdi-delete"></i></a>
+                            </li>
+                            <li>
+                                <a t="[append]TopBar.Settings" href=""><i class="zmdi zmdi-settings"></i></a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Button für die Anmeldung ausgeben. Aber nur wenn kein User angemeldet ist -->
+                    <li if.bind="!userInfoExists" style="margin-right:15px;">
+                        <a href="" click.trigger="login()">
+                            <p style="font-size:25px; margin-bottom:0px;"><i class="him-icon zmdi zmdi-account" style="padding-right:5px;"></i> ${ 'TopBar.Login' | t}</p>
+                        </a>
+                    </li>
+
+                    <!-- Button für die Registrierung ausgeben. Aber nur wenn kein User angemeldet ist -->
+                    <li if.bind="!userInfoExists">
+                        <a href="" click.trigger="register()">
+                            <p style="font-size:25px; margin-bottom:0px;"><i class="him-icon zmdi zmdi-account-add" style="padding-right:5px;"></i> ${ 'TopBar.Register' | t}</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </header>
+
+    <!-- Anzeigen des Hauptbereiches mit dem Seitenmenu. Das Seitenmenu wird aber nur angezeigt wenn die Navigation aktiv ist -->
+    <section id.bind="showNavigation ? 'main' : ''">
+        <!-- Anzeigen des Seitenmenüs -->
+        <aside if.bind="showNavigation" id="sidebar" class="sidebar c-overflow">
+            <!-- Ausgeben des Bereiches für den aktuellen Benutzers -->
+            <div if.bind="userInfoExists" class.bind="!userMenuVisible ? 's-profile' : 's-profile toggled'">
+                <a href="" click.trigger="switchUserMenu()">
+                    <div class="sp-pic">
+                        <!-- <img class="mCS_img_loaded" src="img/profile-pics/1.jpg" alt=""> -->
+                    </div>
+                    <div class="sp-info">
+                        ${userInfo.firstName} ${userInfo.familyName}<i class="zmdi zmdi-caret-down"></i>
+                    </div>
+                </a>
+                <ul class="main-menu" style.bind="userMenuVisible ? 'display: block;' : 'display: none;'">
+                    <li>
+                        <a href="" click.trigger="showUserProfile()"><i class="zmdi zmdi-account"></i>${'UserMenu.Profile' | t: { ns: 'Router' }}</a>
+                    </li>
+                    <li>
+                        <a href="" click.trigger="logout()"><i class="zmdi zmdi-time-restore"></i>${'UserMenu.Logout' | t: { ns: 'Router' }}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Ausgeben des Hauptmenus -->
+            <ul class="main-menu">
+                <side-menu menu-items.bind="menuItemList.menuItemsMenu"></side-menu>
+            </ul>
+        </aside>
+
+        <!-- Ausgeben des Inhaltes der aktuellen View -->
+        <section id.bind="showNavigation ? 'content' : ''">
+            <div class.bind="showNavigation ? 'container' : ''">
+                <router-view></router-view>
+            </div>
+        </section>
+    </section>
+
+    <!-- Anzeigen des Footers aber nur wenn die Navigation aktiv ist -->
+    <footer if.bind="showNavigation" id="footer">
+        Copyright &copy; 2016 ${ 'Application.Title' | t}
+
+        <ul class="f-menu">
+            <li><a href="">Home</a></li>
+            <li><a href="">Dashboard</a></li>
+            <li><a href="">Reports</a></li>
+            <li><a href="">Support</a></li>
+            <li><a href="">Contact</a></li>
+        </ul>
+    </footer>
+</template>
