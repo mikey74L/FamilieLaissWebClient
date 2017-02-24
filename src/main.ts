@@ -24,6 +24,7 @@ export async function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
     .developmentLogging()
+    .plugin('aurelia-breeze')
     .plugin('aurelia-animator-css')
     .plugin('aurelia-dialog')
     .plugin('aurelia-validation')

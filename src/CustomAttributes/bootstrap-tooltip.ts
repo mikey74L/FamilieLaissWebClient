@@ -1,8 +1,8 @@
-import {customAttribute, inject} from 'aurelia-framework';
+import {customAttribute, autoinject} from 'aurelia-framework';
 import 'bootstrap';
 
 @customAttribute('bootstrap-tooltip')
-@inject(Element)
+@autoinject()
 export class BootstrapTooltip {
     //Members
     element: HTMLElement;

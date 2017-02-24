@@ -1,10 +1,10 @@
-import { iServiceStammdatenNormal } from './../Interfaces/iServiceStammdatenNormal';
 import { DialogService } from 'aurelia-dialog';
 import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { ShowBusyBoxEvent } from '../Events/ShowBusyBoxEvent';
-import {AppRouter} from 'aurelia-router';
+import { AppRouter } from 'aurelia-router';
 import * as toastr from 'toastr';
+import { ServiceModelStammdatenNormal } from './ServiceHelper'
 
 export abstract class ViewModelGeneral {
   //Members
@@ -169,11 +169,11 @@ export abstract class GridViewModelStammdaten extends ViewModelGeneralView {
 
 export abstract class GridViewModelStammdatenNormal extends GridViewModelStammdaten {
   //Members
-  service: iServiceStammdatenNormal;
+  service: ServiceModelStammdatenNormal;
 
   //C'tor
   constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, routeForEdit: string, 
-              router: AppRouter, service: iServiceStammdatenNormal) {
+              router: AppRouter, service: ServiceModelStammdatenNormal) {
     //Aufrufen des Konstruktors für die Vater Klasse
     super(loc, eventAggregator, dialogService, routeForEdit, router);
 

@@ -66,7 +66,8 @@ const coreBundles = {
     'aurelia-i18n',
     'aurelia-dialog',
     'aurelia-validation',
-    'aurelia-animator-css'
+    'aurelia-animator-css',
+    'aurelia-breeze'
   ]
 }
 
