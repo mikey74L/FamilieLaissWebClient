@@ -1,8 +1,8 @@
-import {customAttribute, inject} from 'aurelia-framework';
+import {customAttribute, autoinject} from 'aurelia-framework';
 import waves from 'node-waves';
 
 @customAttribute('button-waves')
-@inject(Element)
+@autoinject()
 export class ButtonWaves {
     //Members
     element: HTMLElement;
