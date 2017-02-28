@@ -4,7 +4,9 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { ShowBusyBoxEvent } from '../Events/ShowBusyBoxEvent';
 import { AppRouter } from 'aurelia-router';
 import * as toastr from 'toastr';
-import { ServiceModelStammdatenNormal } from './ServiceHelper'
+import swal from 'sweetalert2';
+import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal } from './ServiceHelper'
+import {EntityManager, Entity, ValidationError, ValidationErrorsChangedEventArgs, PropertyChangedEventArgs} from 'breeze-client';
 
 export abstract class ViewModelGeneral {
   //Members
@@ -186,4 +188,261 @@ export abstract class GridViewModelStammdatenNormal extends GridViewModelStammda
     //Laden der Daten über Service anstoßen
     this.entities = await this.service.getData();
   }
+}
+
+export abstract class ViewModelEdit extends ViewModelGeneralView {
+    //Member-Deklarationen
+    routeForList: string;
+    router: AppRouter;
+    itemToEdit: Entity;
+    hasValidationErrors: boolean;
+    validationErrors: Array<ValidationError>;
+    isSavingEnabled: boolean;
+    editMode: string;
+    keySubscribePropertyChanged: number;
+    keySubscribeErrorsChanged: number;
+
+    //C'tor
+    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, routeForList: string, router: AppRouter) {
+        //Aufrufen des Konstruktors für die Vater Klasse
+        super(localize, aggregator, dialog);
+
+        //Übernehmen der Parameter
+        this.routeForList = routeForList;
+        this.router = router;
+
+        //Initialisieren der Member
+        this.hasValidationErrors = false;
+    }
+
+    //Wird aufgerufen wenn der Aurelia-Router Aurelia die View anzeigen möchte.
+    //Hier können asynchrone Vorgänge durchgeführt werden
+    public async activate(info: any): Promise<void> {
+        if (info.operation == "new") {
+            //Setzen des Edit-Modes
+            this.editMode = "new";
+
+            //Aufrufen der Methode zum Anlegen eines neuen Items
+            if (info.idFather) {
+                //Aufrufen der Methode zum Erzeugen eines neuen Elementes
+                await this.createNew(info.idFather);
+
+                //Löschen aller etwaiger Validierungsfehler bei einem neuen Item
+                this.itemToEdit.entityAspect.clearValidationErrors();
+
+                //Aufrufen der Child-Routine
+                return this.activateChild(info);
+            }
+            else {
+                //Aufrufen der Methode zum Erzeugen eines neuen Elementes
+                await this.createNew();
+
+                //Löschen aller etwaiger Validierungsfehler bei einem neuen Item
+                this.itemToEdit.entityAspect.clearValidationErrors();
+
+                //Aufrufen der Child-Routine
+                return this.activateChild(info);
+            }
+        }
+        else {
+            //Setzen des Edit-Modes
+            this.editMode = "edit";
+
+            //Aufrufen der Lade-Methode und der Child-Methode
+            if (info.idFather) {
+                //Aufrufen der Methode zum Laden
+                await this.load(info.id, info.idFather);
+                   
+                //Aufrufen der Child-Methode
+                return this.activateChild(info);
+            }
+            else {
+                //Aufrufen der Methode zum Laden
+                await this.load(info.id);
+
+                //Aufrufen der Child-Methode
+                return this.activateChild(info);
+            }
+        }
+    }
+
+    //Laden der Daten über den Service (Ist abstract und muss überschrieben werden)
+    protected abstract async load(id: number, idFather?: number): Promise<any>;
+
+    //Ein neues Item erzeugen (Ist abstract und muss überschrieben werden
+    protected abstract async createNew(idFather?: number): Promise<any>;
+ 
+    //Wird von Aurelia aufgerufen um zu überprüfen ob durch den Router
+    //diese View überhaupt verlassen werden darf. Hier muss entweder
+    //True für Ja und False für Nein zurückgegeben werden
+    private async canDeactivate(): Promise<boolean> {
+       if (this.hasChanges()) {
+         //Änderungen vorhanden, dann ausgeben einer Sicherheitsabfrage
+         try
+         {
+              //Ausgeben der Warnmeldung
+              await swal(
+                {
+                    titleText: this.loc.tr('Leave_Page.Question.Header', { ns: 'Alerts' }),
+                    text: this.loc.tr('Leave_Page.Question.Body', { ns: 'Alerts' }),
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: this.loc.tr('Leave_Page.Question.Confirm_Button', { ns: 'Alerts' }),
+                    cancelButtonText: this.loc.tr('Leave_Page.Question.Cancel_Button', { ns: 'Alerts' }),
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }
+              );
+
+            //Die Änderungen sollen verworfen werden
+            this.rejectChanges();
+
+            //Verlassen der View erlaubt
+            return Promise.resolve(true);
+         }
+         catch(ex)
+         {
+              //Die View soll nicht verlassen werden
+              return Promise.reject(false);
+         }
+       }
+       else {
+         //Keine Änderungen vorhanden, die View kann verlassen werden
+         return Promise.resolve(true);
+       }
+    } 
+
+    //Liefert zurück ob der Service aktuell ausstehende Änderungen hat (Ist abstract und muss überschrieben werden)
+    protected abstract hasChanges(): boolean;
+
+    //Verwerfen der Änderungen im Service (Ist abstract und muss überschrieben werden)
+    protected abstract rejectChanges(): void;
+
+    //Registriert sich für das Property-Changed Event von Breeze
+    protected subscribePropertyChanged(): void {
+        this.keySubscribePropertyChanged = this.itemToEdit.entityAspect.propertyChanged.subscribe(
+          (eventArgs: PropertyChangedEventArgs) => {
+            this.propertyChanged(eventArgs);
+        });
+    }
+
+    //Wird aufgerufen wenn sich eine Property der Entität geändert hat. Hier müssen die Server-Validation-Errors
+    //für die entsprechende Property gelöscht werden
+    private propertyChanged(eventArgs: PropertyChangedEventArgs): void {
+        var Errors: Array<ValidationError> = this.itemToEdit.entityAspect.getValidationErrors();
+        for (var index in Errors) {
+            if (Errors[index].propertyName == eventArgs.propertyName) {
+                var Error: any = Errors[index];
+                if (Error.isServerError) {
+                    this.itemToEdit.entityAspect.removeValidationError(Errors[index]);
+                }
+            }
+        }
+    }
+
+    //Registriert sich für das Validation Errors Changed Event von Breeze
+    protected subscribeToValidationChanged(): void {
+        //Für das Validation-Changed-Ereignis registrieren
+        this.keySubscribeErrorsChanged = this.itemToEdit.entityAspect.validationErrorsChanged.subscribe(
+          (eventArgs: ValidationErrorsChangedEventArgs) => {
+            this.validationErrorsChanged(eventArgs);
+        });
+
+        //Initiales auslesen des Validierungszustandes
+        this.hasValidationErrors = this.itemToEdit.entityAspect.hasValidationErrors;
+        this.validationErrors = this.itemToEdit.entityAspect.getValidationErrors();
+        this.checkEnabledState();
+    }
+  
+    //Wird aufgerufen wenn sich die Validierungsfehler geändert haben
+    private validationErrorsChanged(eventArgs: ValidationErrorsChangedEventArgs): void {
+        this.hasValidationErrors = eventArgs.entity.entityAspect.hasValidationErrors;
+        this.validationErrors = eventArgs.entity.entityAspect.getValidationErrors();
+        this.checkEnabledState();
+    }
+
+    //Deregistrieren der Event-Handler
+    protected unsubscribeEvents(): void {
+        this.itemToEdit.entityAspect.propertyChanged.unsubscribe(this.keySubscribePropertyChanged);
+        this.itemToEdit.entityAspect.validationErrorsChanged.unsubscribe(this.keySubscribeErrorsChanged);
+    }
+
+    //Muss von der Kind-Klasse überschrieben werden um
+    //die Aktionen zum Speichern der Daten auszuführen
+    //(Ist abstract und muss überschrieben werden)
+    protected abstract async saveChanges(): Promise<void>;
+
+    //Muss von der Kind-Klasse überschrieben werden um
+    //die Aktionen zum Abbrechen des Editiermodus auszuführen
+    //(Ist abstract und muss überschrieben werden)
+    protected abstract cancelChanges(): void;
+}
+
+export abstract class ViewModelEditNormal extends ViewModelEdit {
+    //Members
+    service: ServiceModelStammdatenEditNormal;
+
+    //C'tor
+    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, routeForList: string, 
+                router: AppRouter, service: ServiceModelStammdatenEditNormal) {
+        //Aufrufen des Konstruktors für die Vater Klasse
+        super(localize, aggregator, dialog, routeForList, router);
+
+        //Übernehmen der Parameter
+        this.service = service;
+    }
+
+    //Liefert zurück ob der Service aktuell ausstehende Änderungen hat
+    protected hasChanges(): boolean {
+        return this.service.hasChanges();
+    }
+
+    //Verwerfen der Änderungen im Service
+    protected rejectChanges(): void {
+        //Verwerfen der Änderungen
+        this.service.rejectChanges();
+
+        //Die-Events deregistrieren
+        this.unsubscribeEvents();
+
+        //Benachrichtigung, dass die Änderungen zurückgenommen wurden
+        this.cancelChanges();
+    }
+
+    //Laden der Daten über den Service
+    protected async load(id: number, idFather?: number): Promise<any> {
+        //Deklaration
+        var ResultSet: any;
+
+        //Über Promise das Laden des zu editierenden Items anstoßen
+        ResultSet = await this.service.getItem(id);
+
+        //Übernehmen der Entity
+        this.itemToEdit = ResultSet[0];
+
+        //Verdrahten des Events für das Property-Changed Event
+        this.subscribePropertyChanged();
+
+        //Subscribe to Validation changed
+        this.subscribeToValidationChanged();
+
+        //Promise zurückmelden
+        return Promise.resolve(this.itemToEdit);
+    }
+
+    //Erstellt ein neues Item
+    protected async createNew(idFather?: number): Promise<any> {
+        //Übernehmen der Entity
+        this.itemToEdit = await this.service.createNew();
+
+        //Verdrahten des Events für das Property-Changed Event
+        this.subscribePropertyChanged();
+
+        //Subscribe to Validation changed
+        this.subscribeToValidationChanged();
+
+        //Promise zurückmelden
+        return Promise.resolve(this.itemToEdit);
+    }
 }

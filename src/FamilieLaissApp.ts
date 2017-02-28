@@ -207,7 +207,7 @@ export class FamilieLaissApp {
                                   {showNavigation: true, needAuthentication: false}, [], true );
         Item = this.menuItemList.addItem(this.loc.tr('Stammdaten.Text', {ns: 'Router'}), '', undefined, undefined, false, 
                                          undefined, undefined, {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'category', 'category', './stammdaten/category/category-list', true, 
+        Item.addChildItem(undefined, 'category', 'category', './Views/Stammdaten/Category/category-list', true, 
                           this.loc.tr('Stammdaten.Category', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
         Item.addChildItem(undefined, 'category/:id', 'categorywithid', './stammdaten/category/category-list', true, 
@@ -222,7 +222,7 @@ export class FamilieLaissApp {
         Item.addChildItem(undefined, 'album/:id', 'albumwithid', './Views/Stammdaten/Album/album-list', true, 
                           this.loc.tr('Stammdaten.Album', {ns: 'Router'}), 'albumwithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'albumedit/:operation/:id', 'albumedit', './stammdaten/album/album-edit', true, 
+        Item.addChildItem(undefined, 'albumedit/:operation/:id', 'albumedit', './Views/Stammdaten/Album/album-edit', true, 
                           this.loc.tr('Stammdaten.AlbumEdit', {ns: 'Router'}), 'albumedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
         Item.addChildItem(undefined, 'categoryvalue/:idFather', 'categoryvalue', './stammdaten/categoryvalue/categoryvalue-list', true, 

@@ -5,10 +5,10 @@ import 'bootstrap';
 @autoinject()
 export class BootstrapTooltip {
     //Members
-    element: HTMLElement;
+    element: Element;
 
     //C'tor
-    constructor(element: HTMLElement) {
+    constructor(element: Element) {
         //Übernehmen der Parameter
         this.element = element;
     }

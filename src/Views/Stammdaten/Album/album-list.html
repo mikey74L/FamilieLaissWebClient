@@ -1,4 +1,4 @@
-<template view-cache="*">
+<template>
     <require from="../../../CustomAttributes/bootstrap-tooltip"></require>
     <require from="../../../CustomAttributes/button-waves"></require>
 
@@ -21,11 +21,18 @@
             <!-- Card Body -->
             <div class="card-body card-padding">
                 <!-- Das Grid für die Alben ausgeben -->
-                <div>
-                    <div id="grouppanelAlbum">
-                    </div>
-                    <div id="gridAlbum" style="width:100%; height:400px;">
-                    </div>
+                <div style="height: 65vh">
+                    <ej-grid style="height: 100%" e-data-source.bind="entities" e-allow-filtering=true e-allow-grouping=true e-allow-sorting=true
+                             e-allow-multi-sorting=true e-allow-reordering=true e-allow-resizing=true
+                             e-enable-header-hover=true e-enable-row-hover=true e-filter-settings.bind="gridFilterSettings"
+                             e-group-settings.bind="gridGroupSettings" e-sort-settings.bind="gridSortSettings"
+                             e-edit-settings.bind="gridEditSettings" e-selection-settings.bind="gridSelectionSettings"
+                             e-selection-type="single" e-scroll-settings.bind="gridScrollSettings">
+                        <ej-column e-field="NameGerman" e-header-text="${ 'Media_Group.Name_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
+                        <ej-column e-field="NameEnglish" e-header-text="${ 'Media_Group.Name_English.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
+                        <ej-column e-field="DescriptionGerman" e-header-text="${ 'Media_Group.Description_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
+                        <ej-column e-field="DescriptionEnglish" e-header-text="${ 'Media_Group.Description_English.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
+                    </ej-grid>  
                 </div>
 
                 <!-- Buttons für Hinzufügen, Editieren und Löschen ausgeben -->

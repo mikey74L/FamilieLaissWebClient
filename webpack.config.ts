@@ -12,6 +12,7 @@ import * as aurelia from '@easy-webpack/config-aurelia';
 import * as typescript from '@easy-webpack/config-typescript';
 import * as html from '@easy-webpack/config-html';
 import * as css from '@easy-webpack/config-css';
+import * as less from '@easy-webpack/config-less';
 import * as fontAndImages from '@easy-webpack/config-fonts-and-images';
 import * as globalBluebird from '@easy-webpack/config-global-bluebird';
 import * as globalJquery from '@easy-webpack/config-global-jquery';
@@ -68,6 +69,9 @@ const coreBundles = {
     'aurelia-validation',
     'aurelia-animator-css',
     'aurelia-breeze'
+  ],
+  syncfusion: [
+    'aurelia-syncfusion-bridge'
   ]
 }
 
@@ -79,8 +83,9 @@ let config = generateConfig(
     entry: {
       'app': ['./src/main' /* this is filled by the aurelia-webpack-plugin */],
       'aurelia-bootstrap': coreBundles.bootstrap,
-      'aurelia': coreBundles.aurelia.filter(pkg => coreBundles.bootstrap.indexOf(pkg) === -1)
-    },
+      'aurelia': coreBundles.aurelia.filter(pkg => coreBundles.bootstrap.indexOf(pkg) === -1),
+      'aurelia-syncfusion-bridge': ['aurelia-syncfusion-bridge']
+  },
     output: {
       path: outDir,
     },
@@ -102,6 +107,7 @@ let config = generateConfig(
   typescript(ENV !== 'test' ? {} : { options: { doTypeCheck: false, sourceMap: false, inlineSourceMap: true, inlineSources: true } }),
   html(),
   css({ filename: 'styles.css', allChunks: true, sourceMap: false }),
+  less({ filename: 'stylesless.css', allChunks: true, sourceMap: false}),
   fontAndImages(),
   globalBluebird(),
   globalJquery(),
@@ -117,6 +123,26 @@ let config = generateConfig(
 
   ENV === 'production' ?
     uglify({debug: false, mangle: { except: ['cb', '__webpack_require__'] }}) : {}
+);
+
+config = generateConfig(
+  config,
+  {
+    resolve: {
+      modules: [
+        path.resolve('./node_modules/syncfusion-javascript/Scripts/ej'),
+        path.resolve('./node_modules/syncfusion-javascript/Scripts/ej/web')
+      ]
+    },
+    module:{
+      loaders : [
+        { 
+          test: /\.(cur)(\?\S*)?$/, 
+          loader: 'url?limit=100000&name=[name].[ext]'
+        }
+      ]
+    }
+  }
 );
 
 module.exports = stripMetadata(config);

@@ -1,0 +1,19 @@
+<template>
+    <require from="../CustomAttributes/autosize-textarea"></require>
+
+    <div class.bind="hasValidationError == false ? 'form-group fg-float' : 'form-group fg-float has-error'">
+        <div class.bind="toggled == true ? 'fg-line fg-toggled' : 'fg-line'">
+            <textarea 
+                   autosize-textarea
+                   data-autosize-on="true"
+                   class="form-control auto-size"
+                   style="overflow: hidden; word-wrap: break-word; height: 61px;"
+                   disabled.bind="isBusy"
+                   focus.trigger="elementGotFocus()"
+                   blur.trigger="elementLostFocus($event)"
+                   value.bind="value"></textarea>
+            <label class="fg-label" t.bind="labelText"></label>
+        </div>
+        <small class="help-block">${validationError}</small>
+    </div>
+</template>

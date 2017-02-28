@@ -3,11 +3,12 @@ import {Aurelia} from 'aurelia-framework';
 import {I18N} from 'aurelia-i18n';
 import XHR from 'i18next-xhr-backend';
 import LngDetector from 'i18next-browser-languagedetector';
+import 'aurelia-syncfusion-bridge';
 
 //Styles von Drittanbietern
 import 'sweetalert2/dist/sweetalert2.css';
 import 'toastr/build/toastr.css';
-import 'bootstrap-select/dist/css/bootstrap-select.css';
+//import 'bootstrap-select/dist/css/bootstrap-select.css';
 import 'animate.css/animate.css';
 import 'material-design-iconic-font/dist/css/material-design-iconic-font.css';
 
@@ -24,6 +25,9 @@ export async function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
     .developmentLogging()
+    .plugin('aurelia-syncfusion-bridge', syncfusion => {
+        syncfusion.ejGrid();
+    })
     .plugin('aurelia-breeze')
     .plugin('aurelia-animator-css')
     .plugin('aurelia-dialog')

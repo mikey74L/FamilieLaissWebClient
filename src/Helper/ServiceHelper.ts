@@ -38,12 +38,12 @@ export abstract class ServiceModel {
 
 export abstract class ServiceModelLoadData extends ServiceModel {
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
-    protected abstract async getData(): Promise<Array<any>>;
+    public abstract async getData(): Promise<Array<any>>;
 }
 
 export abstract class ServiceModelLoadDataDelete extends ServiceModelLoadData {
     //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
-    protected abstract async deleteItem(ID: number): Promise<void>;
+    public abstract async deleteItem(ID: number): Promise<void>;
 }
 
 export abstract class ServiceModelStammdaten extends ServiceModel {
@@ -64,29 +64,29 @@ export abstract class ServiceModelStammdatenNormal extends ServiceModelStammdate
 
 export abstract class ServiceModelStammdatenID extends ServiceModelStammdaten {
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
-    protected abstract async getData(ID: number): Promise<Array<any>>;
+    public abstract async getData(ID: number): Promise<Array<any>>;
 
     //Refresh Data from Server (Ist abstract und muss überschrieben werden)
-    protected abstract async refreshData(ID: number): Promise<Array<any>>;
+    public abstract async refreshData(ID: number): Promise<Array<any>>;
 }
 
 export abstract class ServiceModelStammdatenEdit extends ServiceModel {
     //Ermittelt die Daten zu einem bestimmten Item (Ist abstract und muss überschrieben werden)
-    protected abstract async getItem(ID: number): Promise<any>;
+    public abstract async getItem(ID: number): Promise<any>;
 
     //Speichern der Änderungen auf dem Server (Ist abstract und muss überschrieben werden)
-    protected abstract async saveChanges(): Promise<void>;
+    public abstract async saveChanges(): Promise<SaveResult>;
 }
 
 export abstract class ServiceModelStammdatenEditNormal extends ServiceModelStammdatenEdit {
     //Ein neues Item (Ist abstract und muss überschrieben werden)
-    protected abstract async createNew(): Promise<any>;
+    public abstract async createNew(): Promise<any>;
 }
 
 export abstract class ServiceModelStammdatenEditID extends ServiceModelStammdatenEdit {
     //Ein neues Item (Ist abstract und muss überschrieben werden)
-    protected abstract async createNew(idFather: number): Promise<any>;
+    public abstract async createNew(idFather: number): Promise<any>;
 
     //Ermittelt das Vater-Item (Ist abstract und muss überschrieben werden)
-    protected abstract async getFather(idFather: number): Promise<any>;
+    public abstract async getFather(idFather: number): Promise<any>;
 }

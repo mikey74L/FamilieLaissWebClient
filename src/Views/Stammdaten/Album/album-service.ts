@@ -1,4 +1,4 @@
-import { ServiceModelStammdatenNormal } from '../../../Helper/ServiceHelper'
+import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal } from '../../../Helper/ServiceHelper'
 import { EntityQuery, Entity, QueryResult, SaveResult } from 'breeze-client';
 
 export class AlbumService extends ServiceModelStammdatenNormal {
@@ -47,6 +47,45 @@ export class AlbumService extends ServiceModelStammdatenNormal {
         entityDelete.entityAspect.setDeleted();
 
         //Speichern der Änderungen
+        return this.manager.saveChanges();
+    }
+}
+
+export class AlbumServiceEdit extends ServiceModelStammdatenEditNormal {
+    //Ermittelt die Daten für ein einzelnes Album
+    //um dieses zu editieren
+    public async getItem(ID: number): Promise<any> {
+        //Query zusammenbauen
+        var query: EntityQuery = new EntityQuery()
+            .from('Media_Groups')
+            .where('ID', '==', ID);
+        
+        //Ermitteln des Entity-Manager
+        await this.getEntityManager();
+
+        //Query ausführen
+        var Result: Array<Entity> = this.manager.executeQueryLocally(query);
+        
+        //Promise zurückliefern
+        return Promise.resolve(Result);
+    }
+
+    //Erstellt ein neues Album im Entity-Manager
+    public async createNew(): Promise<any> {
+        //Ermitteln des Entity-Manager
+        await this.getEntityManager();
+
+        //Return-Value
+        var RetVal: any = this.manager.createEntity('MediaGroup');
+        RetVal.Typ = 0;
+
+        //Promise zurückliefern 
+        return Promise.resolve(RetVal);
+    }
+
+    //Speichert die Änderungen auf dem Server
+    public async saveChanges(): Promise<SaveResult> {
+        //Speichern der Änderungen mit einem Promise
         return this.manager.saveChanges();
     }
 }

@@ -53,7 +53,7 @@ export class EntityManagerFactory {
             await this.entityManagerFamilieLaiss.fetchMetadata();
 
             //Setzen der Display-Names für die Facet-Groups
-            var custType :any = this.entityManagerFamilieLaiss.metadataStore.getEntityType("Facet_Group");
+            var custType :any = this.entityManagerFamilieLaiss.metadataStore.getEntityType("FacetGroup");
             var dp: any = custType.getProperty("Type");
             dp.displayName = this.loc.tr('Facet_Group.Type.DisplayName', { ns: 'Metadata'});
             dp = custType.getProperty("NameGerman");
@@ -62,26 +62,26 @@ export class EntityManagerFactory {
             dp.displayName = this.loc.tr('Facet_Group.Name_English.DisplayName', { ns: 'Metadata'});
 
             //Setzen der Display-Names für die Facet-Values
-            custType = this.entityManagerFamilieLaiss.metadataStore.getEntityType("Facet_Value");
+            custType = this.entityManagerFamilieLaiss.metadataStore.getEntityType("FacetValue");
             dp = custType.getProperty("NameGerman");
             dp.displayName = this.loc.tr('Facet_Value.Name_German.DisplayName', { ns: 'Metadata'});
             dp = custType.getProperty("NameEnglish");
             dp.displayName = this.loc.tr('Facet_Value.Name_English.DisplayName', { ns: 'Metadata'});
 
             //Setzen der Display-Names für die Media-Groups
-            custType = this.entityManagerFamilieLaiss.metadataStore.getEntityType("Media_Group");
-            dp = custType.getProperty("Typ");
+            custType = this.entityManagerFamilieLaiss.metadataStore.getEntityType("MediaGroup");
+            dp = custType.getProperty("Type");
             dp.displayName = this.loc.tr('Media_Group.Typ.DisplayName', { ns: 'Metadata'});
-            dp = custType.getProperty("Name");
+            dp = custType.getProperty("NameGerman");
             dp.displayName = this.loc.tr('Media_Group.Name.DisplayName', { ns: 'Metadata'});
-            dp = custType.getProperty("Description");
+            dp = custType.getProperty("DescriptionGerman");
             dp.displayName = this.loc.tr('Media_Group.Description.DisplayName', { ns: 'Metadata'});
 
             //Setzen der Display-Names für die Media-Items
-            custType = this.entityManagerFamilieLaiss.metadataStore.getEntityType("Media_Item");
-            dp = custType.getProperty("Name");
+            custType = this.entityManagerFamilieLaiss.metadataStore.getEntityType("MediaItem");
+            dp = custType.getProperty("NameGerman");
             dp.displayName = this.loc.tr('Media_Item.Name.DisplayName', { ns: 'Metadata'});
-            dp = custType.getProperty("Description");
+            dp = custType.getProperty("DescriptionGerman");
             dp.displayName = this.loc.tr('Media_Item.Description.DisplayName', { ns: 'Metadata'});
 
             //Hinzufügen der Validierungsregeln für die Media-Items auf Entity-Level, da
@@ -96,7 +96,7 @@ export class EntityManagerFactory {
                     this.VideoItemValidationFunction, 
                     { messageTemplate: this.loc.tr('Validator.Custom.MediaItem.UploadVideo', null)}
             );
-            custType = this.entityManagerFamilieLaiss.metadataStore.getEntityType("Media_Item");
+            custType = this.entityManagerFamilieLaiss.metadataStore.getEntityType("MediaItem");
             custType.validators.push(PhotoItemValidator);
             custType.validators.push(VideoItemValidator);
         }

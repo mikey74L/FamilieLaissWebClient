@@ -1,3 +1,3 @@
 export class BreezeSettings {
-   static URLFamilieLaissBreezeAPI: string = 'http://localhost:50617/breeze/familielaiss';
+   static URLFamilieLaissBreezeAPI: string = 'http://localhost:51956/breeze/familielaiss';
 }

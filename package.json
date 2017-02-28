@@ -64,7 +64,10 @@
   "homepage": "https://github.com/aurelia/skeleton-navigation#readme",
   "aurelia": {
     "build": {
-      "resources": []
+      "resources": [
+        "aurelia-syncfusion-bridge/grid/grid",
+        "aurelia-syncfusion-bridge/grid/column"
+      ]
     }
   },
   "dependencies": {
@@ -84,6 +87,7 @@
     "aurelia-polyfills": "^1.1.1",
     "aurelia-route-recognizer": "^1.1.0",
     "aurelia-router": "^1.0.7",
+    "aurelia-syncfusion-bridge": "^0.5.0",
     "aurelia-templating-binding": "^1.1.0",
     "aurelia-templating-resources": "^1.2.0",
     "aurelia-templating-router": "^1.0.0",
@@ -102,6 +106,7 @@
     "moment": "^2.17.1",
     "node-waves": "^0.7.5",
     "sweetalert2": "^6.3.1",
+    "syncfusion-javascript": "^15.1.33",
     "toastr": "^2.1.2"
   },
   "devDependencies": {
@@ -118,6 +123,7 @@
     "@easy-webpack/config-global-jquery": "^2.1.0",
     "@easy-webpack/config-html": "^3.1.0",
     "@easy-webpack/config-json": "^3.1.0",
+    "@easy-webpack/config-less": "^3.0.0",
     "@easy-webpack/config-source-map-support": "^1.0.2",
     "@easy-webpack/config-test-coverage-istanbul": "^3.2.0",
     "@easy-webpack/config-typescript": "^5.0.0",
@@ -132,6 +138,7 @@
     "concurrently": "^3.1.0",
     "cross-env": "^3.1.3",
     "del-cli": "^0.2.0",
+    "file-loader": "^0.10.1",
     "http-server": "^0.9.0",
     "jasmine-core": "^2.5.2",
     "karma": "^1.3.0",
@@ -142,6 +149,7 @@
     "karma-remap-istanbul": "^0.2.1",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.8.0",
+    "less": "^2.7.2",
     "protractor": "^4.0.11",
     "ts-node": "^1.7.2",
     "typescript": "^2.1",

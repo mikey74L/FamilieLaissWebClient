@@ -5,10 +5,10 @@ import waves from 'node-waves';
 @autoinject()
 export class ButtonWaves {
     //Members
-    element: HTMLElement;
+    element: Element;
 
     //C'tor
-    constructor(element: HTMLElement) {
+    constructor(element: Element) {
         //Übernehmen der Parameter
         this.element = element;
     }

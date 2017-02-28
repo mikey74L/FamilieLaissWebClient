@@ -1,0 +1,102 @@
+<template>
+  <require from='../../../CustomControls/input-text'></require>
+  <require from='../../../CustomControls/input-textarea'></require>
+  <require from="../../../CustomAttributes/bootstrap-tooltip.ts"></require>
+  <require from="../../../CustomAttributes/button-waves"></require>
+  <require from="../../../Converter/number-to-string"></require>
+
+  <section class="au-animate">
+        <!-- Überschrift ausgeben -->
+        <div class="block-header">
+            <h2 t="Edit.Header" t-params.bind="locOptions"></h2>
+        </div>
+ 
+        <!-- Card ausgeben -->
+        <div class="card">
+            <!-- Card Header-->
+            <div class="card-header">
+                <h2>
+                    ${ 'Edit.Card.Header.Text' | t: { ns: 'StammAlbum', context: editMode } }
+                    <small>${ 'Edit.Card.Header.Description' | t: { ns: 'StammAlbum', context: editMode } }</small>
+                </h2>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body card-padding">
+                <!-- Validation-Summary ausgeben -->
+                <div class.bind="hasValidationErrors == true ? 'alert alert-danger' : 'alert alert-danger collapse'">
+                    <p repeat.for="validationError of validationErrors">${validationError.errorMessage}</p>
+                </div>
+
+                <!-- Das Formular ausgeben -->
+                <form class="card-form" submit.trigger="saveChanges()">
+                    <small t="Edit.Card.Body.Form.Labels.AlbumType" t-params.bind="locOptions"></small>
+                    <div style="margin-top:20px; margin-bottom:45px;">
+                        <label class="radio radio-inline m-r-20">
+                            <input id="rb_Photo" type="radio" name="AlbumType" value="0" checked.bind="itemToEdit.Type | numberToString">
+                            <i class="input-helper"></i>
+                            ${ 'Edit.Card.Body.Form.Radiobuttons.Photo' | t: {ns: 'StammAlbum'} }
+                        </label>
+                        <label class="radio radio-inline m-r-20">
+                            <input id="rb_Video" type="radio" name="AlbumType" value="1" checked.bind="itemToEdit.Type | numberToString">
+                            <i class="input-helper"></i>
+                            ${ 'Edit.Card.Body.Form.Radiobuttons.Video' | t: {ns: 'StammAlbum'} }
+                        </label>
+                    </div>
+
+                    <!-- Input für Name -->
+                    <input-text is-busy.bind="isBusy"
+                                entity.bind="itemToEdit"
+                                entity-property.bind="itemToEdit.entityType.getDataProperty('NameGerman')"
+                                label-text.bind="labelTextName"
+                                value.two-way="itemToEdit.NameGerman"></input-text>
+
+                    <!-- Line Break muss ausgeführt werden, da sonst die Eingabefelder
+                         zu dicht aufeinander hängen und der Floating-Effect für die
+                         Labels nicht richtig funktioniert
+                    -->
+                    <br />
+
+                    <!-- Input für Beschreibung -->
+                    <input-textarea is-busy.bind="isBusy"
+                                entity.bind="itemToEdit"
+                                entity-property.bind="itemToEdit.entityType.getDataProperty('DescriptionGerman')"
+                                label-text.bind="labelTextDescription"
+                                value.two-way="itemToEdit.DescriptionGerman"></input-textarea>
+
+                    <!-- Buttons ausgeben -->
+                    <button id="btnSubmit"
+                            type="submit"
+                            bootstrap-tooltip
+                            button-waves
+                            class="btn btn-primary btn-icon-text waves-effect"
+                            disabled.bind="!isSavingEnabled"
+                            data-toggle="tooltip"
+                            title=""
+                            data-original-title=""
+                            data-trigger="hover"
+                            t="[data-original-title]Edit.Card.Body.Form.Tooltips.Submit;[append]General.Buttons.Save"
+                            t-params.bind="locOptions">
+                        <i class="zmdi zmdi-floppy"></i>
+                    </button>
+                    <button id="btnCancel"
+                            type="button"
+                            bootstrap-tooltip
+                            button-waves
+                            class="btn btn-danger btn-icon-text waves-effect"
+                            disabled.bind="isBusy"
+                            click.trigger="cancelChanges()"
+                            style="margin-left: 10px;"
+                            data-toggle="tooltip"
+                            title=""
+                            data-original-title=""
+                            data-trigger="hover"
+                            t="[data-original-title]Edit.Card.Body.Form.Tooltips.Cancel;[append]General.Buttons.Cancel"
+                            t-params.bind="locOptions">
+                        <i class="zmdi zmdi-close"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+  </section>
+</template>
