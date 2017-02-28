@@ -12,10 +12,6 @@ export class AlbumEdit extends ViewModelEditNormal {
     //Objekt für i18n Namespace-Definition
     locOptions: any = { ns: ['StammAlbum', 'translation'] };
 
-    //Members
-    labelTextName: string;
-    labelTextDescription: string;
-
     //C'tor
     constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, router: AppRouter, service: AlbumServiceEdit) {
         //Aufrufen des Vaters
@@ -64,6 +60,9 @@ export class AlbumEdit extends ViewModelEditNormal {
           this.router.navigate(this.routeForList + "/" + MyEntity.ID);
         }
         catch (ex) {
+          //Ausblenden der Busy-Box
+          this.setBusyState(false);
+ 
           //Überprüfen ob Validierungsfehler anstehen. Wenn ja liegt das
           //fehlerhafte Speichern an den Validierungsfehlern und es muss nichts
           //weiter gemacht werden.

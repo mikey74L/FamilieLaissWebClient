@@ -5,7 +5,6 @@ import {Entity, DataProperty, ValidationError, ValidationErrorsChangedEventArgs}
 @containerless()
 export class InputTextarea {
     //Members
-    @bindable labelText: string;
     @bindable value: any;
     @bindable({
         changeHandler: 'entityChanged'
@@ -15,6 +14,7 @@ export class InputTextarea {
     }) entityProperty: DataProperty;
     @bindable isBusy: Boolean;
 
+    displayName: string;
     toggled: boolean;
     hasValidationError: boolean;
     validationError: string;
@@ -49,8 +49,9 @@ export class InputTextarea {
     }
 
     private propertyChanged(): void {
-        //Initiales auslesen des Validierungszustandes
+        //Initiales auslesen des Validierungszustandes aber nur wenn auch eine Property und eine Entity gesetzt wurde
         if (this.entityProperty != null && this.entity != null) {
+            //Auslesen der Validierungsfehler
             var _Errors: Array<ValidationError> = this.entity.entityAspect.getValidationErrors(this.entityProperty.name);
             if (_Errors.length > 0) {
                 this.hasValidationError = true;
@@ -60,6 +61,9 @@ export class InputTextarea {
                 this.hasValidationError = false;
                 this.validationError = "";
             }
+
+            //Setzen des DisplayNames
+            this.displayName = this.entityProperty.displayName;
         }
     }
 

@@ -33,22 +33,21 @@
                     <small t="Edit.Card.Body.Form.Labels.AlbumType" t-params.bind="locOptions"></small>
                     <div style="margin-top:20px; margin-bottom:45px;">
                         <label class="radio radio-inline m-r-20">
-                            <input id="rb_Photo" type="radio" name="AlbumType" value="0" checked.bind="itemToEdit.Type | numberToString">
+                            <input id="rb_Photo" type="radio" disabled.bind="isBusy" name="AlbumType" value="0" checked.bind="itemToEdit.Type | numberToString">
                             <i class="input-helper"></i>
                             ${ 'Edit.Card.Body.Form.Radiobuttons.Photo' | t: {ns: 'StammAlbum'} }
                         </label>
                         <label class="radio radio-inline m-r-20">
-                            <input id="rb_Video" type="radio" name="AlbumType" value="1" checked.bind="itemToEdit.Type | numberToString">
+                            <input id="rb_Video" type="radio" disabled.bind="isBusy" name="AlbumType" value="1" checked.bind="itemToEdit.Type | numberToString">
                             <i class="input-helper"></i>
                             ${ 'Edit.Card.Body.Form.Radiobuttons.Video' | t: {ns: 'StammAlbum'} }
                         </label>
                     </div>
 
-                    <!-- Input für Name -->
+                    <!-- Input für Name (Deutsch) -->
                     <input-text is-busy.bind="isBusy"
                                 entity.bind="itemToEdit"
                                 entity-property.bind="itemToEdit.entityType.getDataProperty('NameGerman')"
-                                label-text.bind="labelTextName"
                                 value.two-way="itemToEdit.NameGerman"></input-text>
 
                     <!-- Line Break muss ausgeführt werden, da sonst die Eingabefelder
@@ -57,12 +56,35 @@
                     -->
                     <br />
 
-                    <!-- Input für Beschreibung -->
+                    <!-- Input für Name (Englisch) -->
+                    <input-text is-busy.bind="isBusy"
+                                entity.bind="itemToEdit"
+                                entity-property.bind="itemToEdit.entityType.getDataProperty('NameEnglish')"
+                                value.two-way="itemToEdit.NameEnglish"></input-text>
+
+                    <!-- Line Break muss ausgeführt werden, da sonst die Eingabefelder
+                         zu dicht aufeinander hängen und der Floating-Effect für die
+                         Labels nicht richtig funktioniert
+                    -->
+                    <br />
+
+                    <!-- Input für Beschreibung (Deutsch) -->
                     <input-textarea is-busy.bind="isBusy"
                                 entity.bind="itemToEdit"
                                 entity-property.bind="itemToEdit.entityType.getDataProperty('DescriptionGerman')"
-                                label-text.bind="labelTextDescription"
                                 value.two-way="itemToEdit.DescriptionGerman"></input-textarea>
+
+                    <!-- Line Break muss ausgeführt werden, da sonst die Eingabefelder
+                         zu dicht aufeinander hängen und der Floating-Effect für die
+                         Labels nicht richtig funktioniert
+                    -->
+                    <br />
+
+                    <!-- Input für Beschreibung (Englisch) -->
+                    <input-textarea is-busy.bind="isBusy"
+                                entity.bind="itemToEdit"
+                                entity-property.bind="itemToEdit.entityType.getDataProperty('DescriptionEnglish')"
+                                value.two-way="itemToEdit.DescriptionEnglish"></input-textarea>
 
                     <!-- Buttons ausgeben -->
                     <button id="btnSubmit"
