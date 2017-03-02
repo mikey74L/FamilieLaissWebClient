@@ -22,12 +22,13 @@
             <div class="card-body card-padding">
                 <!-- Das Grid für die Alben ausgeben -->
                 <div style="height: 65vh">
-                    <ej-grid style="height: 100%" e-data-source.bind="entities" e-allow-filtering=true e-allow-grouping=true e-allow-sorting=true
+                    <ej-grid id="grid_Media_Group" style="height: 100%" e-data-source.bind="entities" e-allow-filtering=true e-allow-grouping=true e-allow-sorting=true
                              e-allow-multi-sorting=true e-allow-reordering=true e-allow-resizing=true
                              e-enable-header-hover=true e-enable-row-hover=true e-filter-settings.bind="gridFilterSettings"
                              e-group-settings.bind="gridGroupSettings" e-sort-settings.bind="gridSortSettings"
                              e-edit-settings.bind="gridEditSettings" e-selection-settings.bind="gridSelectionSettings"
-                             e-selection-type="single" e-scroll-settings.bind="gridScrollSettings">
+                             e-selection-type="single" 
+                             e-on-row-selected.trigger="rowHasBeenSelected($event.detail)">
                         <ej-column e-field="NameGerman" e-header-text="${ 'Media_Group.Name_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
                         <ej-column e-field="NameEnglish" e-header-text="${ 'Media_Group.Name_English.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
                         <ej-column e-field="DescriptionGerman" e-header-text="${ 'Media_Group.Description_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
@@ -47,7 +48,7 @@
                             data-original-title=""
                             data-trigger="hover"
                             class="btn btn-default btn-icon-text waves-effect"
-                            click.delegate="addNew()"
+                            click.trigger="addNew()"
                             t="[data-original-title]Liste.Card.Body.Tooltips.Add;[append]Grid.General.Buttons.Add"
                             t-params.bind="locOptions">
                         <i class="zmdi zmdi-plus"></i>
@@ -62,7 +63,7 @@
                             data-original-title=""
                             data-trigger="hover"
                             class="btn btn-default btn-icon-text waves-effect"
-                            click.delegate="editCurrent()"
+                            click.trigger="editCurrent()"
                             t="[data-original-title]Liste.Card.Body.Tooltips.Edit;[append]Grid.General.Buttons.Edit"
                             t-params.bind="locOptions">
                         <i class="zmdi zmdi-edit"></i>
@@ -77,7 +78,7 @@
                             data-original-title=""
                             data-trigger="hover"
                             class="btn btn-danger btn-icon-text waves-effect"
-                            click.delegate="deleteCurrent()"
+                            click.trigger="deleteCurrent()"
                             t="[data-original-title]Liste.Card.Body.Tooltips.Delete;[append]Grid.General.Buttons.Delete"
                             t-params.bind="locOptions">
                         <i class="zmdi zmdi-delete"></i>
@@ -92,7 +93,7 @@
                             data-original-title=""
                             data-trigger="hover"
                             class="btn btn-default btn-icon-text waves-effect"
-                            click.delegate="refreshGrid()"
+                            click.trigger="refreshGrid()"
                             t="[data-original-title]Grid.General.Tooltips.Refresh;[append]Grid.General.Buttons.Refresh"
                             t-params.bind="locOptions">
                         <i class="zmdi zmdi-refresh"></i>

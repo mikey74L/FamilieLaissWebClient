@@ -24,6 +24,7 @@ Bluebird.config({ warnings: false });
 export async function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
+    .globalResources('CustomControls/loading-indicator')
     .developmentLogging()
     .plugin('aurelia-syncfusion-bridge', syncfusion => {
         syncfusion.ejGrid();

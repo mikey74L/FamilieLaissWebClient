@@ -16,10 +16,6 @@ export class AlbumEdit extends ViewModelEditNormal {
     constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, router: AppRouter, service: AlbumServiceEdit) {
         //Aufrufen des Vaters
         super(localize, aggregator, dialog, "album", router, service);
-
-        //Setzen der Texte für die Label-Texte
-        this.labelTextName = this.loc.tr('Media_Group.Name.DisplayName', { ns: 'Metadata' });
-        this.labelTextDescription = this.loc.tr('Media_Group.Description.DisplayName', { ns: 'Metadata' });
     }
 
     //Überprüft den Enabled State
@@ -131,6 +127,11 @@ export class AlbumEdit extends ViewModelEditNormal {
     //Wird hier nicht benötigt
     protected attachedChild(): void {
       
+    }
+    
+    //Wird hier nicht benötigt
+    protected attachedChildTimeOut() : void 
+    {
     }
 
     //Wird hier nicht benötigt

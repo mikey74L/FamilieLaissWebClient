@@ -123,12 +123,23 @@ export abstract class ViewModelGeneralView extends ViewModelGeneral {
   public attached(): void {
     //Aufrufen der Attached Implementierung für die Kindklasse
     this.attachedChild();
+
+    //Aufrufen der zeitverzögerten Kindmethode
+    setTimeout(() => {
+      this.attachedChildTimeOut();
+    }, 500);
   }
 
   //Muss von der Kindklasse überschrieben werden um spezifische
   //Attached Implementierungen auszuführen
   //(Ist abstract und muss überschrieben werden)
   protected abstract attachedChild(): void
+
+  //Muss von der Kindklasse überschrieben werden um spezifische
+  //Attached Implementierungen auszuführen
+  //Diese Methode wird von Aurelia zeitverzögert ausgeführt
+  //(Ist abstract und muss überschrieben werden)
+  protected abstract attachedChildTimeOut(): void
 }
 
 export abstract class GridViewModelStammdaten extends ViewModelGeneralView {
@@ -141,8 +152,18 @@ export abstract class GridViewModelStammdaten extends ViewModelGeneralView {
   public isEditEnabled: boolean;
   public isDeleteEnabled: boolean;
   public isRefreshEnabled: boolean;
-  protected idToSelect: any;
+  protected IDToSelect: any;
+  protected selectedID: any;
   protected haveToSelectID: boolean;
+ 
+  //Members für das Grid
+  protected grid: ej.Grid;
+  protected gridFilterSettings: ej.Grid.FilterSettings;
+  protected gridGroupSettings: ej.Grid.GroupSettings;
+  protected gridSortSettings: ej.Grid.SortSettings;
+  protected gridEditSettings: ej.Grid.EditSettings;
+  protected gridSelectionSettings: ej.Grid.SelectionSettings;
+  protected gridScrollSettings: ej.Grid.ScrollSettings;
 
   //C'tor
   constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, routeForEdit: string, router: AppRouter) {

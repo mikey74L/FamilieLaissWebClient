@@ -57,7 +57,7 @@ export class AlbumServiceEdit extends ServiceModelStammdatenEditNormal {
     public async getItem(ID: number): Promise<any> {
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
-            .from('Media_Groups')
+            .from('MediaGroups')
             .where('ID', '==', ID);
         
         //Ermitteln des Entity-Manager

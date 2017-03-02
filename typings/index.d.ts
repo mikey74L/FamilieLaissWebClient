@@ -3,3 +3,4 @@
 /// <reference path="globals/i18next-xhr-backend/index.d.ts" />
 /// <reference path="globals/jquery/index.d.ts" />
 /// <reference path="globals/toastr/index.d.ts" />
+/// <reference path="globals/syncfusion/ej.web.all.d.ts" />

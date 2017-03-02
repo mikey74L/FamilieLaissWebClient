@@ -106,6 +106,7 @@
     "material-design-iconic-font": "^2.2.0",
     "moment": "^2.17.1",
     "node-waves": "^0.7.5",
+    "nprogress": "^0.2.0",
     "sweetalert2": "^6.3.1",
     "syncfusion-javascript": "^15.1.33",
     "toastr": "^2.1.2"

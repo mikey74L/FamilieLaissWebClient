@@ -6,6 +6,7 @@ import {RouterConfiguration, Router, AppRouter} from 'aurelia-router';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {MenuItemList, MenuItemModel} from './Models/MenuItemModel';
 import {inject, NewInstance} from 'aurelia-dependency-injection';
+import { ShowBusyBoxEvent } from './Events/ShowBusyBoxEvent';
 
 @inject(I18N, EventAggregator, AppRouter)
 export class FamilieLaissApp {
@@ -52,15 +53,15 @@ export class FamilieLaissApp {
         this.aggregator = aggregator;
         this.appRouter = router;
 
-    	//Deklaration
-		var layoutStatus;
+      	//Deklaration
+        var layoutStatus;
 
         //Initialisieren bestimmter Properties
-		this.showNavigation = true;
-		this.dropdownSettingsVisible = false;
-		this.dropdownMessagePrio1Visible = false;
-		this.dropdownMessagePrio2Visible = false;
-		this.dropdownMessagePrio3Visible = false;
+		    this.showNavigation = true;
+		    this.dropdownSettingsVisible = false;
+		    this.dropdownMessagePrio1Visible = false;
+		    this.dropdownMessagePrio2Visible = false;
+		    this.dropdownMessagePrio3Visible = false;
         this.isBusy = false;
         this.countBusyIndicator = 0;
         this.menuItemList = new MenuItemList(this.authHelper);
@@ -79,30 +80,30 @@ export class FamilieLaissApp {
             this.currentSkin = 'blue';
         }
 
-		//Ermitteln des Status des Sidebars aus dem Local-Storage des Browsers
+		    //Ermitteln des Status des Sidebars aus dem Local-Storage des Browsers
         layoutStatus = localStorage.getItem('sidebar-status');
 
         //Je nach dem Status aus dem Local-Storage wird die Property gesetzt
         if (layoutStatus == 1) {
-			this.sidebarSwitched = true;
+			      this.sidebarSwitched = true;
 
             //Setzen der CSS-Klasse so dass die Sidebar angezeigt wird
             $('body').addClass('toggled sw-toggled');
         }
         else {
-			this.sidebarSwitched = false;
+			      this.sidebarSwitched = false;
         }     
         
         //Registrieren für das "ShowBusyBoxEvent"
-        // this.aggregator.subscribe(ShowBusyBoxMessage, message => {
-        //     //Anzeigen oder verbergen des Indicators
-        //     if (message.isVisible) {
-        //         this.showBusyIndicator();
-        //     }
-        //     else {
-        //         this.hideBusyIndicator();
-        //     }
-        // });
+        this.aggregator.subscribe(ShowBusyBoxEvent, message => {
+            //Anzeigen oder verbergen des Indicators
+            if (message.isVisible) {
+                this.showBusyIndicator();
+            }
+            else {
+                this.hideBusyIndicator();
+            }
+        });
 
         //Registrieren für das "ShowBusyBoxEvent"
         // this.aggregator.subscribe(UserInfoChangedEvent, message => {
@@ -150,28 +151,28 @@ export class FamilieLaissApp {
         // });
 
         //Registrieren für das Event vom Router wenn ein Routing stattfindet
-        // this.aggregator.subscribe("router:navigation:processing", message => {
-        //     //Den Busy-Indicator einblenden wenn das Routing startet
-        //     this.showBusyIndicator();
-        // });
+        this.aggregator.subscribe("router:navigation:processing", message => {
+            //Den Busy-Indicator einblenden wenn das Routing startet
+            this.showBusyIndicator();
+        });
 
         //Registrieren für das Event vom Router wenn ein Routing beendet ist
-        // this.aggregator.subscribe("router:navigation:complete", message => {
-        //     //Übernehmen ob die Navigation gerendert werden soll oder nicht anhand der aktuell ausgewählten Route
-        //     this.showNavigation = message.instruction.config.settings.showNavigation;
+        this.aggregator.subscribe("router:navigation:complete", message => {
+            //Übernehmen ob die Navigation gerendert werden soll oder nicht anhand der aktuell ausgewählten Route
+            this.showNavigation = message.instruction.config.settings.showNavigation;
 
-        //     //Wenn der Auth-Zustand aktiv ist dann muss die Hintergrundfarbe wegen dem Animate angepast werden
-        //     //dieses wird über das Hinzufügen der Klasse zum Body erreicht
-        //     if (!this.showNavigation) {
-        //         $('body').addClass('background-navigation');
-        //     }
-        //     else {
-        //         $('body').removeClass('background-navigation');
-        //     }
+            //Wenn der Auth-Zustand aktiv ist dann muss die Hintergrundfarbe wegen dem Animate angepast werden
+            //dieses wird über das Hinzufügen der Klasse zum Body erreicht
+            if (!this.showNavigation) {
+                $('body').addClass('background-navigation');
+            }
+            else {
+                $('body').removeClass('background-navigation');
+            }
 
-        //     //Den Busy-Indicator ausblenden wenn das Routing beendet ist
-        //     this.hideBusyIndicator();
-        // });   
+            //Den Busy-Indicator ausblenden wenn das Routing beendet ist
+            this.hideBusyIndicator();
+        });   
     }
 
     //Mit dieser Methode wird der Busy-Indicator eingeblendet
