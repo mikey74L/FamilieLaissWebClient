@@ -157,6 +157,7 @@ export abstract class GridViewModelStammdaten extends ViewModelGeneralView {
   protected haveToSelectID: boolean;
  
   //Members für das Grid
+  protected gridData: ej.DataManager;
   protected grid: ej.Grid;
   protected gridFilterSettings: ej.Grid.FilterSettings;
   protected gridGroupSettings: ej.Grid.GroupSettings;

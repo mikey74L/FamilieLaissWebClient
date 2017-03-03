@@ -211,6 +211,10 @@ declare module ej {
         processResponse(data: Object, ds: any, query: ej.Query, xhr: JQueryXHR, request?: Object, changes?: Changes): Object;
         convertToQueryString(req: any, query: ej.Query, dm: ej.DataManager): JQueryParam;
     }
+    
+    class ForeignKeyAdaptor {
+       constructor(ds: any, name: string);
+    }
 
     interface AdaptorOptions {
         from?: string;

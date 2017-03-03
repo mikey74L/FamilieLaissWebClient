@@ -9,11 +9,17 @@ import {AppRouter} from 'aurelia-router';
 import 'syncfusion-javascript/content/ej/web/ej.widgets.core.material.less';
 import 'syncfusion-javascript/content/ej/web/material/ej.theme.less';
 import * as $ from 'jquery';
+import { ForeignKeyData } from './../../../Models/ForeignKeyData';
+import swal from 'sweetalert2';
 
 @autoinject()
 export class AlbumList extends GridViewModelStammdatenNormal {
     //Objekt für i18n Namespace-Definition
     locOptions: any = { ns: ['StammAlbum', 'translation'] };
+    
+    //Deklaration für Lookup-Daten
+    private LookupData: Array<ForeignKeyData>;
+    private ForeignKeyAdaptorData: Array<any>;
 
     //C'tor
     constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, router: AppRouter, service: AlbumService) {
@@ -25,7 +31,7 @@ export class AlbumList extends GridViewModelStammdatenNormal {
 
         //Setzen der Grouping-Optionen für das Grid
         // this.gridGroupSettings = { groupedColumns: ["ShipCountry"], showToggleButton: true, showGroupedColumn: false };
-        this.gridGroupSettings = { showToggleButton: true, showGroupedColumn: false };
+        this.gridGroupSettings = { groupedColumns: ["Type_DisplayName"], showToggleButton: true, showGroupedColumn: false };
 
         //Setzen der Sortier-Optionen für das Grid
         this.gridSortSettings = { sortedColumns: [{ field: "NameGerman", direction: "ascending" }]};
@@ -35,11 +41,36 @@ export class AlbumList extends GridViewModelStammdatenNormal {
 
         //Setzen der Selection-Optionen für das Grid
         this.gridSelectionSettings = { selectionMode: ["row"] };
+
+        //Setzen der Scroll-Settings für das Grid
+        this.gridScrollSettings = { width: 800, height: 400 };
+        
+        //Zusammenstellen der Foreign-Data für die Typen
+        this.LookupData = [];
+        this.LookupData.push(new ForeignKeyData(0, this.loc.tr('Media_Group.Type.0', { ns: 'Datamappings' })));
+        this.LookupData.push(new ForeignKeyData(1, this.loc.tr('Media_Group.Type.1', { ns: 'Datamappings' })));
+
+        //Zusammenstellen der Daten für den ForeignKeyAdaptor
+        this.ForeignKeyAdaptorData = [
+            {
+                dataSource: this.LookupData, 
+                field: "Type",            
+                foreignKeyField: "ID", 
+                foreignKeyValue: "DisplayName"
+            }
+        ];
     }
 
     //Wird hier nicht benötigt
     protected attachedChild(): void {
-    }
+         //Initialisieren der Daten für das Grid. Hier werden die eigentlichen Entities aus Breeze
+         //mit den Lookupdaten für die Typen zusammengeführt
+         this.gridData = new ej.DataManager(
+           {
+             json: this.entities, 
+             adaptor: new ej.ForeignKeyAdaptor(this.ForeignKeyAdaptorData, 'JsonAdaptor')
+           });
+   }
 
     //Wird von Aurelia zeitverzögert aufgerufen wenn die View zum DOM hinzugefügt wird
     protected attachedChildTimeOut() : void 
@@ -88,18 +119,27 @@ export class AlbumList extends GridViewModelStammdatenNormal {
         if (args.rowIndex != undefined && args.rowIndex >= 0) {
             //Die aktuelle Zeilenhöhe des Grids ermitteln
             var rowHeight: number = this.grid.getRowHeight();
-
+            
             //Den Scroller für die Y-Achse des Grids auf den entsprechenden
             //Wert setzen, so dass die selektierte Zeile angezeigt wird
-            try
-            {
-                this.grid.getScrollObject().scrollY(rowHeight * args.rowIndex, true, 1);
-            }
-            catch (ex)
-            {
-                //Wenn hier eine Exception auftaucht dann ist der Scroller nicht initialisiert,
-                //da das Grid aktuell keinen Braucht wegen der zu geringen Anzahl an Items
-            }
+            // try
+            // {
+            //     var Scroller: ej.Scroller = this.grid.getScrollObject();
+            //     var Height: any = Scroller.model.height;
+            //     var ScrollPosition: number = rowHeight / 10 * args.rowIndex;
+            //     if (ScrollPosition > Height)
+            //     {
+            //         this.grid.getScrollObject().scrollY(Height, true, 1);
+            //     }
+            //     else {
+            //         this.grid.getScrollObject().scrollY(ScrollPosition, true, 1);
+            //     }
+            // }
+            // catch (ex)
+            // {
+            //     //Wenn hier eine Exception auftaucht dann ist der Scroller nicht initialisiert,
+            //     //da das Grid aktuell keinen Braucht wegen der zu geringen Anzahl an Items
+            // }
 
             //Setzen des Flags
             this.selectedID = args.data.ID;
@@ -171,5 +211,96 @@ export class AlbumList extends GridViewModelStammdatenNormal {
     public editCurrent(): void {
         //Es muss zur Seite mit dem Editieren einer Kategorie gesprungen werden
         this.router.navigate(this.routeForEdit + "/edit/" + this.selectedID);
+    }
+
+    //Das aktuell selektierte Album editieren (Wird vom Delete-Button aufgerufen)
+    public async deleteCurrent(): Promise<void> {
+        try
+        {
+            //Ausgeben einer Sicherheitsabfrage ob wirklich gelöscht werden soll
+            await swal(
+                {
+                    titleText: this.loc.tr('Delete.Media_Group.Header', { ns: 'Alerts' }),
+                    text: this.loc.tr('Delete.Media_Group.Body', { ns: 'Alerts' }),
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: this.loc.tr('Delete.Media_Group.Confirm_Button', { ns: 'Alerts' }),
+                    cancelButtonText: this.loc.tr('Delete.Media_Group.Cancel_Button', { ns: 'Alerts' }),
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+             });
+      
+             //Einblenden der Busy-Box
+             this.setBusyState(true);
+
+             try
+             {
+                 //Löschen des Items über den Service
+                 await this.service.deleteItem(this.selectedID);
+
+                 //Das selektierte Item zurücksetzen
+                 this.isItemSelected = false;
+
+                 //Aktualisieren der Daten
+                 this.entities = await this.service.getData()
+
+                 //Aktualisieren des Grids nach dem die Daten neu ermittelt wurden
+                 this.gridData = new ej.DataManager(
+                 {
+                     json: this.entities, 
+                     adaptor: new ej.ForeignKeyAdaptor(this.ForeignKeyAdaptorData, 'JsonAdaptor')
+                 });
+
+                 //Selektion im Grid bestimmen
+                 this.selectItem();
+
+                 //Ausblenden der Busy-Box
+                 this.setBusyState(false);
+ 
+                 //Enabled-State aktualisieren
+                 this.checkEnabledState();
+
+                 //Ausgeben einer Erfolgsmeldung
+                 this.showNotifySuccess(this.loc.tr('Album.Delete.Success', { ns: 'Toasts' }));
+             }
+             catch (ex)
+             {
+                 //Ausblenden der Busy-Box
+                 this.setBusyState(false);
+
+                 //Zurücknehmen der Änderungen (Delete-State)
+                 this.service.rejectChanges();
+
+                 //Ausgeben einer Fehlermeldung
+                 this.showNotifyError(this.loc.tr('Album.Delete.Error', { ns: 'Toasts' }));
+             }
+        }
+        catch (ex)
+        {
+            //Die Sicherheitsabfrage wurde mit "Nein" beantwortet. Es muss nichts gemacht werden
+        }
+    }
+
+    //Das Grid mit neuen Daten vom Server aktualisieren
+    public async refreshGrid(): Promise<void> {
+        //Busy-State setzen
+        this.setBusyState(true);
+
+        //Aktualisieren der Daten
+        this.entities = await this.service.refreshData();
+
+        //Aktualisieren des Grids nach dem die Daten neu ermittelt wurden
+        this.gridData = new ej.DataManager(
+        {
+            json: this.entities, 
+            adaptor: new ej.ForeignKeyAdaptor(this.ForeignKeyAdaptorData, 'JsonAdaptor')
+        });
+
+        //Selektieren des gewünschten Items
+        this.selectItem();
+
+        //Busy-State zurücksetzen
+        this.setBusyState(false);
     }
 }

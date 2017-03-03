@@ -7,7 +7,6 @@ import 'aurelia-syncfusion-bridge';
 
 //Styles von Drittanbietern
 import 'sweetalert2/dist/sweetalert2.css';
-import 'toastr/build/toastr.css';
 //import 'bootstrap-select/dist/css/bootstrap-select.css';
 import 'animate.css/animate.css';
 import 'material-design-iconic-font/dist/css/material-design-iconic-font.css';
