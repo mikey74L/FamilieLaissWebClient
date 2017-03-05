@@ -1,4 +1,5 @@
 import { EntityManagerFactory } from './EntityManagerFactory';
+import { LoadDataWithFatherModel } from '../Models/LoadDataWithFatherModel'
 import {EntityManager, SaveResult} from 'breeze-client';
 import {autoinject} from 'aurelia-dependency-injection';
 
@@ -64,10 +65,10 @@ export abstract class ServiceModelStammdatenNormal extends ServiceModelStammdate
 
 export abstract class ServiceModelStammdatenID extends ServiceModelStammdaten {
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
-    public abstract async getData(ID: number): Promise<Array<any>>;
+    public abstract async getData(ID: number): Promise<LoadDataWithFatherModel>;
 
     //Refresh Data from Server (Ist abstract und muss überschrieben werden)
-    public abstract async refreshData(ID: number): Promise<Array<any>>;
+    public abstract async refreshData(ID: number): Promise<LoadDataWithFatherModel>;
 }
 
 export abstract class ServiceModelStammdatenEdit extends ServiceModel {

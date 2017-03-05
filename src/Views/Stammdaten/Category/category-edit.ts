@@ -1,5 +1,5 @@
 import { ViewModelEditNormal} from '../../../Helper/ViewModelHelper';
-import { AlbumServiceEdit } from './album-service';
+import { CategoryServiceEdit } from './category-service';
 import {I18N} from 'aurelia-i18n';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {DialogService} from 'aurelia-dialog';
@@ -8,14 +8,14 @@ import {autoinject} from 'aurelia-dependency-injection';
 import swal from 'sweetalert2';
 
 @autoinject()
-export class AlbumEdit extends ViewModelEditNormal {
+export class CategoryEdit extends ViewModelEditNormal {
     //Objekt für i18n Namespace-Definition
-    locConfig: any = { ns: ['StammAlbum', 'translation'] };
+    locConfig: any = { ns: ['StammCategory', 'translation'] };
 
     //C'tor
-    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, router: AppRouter, service: AlbumServiceEdit) {
+    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, router: AppRouter, service: CategoryServiceEdit) {
         //Aufrufen des Vaters
-        super(localize, aggregator, dialog, "album", router, service);
+        super(localize, aggregator, dialog, "category", router, service);
     }
 
     //Überprüft den Enabled State
@@ -46,12 +46,12 @@ export class AlbumEdit extends ViewModelEditNormal {
           this.setBusyState(false);
 
           //Ausgeben einer Erfolgsmeldung
-          this.showNotifySuccess(this.loc.tr('Album.Save.Success', { ns: 'Toasts' }));
+          this.showNotifySuccess(this.loc.tr('Category.Save.Success', { ns: 'Toasts' }));
 
           //Die Event-Handler deregistrieren
           this.unsubscribeEvents();
 
-          //Zurück zur Liste der Alben springen
+          //Zurück zur Liste der Kategorien springen
           var MyEntity: any = this.itemToEdit;
           this.router.navigate(this.routeForList + "/" + MyEntity.ID);
         }
@@ -65,7 +65,7 @@ export class AlbumEdit extends ViewModelEditNormal {
           //Wenn nicht muss eine entsprechende Fehlermeldung angezeigt werden,
           //dass das Speichern nicht funktioniert hat
           if (!this.itemToEdit.entityAspect.hasValidationErrors) {
-            this.showNotifyError(this.loc.tr('Album.Save.Error', { ns: 'Toasts' }));
+            this.showNotifyError(this.loc.tr('Category.Save.Error', { ns: 'Toasts' }));
           }
         }
     }
@@ -76,12 +76,12 @@ export class AlbumEdit extends ViewModelEditNormal {
         this.service.rejectChanges();
                 
         //Benachrichtigung ausgeben
-        this.showNotifyInfo(this.loc.tr('Album.Cancel.Success', { ns: 'Toasts', context: this.editMode }));
+        this.showNotifyInfo(this.loc.tr('Category.Cancel.Success', { ns: 'Toasts', context: this.editMode }));
 
         //Die Event-Handler deregistrieren
         this.unsubscribeEvents();
 
-        //Zurückkehren zur Liste der Alben
+        //Zurückkehren zur Liste der Kategorien
         if (this.editMode == "edit") {
             var MyEntity: any = this.itemToEdit;
             this.router.navigate(this.routeForList + "/" + MyEntity.ID);

@@ -8,7 +8,7 @@
   <section class="au-animate">
         <!-- Überschrift ausgeben -->
         <div class="block-header">
-            <h2 t="Edit.Header" t-params.bind="locOptions"></h2>
+            <h2 t="Edit.Header" t-params.bind="locConfig"></h2>
         </div>
  
         <!-- Card ausgeben -->
@@ -98,7 +98,7 @@
                             data-original-title=""
                             data-trigger="hover"
                             t="[data-original-title]Edit.Card.Body.Form.Tooltips.Submit;[append]General.Buttons.Save"
-                            t-params.bind="locOptions">
+                            t-params.bind="locConfig">
                         <i class="zmdi zmdi-floppy"></i>
                     </button>
                     <button id="btnCancel"
@@ -114,7 +114,7 @@
                             data-original-title=""
                             data-trigger="hover"
                             t="[data-original-title]Edit.Card.Body.Form.Tooltips.Cancel;[append]General.Buttons.Cancel"
-                            t-params.bind="locOptions">
+                            t-params.bind="locConfig">
                         <i class="zmdi zmdi-close"></i>
                     </button>
                 </form>

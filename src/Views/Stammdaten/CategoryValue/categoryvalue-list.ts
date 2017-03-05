@@ -1,6 +1,6 @@
 /// <reference path="../../../../typings/globals/syncfusion/ej.web.all.d.ts" />
-import {GridViewModelStammdatenNormal} from '../../../Helper/ViewModelHelper';
-import {CategoryService} from './category-service';
+import {GridViewModelStammdatenID} from '../../../Helper/ViewModelHelper';
+import {CategoryValueService} from './categoryvalue-service';
 import {I18N} from 'aurelia-i18n';
 import {autoinject} from 'aurelia-dependency-injection';
 import {EventAggregator} from 'aurelia-event-aggregator';
@@ -11,33 +11,26 @@ import 'syncfusion-javascript/content/ej/web/material/ej.theme.less';
 import * as $ from 'jquery';
 import { ForeignKeyData } from './../../../Models/ForeignKeyData';
 import swal from 'sweetalert2';
+import {LoadDataWithFatherModel} from '../../../Models/LoadDataWithFatherModel'
 
 @autoinject()
-export class CategoryList extends GridViewModelStammdatenNormal {
+export class CategoryValueList extends GridViewModelStammdatenID {
     //Objekt für i18n Namespace-Definition
-    locConfig: any = { ns: ['StammCategory', 'translation'] };
+    locConfig: any = { ns: ['StammCategoryValue', 'translation'] };
     
-    //Zusätzliche Member-Deklarationen
-    public isValuesEnabled: boolean;
-
-    //Deklaration für Lookup-Daten
-    private LookupData: Array<ForeignKeyData>;
-    private ForeignKeyAdaptorData: Array<any>;
-
     //C'tor
-    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, router: AppRouter, service: CategoryService) {
+    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, router: AppRouter, service: CategoryValueService) {
         //Aufrufen des C'tor des Vaters
-        super(localize, aggregator, dialog, 'categoryedit', router, service)
+        super(localize, aggregator, dialog, 'categoryvalueedit', 'category', router, service)
         
         //Setzen der Filteroptionen für das Grid
         this.gridFilterSettings = { filterType : "excel"};
 
         //Setzen der Grouping-Optionen für das Grid
-        // this.gridGroupSettings = { groupedColumns: ["ShipCountry"], showToggleButton: true, showGroupedColumn: false };
-        this.gridGroupSettings = { groupedColumns: ["Type_DisplayName"], showToggleButton: true, showGroupedColumn: false };
+        this.gridGroupSettings = { showToggleButton: true, showGroupedColumn: false };
 
         //Setzen der Sortier-Optionen für das Grid
-        this.gridSortSettings = { sortedColumns: [{ field: "Type_DisplayName", direction: "ascending" }, { field: "NameGerman", direction: "ascending" }]};
+        this.gridSortSettings = { sortedColumns: [{ field: "NameGerman", direction: "ascending" }]};
 
         //Setzen der Editier-Optionen für das Grid
         this.gridEditSettings = { allowEditing: false };
@@ -47,40 +40,17 @@ export class CategoryList extends GridViewModelStammdatenNormal {
 
         //Setzen der Scroll-Settings für das Grid
         this.gridScrollSettings = { width: '100%', height: 400 };
-        
-        //Zusammenstellen der Foreign-Data für die Typen
-        this.LookupData = [];
-        this.LookupData.push(new ForeignKeyData(0, this.loc.tr('Facet_Group.Type.0', { ns: 'Datamappings' })));
-        this.LookupData.push(new ForeignKeyData(1, this.loc.tr('Facet_Group.Type.1', { ns: 'Datamappings' })));
-        this.LookupData.push(new ForeignKeyData(2, this.loc.tr('Facet_Group.Type.2', { ns: 'Datamappings' })));
-
-        //Zusammenstellen der Daten für den ForeignKeyAdaptor
-        this.ForeignKeyAdaptorData = [
-            {
-                dataSource: this.LookupData, 
-                field: "Type",            
-                foreignKeyField: "ID", 
-                foreignKeyValue: "DisplayName"
-            }
-        ];
     }
 
     //Wird von Aurelia aufgerufen
     protected attachedChild(): void {
-         //Initialisieren der Daten für das Grid. Hier werden die eigentlichen Entities aus Breeze
-         //mit den Lookupdaten für die Typen zusammengeführt
-         this.gridData = new ej.DataManager(
-           {
-             json: this.entities, 
-             adaptor: new ej.ForeignKeyAdaptor(this.ForeignKeyAdaptorData, 'JsonAdaptor')
-           });
-   }
+    }
 
     //Wird von Aurelia zeitverzögert aufgerufen wenn die View zum DOM hinzugefügt wird
     protected attachedChildTimeOut() : void 
     {
         //Ermitteln der Grid-Instanz
-        this.grid = $("#grid_Category").data("ejGrid");
+        this.grid = $("#grid_CategoryValue").data("ejGrid");
 
         //Selektieren des gewünschten Items
         this.selectItem();
@@ -181,21 +151,20 @@ export class CategoryList extends GridViewModelStammdatenNormal {
             this.isDeleteEnabled = false;
             this.isEditEnabled = false;
             this.isRefreshEnabled = false;
-            this.isValuesEnabled = false;
+            this.isBackEnabled = false;
         }
         else {
             //Aktivieren der Buttons
             this.isAddEnabled = true;
             this.isRefreshEnabled = true;
+            this.isBackEnabled = true;
             if (this.isItemSelected) {
                 this.isEditEnabled = true;
                 this.isDeleteEnabled = true;
-                this.isValuesEnabled = true;
             }
             else {
                 this.isEditEnabled = false;
                 this.isDeleteEnabled = false;
-                this.isValuesEnabled = false;
             }
         }
     }
@@ -208,20 +177,19 @@ export class CategoryList extends GridViewModelStammdatenNormal {
     //Eine neue Kategorie hinzufügen (Wird vom Add-Button aufgerufen)
     public addNew(): void {
         //Es muss zur Edit-Seite gesprungen werden
-        this.router.navigate(this.routeForEdit + "/new/0");
+        this.router.navigate(this.routeForEdit + "/new/" + this.fatherItem.ID + "/0");
     }
 
     //Die aktuell selektierte Kategorie editieren (Wird vom Edit-Button aufgerufen)
     public editCurrent(): void {
         //Es muss zur Edit-Seite gesprungen werden
-        this.router.navigate(this.routeForEdit + "/edit/" + this.selectedID);
+        this.router.navigate(this.routeForEdit + "/edit/" + this.fatherItem.ID + "/" + this.selectedID);
     }
 
-    //Die Seite mit der Liste der Kategoriewerte für die selektierte Kategorie
-    //anzeigen (Wird vom Button aufgerufen)
-    public showValues(): void {
-        //Es muss zur Seite mit den Kategoriewerten gesprungen werden
-        this.router.navigate('categoryvalue/' + this.selectedID);
+    //Zurück zur Liste der Kategorien springen welches die Vater View darstellt
+    //(Wird vom Go-Back-Button aufgerufen)
+    public goBack(): void {
+        this.router.navigate(this.routeFather + "/" + this.fatherItem.ID);
     }
 
     //Die aktuell selektierte Kategorie löschen (Wird vom Delete-Button aufgerufen)
@@ -231,13 +199,13 @@ export class CategoryList extends GridViewModelStammdatenNormal {
             //Ausgeben einer Sicherheitsabfrage ob wirklich gelöscht werden soll
             await swal(
                 {
-                    titleText: this.loc.tr('Delete.Facet_Group.Header', { ns: 'Alerts' }),
-                    text: this.loc.tr('Delete.Facet_Group.Body', { ns: 'Alerts' }),
+                    titleText: this.loc.tr('Delete.Facet_Value.Header', { ns: 'Alerts' }),
+                    text: this.loc.tr('Delete.Facet_Value.Body', { ns: 'Alerts' }),
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#DD6B55',
-                    confirmButtonText: this.loc.tr('Delete.Facet_Group.Confirm_Button', { ns: 'Alerts' }),
-                    cancelButtonText: this.loc.tr('Delete.Facet_Group.Cancel_Button', { ns: 'Alerts' }),
+                    confirmButtonText: this.loc.tr('Delete.Facet_Value.Confirm_Button', { ns: 'Alerts' }),
+                    cancelButtonText: this.loc.tr('Delete.Facet_Value.Cancel_Button', { ns: 'Alerts' }),
                     allowOutsideClick: false,
                     allowEscapeKey: false
              });
@@ -254,14 +222,8 @@ export class CategoryList extends GridViewModelStammdatenNormal {
                  this.isItemSelected = false;
 
                  //Aktualisieren der Daten
-                 this.entities = await this.service.getData()
-
-                 //Aktualisieren des Grids nach dem die Daten neu ermittelt wurden
-                 this.gridData = new ej.DataManager(
-                 {
-                     json: this.entities, 
-                     adaptor: new ej.ForeignKeyAdaptor(this.ForeignKeyAdaptorData, 'JsonAdaptor')
-                 });
+                 var Result:LoadDataWithFatherModel = await this.service.getData(this.fatherItem.ID);
+                 this.entities = Result.entities;
 
                  //Selektion im Grid bestimmen
                  this.selectItem();
@@ -273,7 +235,7 @@ export class CategoryList extends GridViewModelStammdatenNormal {
                  this.checkEnabledState();
 
                  //Ausgeben einer Erfolgsmeldung
-                 this.showNotifySuccess(this.loc.tr('Category.Delete.Success', { ns: 'Toasts' }));
+                 this.showNotifySuccess(this.loc.tr('CategoryValue.Delete.Success', { ns: 'Toasts' }));
              }
              catch (ex)
              {
@@ -284,7 +246,7 @@ export class CategoryList extends GridViewModelStammdatenNormal {
                  this.service.rejectChanges();
 
                  //Ausgeben einer Fehlermeldung
-                 this.showNotifyError(this.loc.tr('Category.Delete.Success', { ns: 'Toasts' }));
+                 this.showNotifyError(this.loc.tr('CategoryValue.Delete.Success', { ns: 'Toasts' }));
              }
         }
         catch (ex)
@@ -299,14 +261,8 @@ export class CategoryList extends GridViewModelStammdatenNormal {
         this.setBusyState(true);
 
         //Aktualisieren der Daten
-        this.entities = await this.service.refreshData();
-
-        //Aktualisieren des Grids nach dem die Daten neu ermittelt wurden
-        this.gridData = new ej.DataManager(
-        {
-            json: this.entities, 
-            adaptor: new ej.ForeignKeyAdaptor(this.ForeignKeyAdaptorData, 'JsonAdaptor')
-        });
+        var Result: LoadDataWithFatherModel = await this.service.refreshData(this.fatherItem.ID);
+        this.entities = Result.entities;
 
         //Das selektierte Item zurücksetzen
         this.isItemSelected = false;

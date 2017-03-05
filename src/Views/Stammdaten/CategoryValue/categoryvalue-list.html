@@ -12,16 +12,17 @@
         <div class="card">
             <!-- Card Header-->
             <div class="card-header">
-                <h2>${ 'Liste.Card.Header.Text' | t: { ns: 'StammCategory' } }
-                <small>${ 'Liste.Card.Header.Description' | t: { ns: 'StammCategory' } }</small>
+                <h2>
+                    ${ 'Liste.Card.Header.Text' | t: { ns: 'StammCategoryValue', 'category' : fatherItem.NameGerman }}
+                    <small>${ 'Liste.Card.Header.Description' | t: { ns: 'StammCategoryValue'} }</small>
                 </h2>
             </div>
 
             <!-- Card Body -->
             <div class="card-body card-padding">
-                <!-- Das Grid für die Kategorien ausgeben -->
-                <div >
-                    <ej-grid id="grid_Category" e-data-source.bind="gridData" e-allow-filtering=true 
+                <!-- Das Grid für die Kategorie-Werte ausgeben -->
+                <div>
+                    <ej-grid id="grid_CategoryValue" e-data-source.bind="entities" e-allow-filtering=true 
                              e-allow-sorting=true e-allow-scrolling=true
                              e-allow-multi-sorting=true e-allow-reordering=true e-allow-resizing=true
                              e-enable-header-hover=true e-enable-row-hover=true e-filter-settings.bind="gridFilterSettings"
@@ -30,61 +31,15 @@
                              e-scroll-settings.bind="gridScrollSettings"
                              e-selection-type="single" e-enable-alt-row=false
                              e-on-row-selected.trigger="rowHasBeenSelected($event.detail)">
-                        <ej-column e-field="Type_DisplayName" e-width=180 e-header-text="${ 'Facet_Group.Type.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
-                        <ej-column e-field="NameGerman" e-width=300 e-header-text="${ 'Facet_Group.Name_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
-                        <ej-column e-field="NameEnglish" e-width=300 e-header-text="${ 'Facet_Group.Name_English.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
+                        <ej-column e-field="NameGerman" e-width=300 e-header-text="${ 'Facet_Value.Name_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
+                        <ej-column e-field="NameEnglish" e-width=300 e-header-text="${ 'Facet_Value.Name_English.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
                     </ej-grid>  
                 </div>
 
                 <!-- Buttons für Hinzufügen, Editieren und Löschen ausgeben -->
                 <div class="grid-buttons">
-                    <button id="buttonAdd" 
-                            disabled.bind="!isAddEnabled" 
-                            type="button" 
-                            bootstrap-tooltip
-                            button-waves
-                            data-toggle="tooltip" 
-                            title="" 
-                            data-original-title="" 
-                            data-trigger="hover"
-                            class="btn btn-default btn-icon-text waves-effect" 
-                            click.delegate="addNew()" 
-                            t="[data-original-title]Liste.Card.Body.Tooltips.Add;[append]Grid.General.Buttons.Add"
-                            t-params.bind="locConfig">
-                        <i class="zmdi zmdi-plus"></i>
-                    </button>
-                    <button id="buttonEdit" 
-                            disabled.bind="!isEditEnabled" 
-                            type="button" 
-                            bootstrap-tooltip
-                            button-waves
-                            data-toggle="tooltip" 
-                            title="" 
-                            data-original-title="" 
-                            data-trigger="hover"
-                            class="btn btn-default btn-icon-text waves-effect" 
-                            click.delegate="editCurrent()" 
-                            t="[data-original-title]Liste.Card.Body.Tooltips.Edit;[append]Grid.General.Buttons.Edit"
-                            t-params.bind="locConfig">
-                        <i class="zmdi zmdi-edit"></i>
-                    </button>
-                    <button id="buttonDelete" 
-                            disabled.bind="!isDeleteEnabled" 
-                            type="button" 
-                            bootstrap-tooltip
-                            button-waves
-                            data-toggle="tooltip" 
-                            title="" 
-                            data-original-title="" 
-                            data-trigger="hover"
-                            class="btn btn-danger btn-icon-text waves-effect"
-                            click.delegate="deleteCurrent()" 
-                            t="[data-original-title]Liste.Card.Body.Tooltips.Delete;[append]Grid.General.Buttons.Delete"
-                            t-params.bind="locConfig">
-                        <i class="zmdi zmdi-delete"></i>
-                    </button>
-                    <button id="buttonCategoryValue"
-                            disabled.bind="!isValuesEnabled"
+                    <button id="buttonAdd"
+                            disabled.bind="!isAddEnabled"
                             type="button"
                             bootstrap-tooltip
                             button-waves
@@ -93,21 +48,67 @@
                             data-original-title=""
                             data-trigger="hover"
                             class="btn btn-default btn-icon-text waves-effect"
-                            click.delegate="showValues()"
-                            t="[data-original-title]Liste.Card.Body.Tooltips.Values;[append]Liste.Card.Body.Buttons.Values"
+                            click.delegate="addNew()"
+                            t="[data-original-title]Liste.Card.Body.Tooltips.Add;[append]Grid.General.Buttons.Add"
                             t-params.bind="locConfig">
+                        <i class="zmdi zmdi-plus"></i>
                     </button>
-                    <button id="buttonRefresh" 
-                            disabled.bind="!isRefreshEnabled" 
-                            type="button" 
+                    <button id="buttonEdit"
+                            disabled.bind="!isEditEnabled"
+                            type="button"
                             bootstrap-tooltip
                             button-waves
-                            data-toggle="tooltip" 
-                            title="" 
-                            data-original-title="" 
+                            data-toggle="tooltip"
+                            title=""
+                            data-original-title=""
                             data-trigger="hover"
-                            class="btn btn-default btn-icon-text waves-effect" 
-                            click.delegate="refreshGrid()" 
+                            class="btn btn-default btn-icon-text waves-effect"
+                            click.delegate="editCurrent()"
+                            t="[data-original-title]Liste.Card.Body.Tooltips.Edit;[append]Grid.General.Buttons.Edit"
+                            t-params.bind="locConfig">
+                        <i class="zmdi zmdi-edit"></i>
+                    </button>
+                    <button id="buttonDelete"
+                            disabled.bind="!isDeleteEnabled"
+                            type="button"
+                            bootstrap-tooltip
+                            button-waves
+                            data-toggle="tooltip"
+                            title=""
+                            data-original-title=""
+                            data-trigger="hover"
+                            class="btn btn-danger btn-icon-text waves-effect"
+                            click.delegate="deleteCurrent()"
+                            t="[data-original-title]Liste.Card.Body.Tooltips.Delete;[append]Grid.General.Buttons.Delete"
+                            t-params.bind="locConfig">
+                        <i class="zmdi zmdi-delete"></i>
+                    </button>
+                    <button id="buttonBack"
+                            disabled.bind="!isBackEnabled"
+                            type="button"
+                            bootstrap-tooltip
+                            button-waves
+                            data-toggle="tooltip"
+                            title=""
+                            data-original-title=""
+                            data-trigger="hover"
+                            class="btn btn-default btn-icon-text waves-effect"
+                            click.delegate="goBack()"
+                            t="[data-original-title]Liste.Card.Body.Tooltips.Back;[append]Liste.Card.Body.Buttons.Back"
+                            t-params.bind="locConfig">
+                        <i class="zmdi zmdi-arrow-left"></i>
+                    </button>
+                    <button id="buttonRefresh"
+                            disabled.bind="!isRefreshEnabled"
+                            type="button"
+                            bootstrap-tooltip
+                            button-waves
+                            data-toggle="tooltip"
+                            title=""
+                            data-original-title=""
+                            data-trigger="hover"
+                            class="btn btn-default btn-icon-text waves-effect"
+                            click.delegate="refreshGrid()"
                             t="[data-original-title]Grid.General.Tooltips.Refresh;[append]Grid.General.Buttons.Refresh"
                             t-params.bind="locConfig">
                         <i class="zmdi zmdi-refresh"></i>

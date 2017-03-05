@@ -39,7 +39,7 @@
     }
   },
   "Media_Group": {
-    "Typ": {
+    "Type": {
       "DisplayName": "Albumtyp"
     },
     "Name_German": {

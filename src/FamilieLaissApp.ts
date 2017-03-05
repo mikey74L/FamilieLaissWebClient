@@ -211,12 +211,13 @@ export class FamilieLaissApp {
         Item.addChildItem(undefined, 'category', 'category', './Views/Stammdaten/Category/category-list', true, 
                           this.loc.tr('Stammdaten.Category', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'category/:id', 'categorywithid', './stammdaten/category/category-list', true, 
+        Item.addChildItem(undefined, 'category/:id', 'categorywithid', './Views/Stammdaten/Category/category-list', true, 
                           this.loc.tr('Stammdaten.Category', {ns: 'Router'}), 'categorywithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'categoryedit/:operation/:id', 'categoryedit', './stammdaten/category/category-edit', true, 
+        Item.addChildItem(undefined, 'categoryedit/:operation/:id', 'categoryedit', './Views/Stammdaten/Category/category-edit', true, 
                           this.loc.tr('Stammdaten.CategoryEdit', {ns: 'Router'}), 'categoryedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
+      
         Item.addChildItem(undefined, 'album', 'album', './Views/Stammdaten/Album/album-list', true, 
                           this.loc.tr('Stammdaten.Album', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
@@ -226,15 +227,17 @@ export class FamilieLaissApp {
         Item.addChildItem(undefined, 'albumedit/:operation/:id', 'albumedit', './Views/Stammdaten/Album/album-edit', true, 
                           this.loc.tr('Stammdaten.AlbumEdit', {ns: 'Router'}), 'albumedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'categoryvalue/:idFather', 'categoryvalue', './stammdaten/categoryvalue/categoryvalue-list', true, 
+   
+        Item.addChildItem(undefined, 'categoryvalue/:idFather', 'categoryvalue', './Views/Stammdaten/CategoryValue/categoryvalue-list', true, 
                           this.loc.tr('Stammdaten.CategoryValue', {ns: 'Router'}), 'categoryvalue', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'categoryvalue/:idFather/:id', 'categoryvaluewithid', './stammdaten/categoryvalue/categoryvalue-list', true, 
+        Item.addChildItem(undefined, 'categoryvalue/:idFather/:id', 'categoryvaluewithid', './Views/Stammdaten/CategoryValue/categoryvalue-list', true, 
                           this.loc.tr('Stammdaten.CategoryValue', {ns: 'Router'}), 'categoryvaluewithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'categoryvalueedit/:operation/:idFather/:id', 'categoryvalueedit', './stammdaten/categoryvalue/categoryvalue-edit', true, 
+        Item.addChildItem(undefined, 'categoryvalueedit/:operation/:idFather/:id', 'categoryvalueedit', './Views/Stammdaten/CategoryValue/categoryvalue-edit', true, 
                           this.loc.tr('Stammdaten.CategoryValueEdit', {ns: 'Router'}), 'categoryvalueedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
+     
         Item.addChildItem(undefined, 'pictureuploadlist', 'pictureuploadlist', './stammdaten/pictureupload/picture-upload-list', true, 
                           this.loc.tr('Stammdaten.PictureUploadList', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );

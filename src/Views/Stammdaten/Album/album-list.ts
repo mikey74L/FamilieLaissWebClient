@@ -15,7 +15,7 @@ import swal from 'sweetalert2';
 @autoinject()
 export class AlbumList extends GridViewModelStammdatenNormal {
     //Objekt für i18n Namespace-Definition
-    locOptions: any = { ns: ['StammAlbum', 'translation'] };
+    locConfig: any = { ns: ['StammAlbum', 'translation'] };
     
     //Deklaration für Lookup-Daten
     private LookupData: Array<ForeignKeyData>;
@@ -34,7 +34,7 @@ export class AlbumList extends GridViewModelStammdatenNormal {
         this.gridGroupSettings = { groupedColumns: ["Type_DisplayName"], showToggleButton: true, showGroupedColumn: false };
 
         //Setzen der Sortier-Optionen für das Grid
-        this.gridSortSettings = { sortedColumns: [{ field: "NameGerman", direction: "ascending" }]};
+        this.gridSortSettings = { sortedColumns: [{ field: "Type_DisplayName", direction: "ascending" }, { field: "NameGerman", direction: "ascending" }]};
 
         //Setzen der Editier-Optionen für das Grid
         this.gridEditSettings = { allowEditing: false };
@@ -43,7 +43,7 @@ export class AlbumList extends GridViewModelStammdatenNormal {
         this.gridSelectionSettings = { selectionMode: ["row"] };
 
         //Setzen der Scroll-Settings für das Grid
-        this.gridScrollSettings = { width: 800, height: 400 };
+        this.gridScrollSettings = { width: '100%', height: 400 };
         
         //Zusammenstellen der Foreign-Data für die Typen
         this.LookupData = [];
@@ -61,7 +61,7 @@ export class AlbumList extends GridViewModelStammdatenNormal {
         ];
     }
 
-    //Wird hier nicht benötigt
+    //Wird von Aurelia aufgerufen
     protected attachedChild(): void {
          //Initialisieren der Daten für das Grid. Hier werden die eigentlichen Entities aus Breeze
          //mit den Lookupdaten für die Typen zusammengeführt
@@ -78,10 +78,10 @@ export class AlbumList extends GridViewModelStammdatenNormal {
         //Ermitteln der Grid-Instanz
         this.grid = $("#grid_Media_Group").data("ejGrid");
 
-        // //Selektieren des gewünschten Items
+        //Selektieren des gewünschten Items
         this.selectItem();
 
-        // //Überprüfen des Enabled-State
+        //Überprüfen des Enabled-State
         this.checkEnabledState();
     }
 
@@ -107,6 +107,10 @@ export class AlbumList extends GridViewModelStammdatenNormal {
                   //Alten Modus wiederherstellen
                   this.grid.model.selectionType = OldMode;
 
+                  //Wenn die ID einmal selektiert wurde, dann ist dieses
+                  //für die zukünftigen Selektionen nicht mehr notwendig
+                  this.haveToSelectID = false;
+
                   //Schleife verlassen
                   break;
                 }
@@ -122,24 +126,17 @@ export class AlbumList extends GridViewModelStammdatenNormal {
             
             //Den Scroller für die Y-Achse des Grids auf den entsprechenden
             //Wert setzen, so dass die selektierte Zeile angezeigt wird
-            // try
-            // {
-            //     var Scroller: ej.Scroller = this.grid.getScrollObject();
-            //     var Height: any = Scroller.model.height;
-            //     var ScrollPosition: number = rowHeight / 10 * args.rowIndex;
-            //     if (ScrollPosition > Height)
-            //     {
-            //         this.grid.getScrollObject().scrollY(Height, true, 1);
-            //     }
-            //     else {
-            //         this.grid.getScrollObject().scrollY(ScrollPosition, true, 1);
-            //     }
-            // }
-            // catch (ex)
-            // {
-            //     //Wenn hier eine Exception auftaucht dann ist der Scroller nicht initialisiert,
-            //     //da das Grid aktuell keinen Braucht wegen der zu geringen Anzahl an Items
-            // }
+            try
+            {
+                var Scroller: ej.Scroller = this.grid.getScrollObject();
+                var ScrollPosition: number = rowHeight * args.rowIndex;
+                this.grid.getScrollObject().scrollY(ScrollPosition, true, 1);
+            }
+            catch (ex)
+            {
+                //Wenn hier eine Exception auftaucht dann ist der Scroller nicht initialisiert,
+                //da das Grid aktuell keinen Braucht wegen der zu geringen Anzahl an Items
+            }
 
             //Setzen des Flags
             this.selectedID = args.data.ID;
@@ -201,19 +198,19 @@ export class AlbumList extends GridViewModelStammdatenNormal {
 
     }
 
-    //Eine neues Album hinzufügen (Wird vom Add-Button aufgerufen)
+    //Ein neues Album hinzufügen (Wird vom Add-Button aufgerufen)
     public addNew(): void {
-        //Es muss zur Seite mit der Eingabe eines neuen Albums gesprungen werden
+        //Es muss zur Edit-Seite gesprungen werden
         this.router.navigate(this.routeForEdit + "/new/0");
     }
 
     //Das aktuell selektierte Album editieren (Wird vom Edit-Button aufgerufen)
     public editCurrent(): void {
-        //Es muss zur Seite mit dem Editieren einer Kategorie gesprungen werden
+        //Es muss zur Edit-Seite gesprungen werden
         this.router.navigate(this.routeForEdit + "/edit/" + this.selectedID);
     }
 
-    //Das aktuell selektierte Album editieren (Wird vom Delete-Button aufgerufen)
+    //Das aktuell selektierte Album löschen (Wird vom Delete-Button aufgerufen)
     public async deleteCurrent(): Promise<void> {
         try
         {
@@ -296,6 +293,9 @@ export class AlbumList extends GridViewModelStammdatenNormal {
             json: this.entities, 
             adaptor: new ej.ForeignKeyAdaptor(this.ForeignKeyAdaptorData, 'JsonAdaptor')
         });
+
+        //Das selektierte Item zurücksetzen
+        this.isItemSelected = false;
 
         //Selektieren des gewünschten Items
         this.selectItem();

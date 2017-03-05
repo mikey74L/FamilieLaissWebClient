@@ -5,7 +5,8 @@ import { ShowBusyBoxEvent } from '../Events/ShowBusyBoxEvent';
 import { AppRouter } from 'aurelia-router';
 import * as toastr from 'toastr';
 import swal from 'sweetalert2';
-import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal } from './ServiceHelper'
+import { LoadDataWithFatherModel} from '../Models/LoadDataWithFatherModel';
+import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal, ServiceModelStammdatenID } from './ServiceHelper'
 import {EntityManager, Entity, ValidationError, ValidationErrorsChangedEventArgs, PropertyChangedEventArgs} from 'breeze-client';
 
 export abstract class ViewModelGeneral {
@@ -210,6 +211,37 @@ export abstract class GridViewModelStammdatenNormal extends GridViewModelStammda
     //Laden der Daten über Service anstoßen
     this.entities = await this.service.getData();
   }
+}
+
+export abstract class GridViewModelStammdatenID extends GridViewModelStammdaten {
+  //Members
+  service: ServiceModelStammdatenID;
+  fatherItem: any;
+  routeFather: string;
+  isBackEnabled: boolean;
+
+  //C'tor
+  constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, 
+              routeForEdit: string, routeForFather: string, router: AppRouter, service: ServiceModelStammdatenID) {
+    //Aufrufen des Konstruktors für die Vater Klasse
+    super(loc, eventAggregator, dialogService, routeForEdit, router);
+
+		//Übernehmen der Parameter
+    this.service = service;
+    this.routeFather = routeForFather;
+	}
+
+  //Laden der Daten über den Service
+  protected async load(info: any): Promise<void> {
+		//Laden der Daten über den Service anstoßen
+    var ReturnValue: LoadDataWithFatherModel = await this.service.getData(info.idFather)
+
+    //Übernehemen des Vaters
+    this.fatherItem = ReturnValue.fatherItem; 
+
+		//Übernehmen des Kategorie-Werte
+		this.entities = ReturnValue.entities;
+	}
 }
 
 export abstract class ViewModelEdit extends ViewModelGeneralView {

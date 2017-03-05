@@ -5,7 +5,7 @@
     <section class="au-animate">
         <!-- Überschrift ausgeben -->
         <div class="block-header">
-            <h2 t="Liste.Header" t-params.bind="locOptions"></h2>
+            <h2 t="Liste.Header" t-params.bind="locConfig"></h2>
         </div>
 
         <!-- Card ausgeben -->
@@ -23,15 +23,15 @@
                 <!-- Das Grid für die Alben ausgeben -->
                 <div>
                     <ej-grid id="grid_Media_Group" e-data-source.bind="gridData" e-allow-filtering=true 
-                             e-allow-grouping=true e-allow-sorting=true e-allow-scrolling=true
+                             e-allow-sorting=true e-allow-scrolling=true
                              e-allow-multi-sorting=true e-allow-reordering=true e-allow-resizing=true
                              e-enable-header-hover=true e-enable-row-hover=true e-filter-settings.bind="gridFilterSettings"
-                             e-group-settings.bind="gridGroupSettings" e-sort-settings.bind="gridSortSettings"
+                             e-sort-settings.bind="gridSortSettings"
                              e-edit-settings.bind="gridEditSettings" e-selection-settings.bind="gridSelectionSettings"
                              e-scroll-settings.bind="gridScrollSettings"
                              e-selection-type="single" e-enable-alt-row=false
                              e-on-row-selected.trigger="rowHasBeenSelected($event.detail)">
-                        <ej-column e-field="Type_DisplayName" e-width=180 e-header-text="${ 'Media_Group.Typ.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
+                        <ej-column e-field="Type_DisplayName" e-width=180 e-header-text="${ 'Media_Group.Type.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
                         <ej-column e-field="NameGerman" e-width=300 e-header-text="${ 'Media_Group.Name_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
                         <ej-column e-field="NameEnglish" e-width=300 e-header-text="${ 'Media_Group.Name_English.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
                         <ej-column e-field="DescriptionGerman" e-width=400 e-header-text="${ 'Media_Group.Description_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
@@ -53,7 +53,7 @@
                             class="btn btn-default btn-icon-text waves-effect"
                             click.trigger="addNew()"
                             t="[data-original-title]Liste.Card.Body.Tooltips.Add;[append]Grid.General.Buttons.Add"
-                            t-params.bind="locOptions">
+                            t-params.bind="locConfig">
                         <i class="zmdi zmdi-plus"></i>
                     </button>
                     <button id="buttonEdit"
@@ -68,7 +68,7 @@
                             class="btn btn-default btn-icon-text waves-effect"
                             click.trigger="editCurrent()"
                             t="[data-original-title]Liste.Card.Body.Tooltips.Edit;[append]Grid.General.Buttons.Edit"
-                            t-params.bind="locOptions">
+                            t-params.bind="locConfig">
                         <i class="zmdi zmdi-edit"></i>
                     </button>
                     <button id="buttonDelete"
@@ -83,7 +83,7 @@
                             class="btn btn-danger btn-icon-text waves-effect"
                             click.trigger="deleteCurrent()"
                             t="[data-original-title]Liste.Card.Body.Tooltips.Delete;[append]Grid.General.Buttons.Delete"
-                            t-params.bind="locOptions">
+                            t-params.bind="locConfig">
                         <i class="zmdi zmdi-delete"></i>
                     </button>
                     <button id="buttonRefresh"
@@ -98,7 +98,7 @@
                             class="btn btn-default btn-icon-text waves-effect"
                             click.trigger="refreshGrid()"
                             t="[data-original-title]Grid.General.Tooltips.Refresh;[append]Grid.General.Buttons.Refresh"
-                            t-params.bind="locOptions">
+                            t-params.bind="locConfig">
                         <i class="zmdi zmdi-refresh"></i>
                     </button>
                 </div>

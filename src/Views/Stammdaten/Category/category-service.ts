@@ -1,12 +1,13 @@
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal } from '../../../Helper/ServiceHelper'
 import { EntityQuery, Entity, QueryResult, SaveResult } from 'breeze-client';
 
-export class AlbumService extends ServiceModelStammdatenNormal {
-    //Ermittelt alle Alben vom Server oder wenn schon mal geladen aus dem EntityManager lokal
+export class CategoryService extends ServiceModelStammdatenNormal {
+    //Ermittelt alle Kategorien vom Server oder wenn schon mal geladen aus dem EntityManager lokal
     public async getData(): Promise<Array<any>> {
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
-            .from('MediaGroups');
+            .from('FacetGroups')
+            .where("FacetValueType", "==", 1);
 
         //Query in einem Promise ausführen 
         if (!this.loadedFromServer) {
@@ -29,7 +30,8 @@ export class AlbumService extends ServiceModelStammdatenNormal {
     public async refreshData(): Promise<Array<any>> {
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
-            .from('MediaGroups');
+            .from('MediaGroups')
+            .where("FacetValueType", "==", 1);
 
         //Ausführen der Query
         var Result: QueryResult = await this.manager.executeQuery(query);
@@ -41,7 +43,7 @@ export class AlbumService extends ServiceModelStammdatenNormal {
     //Löscht ein Item 
     public async deleteItem(ID: number): Promise<SaveResult> {
         //Ermitteln der Entity
-        var entityDelete: Entity = this.manager.getEntityByKey('MediaGroup', ID);
+        var entityDelete: Entity = this.manager.getEntityByKey('FacetGroup', ID);
             
         //Entfernen des Items aus dem Manager
         entityDelete.entityAspect.setDeleted();
@@ -51,13 +53,13 @@ export class AlbumService extends ServiceModelStammdatenNormal {
     }
 }
 
-export class AlbumServiceEdit extends ServiceModelStammdatenEditNormal {
-    //Ermittelt die Daten für ein einzelnes Album
+export class CategoryServiceEdit extends ServiceModelStammdatenEditNormal {
+    //Ermittelt die Daten für eine einzelne Kategorie
     //um dieses zu editieren
     public async getItem(ID: number): Promise<any> {
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
-            .from('MediaGroups')
+            .from('FacetGroups')
             .where('ID', '==', ID);
         
         //Ermitteln des Entity-Manager
@@ -70,13 +72,13 @@ export class AlbumServiceEdit extends ServiceModelStammdatenEditNormal {
         return Promise.resolve(Result);
     }
 
-    //Erstellt ein neues Album im Entity-Manager
+    //Erstellt eine neue Kategorie im Entity-Manager
     public async createNew(): Promise<any> {
         //Ermitteln des Entity-Manager
         await this.getEntityManager();
 
         //Return-Value
-        var RetVal: any = this.manager.createEntity('MediaGroup');
+        var RetVal: any = this.manager.createEntity('FacetGroup');
         RetVal.Type = 0;
 
         //Promise zurückliefern 
