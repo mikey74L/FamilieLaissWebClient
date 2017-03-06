@@ -1,5 +1,5 @@
 import {ServiceModelStammdatenID, ServiceModelStammdatenEditID} from '../../../Helper/ServiceHelper';
-import {LoadDataWithFatherModel} from '../../../Models/LoadDataWithFatherModel';
+import {LoadDataWithFatherModel, EditDataWithFatherModel} from '../../../Models/LoadDataWithFatherModel';
 import {EntityManagerFactory} from '../../../Helper/EntityManagerFactory';
 import {EntityQuery, Entity, Predicate, QueryResult, SaveResult} from 'breeze-client';
 
@@ -53,6 +53,66 @@ export class CategoryValueService extends ServiceModelStammdatenID {
         entityDelete.entityAspect.setDeleted();
 
         //Speichern der Änderungen
+        return this.manager.saveChanges();
+    }
+}
+
+export class CategoryValueServiceEdit extends ServiceModelStammdatenEditID {
+    //Ermittelt die Daten für einen einzelnen Kategorie-Wert
+    //um diesen zu editieren
+    public async getItem(ID: number, idFather: number): Promise<EditDataWithFatherModel> {
+        //Query zusammenbauen
+        var queryValue = new EntityQuery()
+            .from('FacetValues')
+            .where('ID', '==', ID);
+        var queryCategory = new EntityQuery()
+            .from('FacetGroups')
+            .where('ID', '==', idFather);
+
+        //Result-Value instanziieren 
+        var ReturnValue: EditDataWithFatherModel = new EditDataWithFatherModel();
+
+        //Ermitteln des Entity-Manager
+        await this.getEntityManager();
+
+        //Ausführen der Query für den Value
+        var Result: Array<Entity> = this.manager.executeQueryLocally(queryValue);
+        ReturnValue.editItem = Result[0];
+
+        //Ausführen der Query für die Group
+        Result = this.manager.executeQueryLocally(queryCategory);
+        ReturnValue.fatherItem = Result[0];
+
+        //Promise zurückliefern
+        return Promise.resolve(ReturnValue);
+    }
+
+    //Ermittelt das Vater-Item
+    public async getFather(idFather: number): Promise<any> {
+        //Query zusammenbauen
+        var queryCategory = new EntityQuery()
+            .from('FacetGroups')
+            .where('ID', '==', idFather);
+ 
+        //Query für die Kategorie ausführen ausführen
+        return Promise.resolve(this.manager.executeQueryLocally(queryCategory)[0]);
+    }
+
+    //Erstellt einen neuen Kategorie-Wert im Entity-Manager
+    public async createNew(idFather: number): Promise<any> {
+        //Ermitteln des Entity-Manager
+        await this.getEntityManager();
+
+        //Return-Value
+        var RetVal: any = this.manager.createEntity('FacetValue');
+        RetVal.ID_Group = idFather;
+
+        //Promise zurückliefern 
+        return Promise.resolve(RetVal);
+    }
+
+    //Speichert die Änderungen auf dem Server
+    public async saveChanges(): Promise<SaveResult> {
         return this.manager.saveChanges();
     }
 }

@@ -1,5 +1,5 @@
 import { EntityManagerFactory } from './EntityManagerFactory';
-import { LoadDataWithFatherModel } from '../Models/LoadDataWithFatherModel'
+import { LoadDataWithFatherModel, EditDataWithFatherModel } from '../Models/LoadDataWithFatherModel'
 import {EntityManager, SaveResult} from 'breeze-client';
 import {autoinject} from 'aurelia-dependency-injection';
 
@@ -72,19 +72,22 @@ export abstract class ServiceModelStammdatenID extends ServiceModelStammdaten {
 }
 
 export abstract class ServiceModelStammdatenEdit extends ServiceModel {
-    //Ermittelt die Daten zu einem bestimmten Item (Ist abstract und muss überschrieben werden)
-    public abstract async getItem(ID: number): Promise<any>;
-
     //Speichern der Änderungen auf dem Server (Ist abstract und muss überschrieben werden)
     public abstract async saveChanges(): Promise<SaveResult>;
 }
 
 export abstract class ServiceModelStammdatenEditNormal extends ServiceModelStammdatenEdit {
+    //Ermittelt die Daten zu einem bestimmten Item (Ist abstract und muss überschrieben werden)
+    public abstract async getItem(ID: number): Promise<any>;
+
     //Ein neues Item (Ist abstract und muss überschrieben werden)
     public abstract async createNew(): Promise<any>;
 }
 
 export abstract class ServiceModelStammdatenEditID extends ServiceModelStammdatenEdit {
+    //Ermittelt die Daten zu einem bestimmten Item (Ist abstract und muss überschrieben werden)
+    public abstract async getItem(ID: number, idFather: number): Promise<EditDataWithFatherModel>;
+
     //Ein neues Item (Ist abstract und muss überschrieben werden)
     public abstract async createNew(idFather: number): Promise<any>;
 

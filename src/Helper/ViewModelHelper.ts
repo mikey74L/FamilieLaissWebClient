@@ -5,8 +5,8 @@ import { ShowBusyBoxEvent } from '../Events/ShowBusyBoxEvent';
 import { AppRouter } from 'aurelia-router';
 import * as toastr from 'toastr';
 import swal from 'sweetalert2';
-import { LoadDataWithFatherModel} from '../Models/LoadDataWithFatherModel';
-import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal, ServiceModelStammdatenID } from './ServiceHelper'
+import { LoadDataWithFatherModel, EditDataWithFatherModel} from '../Models/LoadDataWithFatherModel';
+import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal, ServiceModelStammdatenID, ServiceModelStammdatenEditID } from './ServiceHelper'
 import {EntityManager, Entity, ValidationError, ValidationErrorsChangedEventArgs, PropertyChangedEventArgs} from 'breeze-client';
 
 export abstract class ViewModelGeneral {
@@ -257,9 +257,10 @@ export abstract class ViewModelEdit extends ViewModelGeneralView {
     keySubscribeErrorsChanged: number;
 
     //C'tor
-    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, routeForList: string, router: AppRouter) {
+    constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, routeForList: string, 
+                router: AppRouter) {
         //Aufrufen des Konstruktors für die Vater Klasse
-        super(localize, aggregator, dialog);
+        super(loc, eventAggregator, dialogService);
 
         //Übernehmen der Parameter
         this.routeForList = routeForList;
@@ -279,7 +280,7 @@ export abstract class ViewModelEdit extends ViewModelGeneralView {
             //Aufrufen der Methode zum Anlegen eines neuen Items
             if (info.idFather) {
                 //Aufrufen der Methode zum Erzeugen eines neuen Elementes
-                await this.createNew(info.idFather);
+                await this.createNew(info);
 
                 //Löschen aller etwaiger Validierungsfehler bei einem neuen Item
                 this.itemToEdit.entityAspect.clearValidationErrors();
@@ -289,7 +290,7 @@ export abstract class ViewModelEdit extends ViewModelGeneralView {
             }
             else {
                 //Aufrufen der Methode zum Erzeugen eines neuen Elementes
-                await this.createNew();
+                await this.createNew(info);
 
                 //Löschen aller etwaiger Validierungsfehler bei einem neuen Item
                 this.itemToEdit.entityAspect.clearValidationErrors();
@@ -305,14 +306,14 @@ export abstract class ViewModelEdit extends ViewModelGeneralView {
             //Aufrufen der Lade-Methode und der Child-Methode
             if (info.idFather) {
                 //Aufrufen der Methode zum Laden
-                await this.load(info.id, info.idFather);
+                await this.load(info);
                    
                 //Aufrufen der Child-Methode
                 return this.activateChild(info);
             }
             else {
                 //Aufrufen der Methode zum Laden
-                await this.load(info.id);
+                await this.load(info);
 
                 //Aufrufen der Child-Methode
                 return this.activateChild(info);
@@ -321,10 +322,10 @@ export abstract class ViewModelEdit extends ViewModelGeneralView {
     }
 
     //Laden der Daten über den Service (Ist abstract und muss überschrieben werden)
-    protected abstract async load(id: number, idFather?: number): Promise<any>;
+    protected abstract async load(info: any): Promise<any>;
 
     //Ein neues Item erzeugen (Ist abstract und muss überschrieben werden
-    protected abstract async createNew(idFather?: number): Promise<any>;
+    protected abstract async createNew(info: any): Promise<any>;
  
     //Wird von Aurelia aufgerufen um zu überprüfen ob durch den Router
     //diese View überhaupt verlassen werden darf. Hier muss entweder
@@ -438,10 +439,10 @@ export abstract class ViewModelEditNormal extends ViewModelEdit {
     service: ServiceModelStammdatenEditNormal;
 
     //C'tor
-    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, routeForList: string, 
+    constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, routeForList: string, 
                 router: AppRouter, service: ServiceModelStammdatenEditNormal) {
         //Aufrufen des Konstruktors für die Vater Klasse
-        super(localize, aggregator, dialog, routeForList, router);
+        super(loc, eventAggregator, dialogService, routeForList, router);
 
         //Übernehmen der Parameter
         this.service = service;
@@ -465,12 +466,12 @@ export abstract class ViewModelEditNormal extends ViewModelEdit {
     }
 
     //Laden der Daten über den Service
-    protected async load(id: number, idFather?: number): Promise<any> {
+    protected async load(info: any): Promise<any> {
         //Deklaration
         var ResultSet: any;
 
         //Über Promise das Laden des zu editierenden Items anstoßen
-        ResultSet = await this.service.getItem(id);
+        ResultSet = await this.service.getItem(info.id);
 
         //Übernehmen der Entity
         this.itemToEdit = ResultSet[0];
@@ -486,10 +487,80 @@ export abstract class ViewModelEditNormal extends ViewModelEdit {
     }
 
     //Erstellt ein neues Item
-    protected async createNew(idFather?: number): Promise<any> {
+    protected async createNew(info: any): Promise<any> {
         //Übernehmen der Entity
         this.itemToEdit = await this.service.createNew();
 
+        //Verdrahten des Events für das Property-Changed Event
+        this.subscribePropertyChanged();
+
+        //Subscribe to Validation changed
+        this.subscribeToValidationChanged();
+
+        //Promise zurückmelden
+        return Promise.resolve(this.itemToEdit);
+    }
+}
+
+export abstract class ViewModelEditID extends ViewModelEdit {
+    //Members
+    service: ServiceModelStammdatenEditID;
+    fatherItem: any;
+
+    //C'tor
+    constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, 
+                routeForList: string, router: AppRouter, service: ServiceModelStammdatenEditID) {
+        //Aufrufen des Konstruktors für die Vater Klasse
+        super(loc, eventAggregator, dialogService, routeForList, router);
+
+        //Übernehmen der Parameter
+        this.service = service;
+    }
+
+    //Liefert zurück ob der Service aktuell ausstehende Änderungen hat
+    protected hasChanges(): boolean {
+        return this.service.hasChanges();
+    }
+
+    //Verwerfen der Änderungen im Service
+    protected rejectChanges(): void {
+        //Verwerfen der Änderungen
+        this.service.rejectChanges();
+
+        //Die-Events deregistrieren
+        this.unsubscribeEvents();
+
+        //Benachrichtigung, dass die Änderungen zurückgenommen wurden
+        this.cancelChanges();
+    }
+
+    //Laden der Daten über den Service
+    protected async load(info: any): Promise<any> {
+        //Über Promise das Laden des zu editierenden Items anstoßen
+        var ResultSet: EditDataWithFatherModel = await this.service.getItem(info.id, info.idFather);
+
+        //Übernehmen der Entity
+        this.itemToEdit = ResultSet.editItem;
+        this.fatherItem = ResultSet.fatherItem;
+
+        //Verdrahten des Events für das Property-Changed Event
+        this.subscribePropertyChanged();
+
+        //Subscribe to Validation changed
+        this.subscribeToValidationChanged();
+
+        //Promise zurückmelden
+        return Promise.resolve(this.itemToEdit);
+    }
+
+    //Erstellt ein neues Item
+    protected async createNew(info: any): Promise<any> {
+        //Erzeugen einer neuen Entity
+        this.itemToEdit = await this.service.createNew(info.idFather);
+
+        //Ermitteln der Daten des Vaters
+        this.fatherItem = await this.service.getFather(info.idFather);
+        
         //Verdrahten des Events für das Property-Changed Event
         this.subscribePropertyChanged();
 
