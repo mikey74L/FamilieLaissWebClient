@@ -25,10 +25,11 @@ export async function configure(aurelia: Aurelia) {
     .standardConfiguration()
     .globalResources(['CustomControls/loading-indicator', 'CustomControls/input-text', 'CustomControls/input-textarea',
                       'CustomAttributes/bootstrap-tooltip', 'CustomAttributes/button-waves', 
-                      'CustomAttributes/autosize-textarea'])
+                      'CustomAttributes/autosize-textarea', 'CustomControls/upload-control'])
     .developmentLogging()
     .plugin('aurelia-syncfusion-bridge', syncfusion => {
         syncfusion.ejGrid();
+        syncfusion.ejTab();
     })
     .plugin('aurelia-breeze')
     .plugin('aurelia-animator-css')

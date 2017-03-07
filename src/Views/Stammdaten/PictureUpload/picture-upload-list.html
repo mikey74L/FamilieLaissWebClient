@@ -1,0 +1,33 @@
+<template>
+  <section class="au-animate">
+    <!-- Überschrift ausgeben -->
+    <div class="block-header">
+      <h2>${ 'Header.Text' | t: { ns: 'StammPictureUpload'}}
+        <small>${ 'Header.Description' | t: { ns: 'StammPictureUpload'}}</small>
+      </h2>
+    </div>
+
+    <!-- Card ausgeben -->
+    <div class="card">
+      <div class="card-body card-padding">
+        <!-- Ausgeben des Tab-Controls -->
+        <ej-tab id="tab_Upload_Picture" e-selected-item-index="0"
+                e-on-create.trigger="tabCreated($event)" 
+                e-on-before-active.trigger="tabBeforeActive($event)" 
+                e-on-item-active.trigger="tabAfterActive($event)">
+          <ul>
+            <li><a href="#uploadControl">Bilder hochladen</a></li>
+            <li><a href="#uploadList">Hochgeladene Bilder verwalten</a></li>
+          </ul>
+          <!-- Die Tab-Seite mit dem Upload-Control ausgeben -->
+          <div id="uploadControl">
+            <upload-control></upload-control>
+          </div>
+          <!-- Die Seite mit den hochgeladenen Bildern ausgeben -->
+          <div id="uploadList">
+          </div>
+        </ej-tab>
+      </div>
+    </div>
+  </section>
+</template>

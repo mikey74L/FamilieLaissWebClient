@@ -243,8 +243,9 @@ export class FamilieLaissApp {
         Item.addChildItem(undefined, 'categoryvalueedit/:operation/:idFather/:id', 'categoryvalueedit', './Views/Stammdaten/CategoryValue/categoryvalue-edit', true, 
                           this.loc.tr('Stammdaten.CategoryValueEdit', {ns: 'Router'}), 'categoryvalueedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-     
-        Item.addChildItem(undefined, 'pictureuploadlist', 'pictureuploadlist', './stammdaten/pictureupload/picture-upload-list', true, 
+        
+        //Routes für "Stammdaten - Picture Upload"
+        Item.addChildItem(undefined, 'pictureuploadlist', 'pictureuploadlist', './Views/Stammdaten/PictureUpload/picture-upload-list', true, 
                           this.loc.tr('Stammdaten.PictureUploadList', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
         
