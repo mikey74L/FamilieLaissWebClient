@@ -1,38 +1,61 @@
 <template>
   <!-- Das unsichtbare Input für die Dateiauswahl ausgeben -->
-  <input id="fileInput" style="display: none" type="file" multiple accept="image/*" change.trigger="filesSelected($event)"
+  <input id="fileInput" style="display: none" type="file" multiple accept.bind="uploadType == 1 ? 'image/*' : 'video/*'" change.trigger="filesSelected($event)"
   />
-
+  
   <!-- Ausgeben des Grids für die Dateiliste -->
   <ej-grid id="grid_Uploadlist" e-data-source.bind="fileList" e-allow-filtering=false e-allow-sorting=false e-allow-scrolling=true
     e-allow-multi-sorting=false e-allow-reordering=false e-allow-resizing=true e-enable-header-hover=true e-enable-row-hover=true
     e-edit-settings.bind="gridEditSettings" e-selection-settings.bind="gridSelectionSettings" e-scroll-settings.bind="gridScrollSettings"
     e-selection-type="single" e-enable-alt-row=false e-on-row-selected.trigger="rowHasBeenSelected($event.detail)">
-    <ej-column e-field="fileName" e-width=180 e-header-text="Dateiname"></ej-column>
-    <ej-column e-field="fileSizeText" e-width=180 e-header-text="Größe"></ej-column>
+    <ej-column e-field="fileName" e-type="string" e-header-text="${ 'Uploadcontrol.Columns.Name' | t: { ns: 'Controls' } }"></ej-column>
+    <ej-column e-field="fileSizeText" e-type="text" e-width=180 e-header-text="${ 'Uploadcontrol.Columns.Size' | t: { ns: 'Controls' } }"></ej-column>
+    <ej-column e-field="statusText" e-type="text" e-width=150 e-header-text="${ 'Uploadcontrol.Columns.Status' | t: { ns: 'Controls' } }"></ej-column>
+    <ej-column e-field="isUploaded" e-type="boolean" e-width=170 e-header-text="${ 'Uploadcontrol.Columns.UploadDone' | t: { ns: 'Controls' } }"></ej-column>
+    <ej-column e-width=180 e-header-text="${ 'Uploadcontrol.Columns.Percentage' | t: { ns: 'Controls' } }">
+      <ej-template>
+        <div>
+          <div class="progress progress-striped active">
+            <div class.bind="isUploaded == false ? 'progress-bar' : 'progress-bar progress-bar-success'" style.bind="'width: ' + percentageDone + '%'"></div>
+          </div>
+        </div>
+      </ej-template>
+    </ej-column>
   </ej-grid>
 
   <!-- Ausgeben der Buttons -->
   <div style="margin-top:15px">
-    <button id="btn_Add_File" type="button" disabled.bind="!isAddEnabled" bootstrap-tooltip button-waves class="btn btn-default waves-effect"
-      data-toggle="tooltip" title="" data-original-title="" data-trigger="hover" click.trigger="addFile()" t="[data-original-title]Uploadcontrol.Buttons.Tooltip.Add;[append]Uploadcontrol.Buttons.Text.Add"
-      t-params.bind="locConfig">
-    <i class="zmdi zmdi-plus"></i>
-  </button>
-    <button id="btn_Delete_File" type="button" disabled.bind="!isDeleteEnabled" bootstrap-tooltip button-waves class="btn btn-danger waves-effect"
-      data-toggle="tooltip" title="" data-original-title="" data-trigger="hover" click.trigger="deleteFile()" t="[data-original-title]Uploadcontrol.Buttons.Tooltip.Delete;[append]Uploadcontrol.Buttons.Text.Delete"
-      t-params.bind="locConfig">
-    <i class="zmdi zmdi-delete"></i>
-  </button>
-    <button id="btn_Clear_List" type="button" disabled.bind="!isClearEnabled" bootstrap-tooltip button-waves class="btn btn-danger waves-effect"
-      data-toggle="tooltip" title="" data-original-title="" data-trigger="hover" click.trigger="clearList()" t="[data-original-title]Uploadcontrol.Buttons.Tooltip.Clear;[append]Uploadcontrol.Buttons.Text.Clear"
-      t-params.bind="locConfig">
-    <i class="zmdi zmdi-delete"></i>
-  </button>
-    <button id="btn_Start_Upload" type="button" disabled.bind="!isStartUploadEnabled" bootstrap-tooltip button-waves class="btn btn-primary waves-effect"
-      data-toggle="tooltip" title="" data-original-title="" data-trigger="hover" click.trigger="uploadFiles()" t="[data-original-title]Uploadcontrol.Buttons.Tooltip.Upload;[append]Uploadcontrol.Buttons.Text.Upload"
-      t-params.bind="locConfig">
-    <i class="zmdi zmdi-upload"></i>
-  </button>
+    <button id="btn_Add_File" type="button" disabled.bind="!isAddEnabled" bootstrap-tooltip button-waves 
+            class="btn btn-default waves-effect"
+            data-toggle="tooltip" title="" data-original-title="" data-trigger="hover" 
+            click.trigger="addFile()" 
+            t="[data-original-title]Uploadcontrol.Buttons.Tooltip.Add;[append]Uploadcontrol.Buttons.Text.Add"
+            t-params.bind="locConfig">
+      <i class="zmdi zmdi-plus"></i>
+    </button>
+    <button id="btn_Delete_File" type="button" disabled.bind="!isDeleteEnabled" bootstrap-tooltip button-waves 
+            class="btn btn-danger waves-effect"
+            data-toggle="tooltip" title="" data-original-title="" data-trigger="hover" 
+            click.trigger="deleteFile()" 
+            t="[data-original-title]Uploadcontrol.Buttons.Tooltip.Delete;[append]Uploadcontrol.Buttons.Text.Delete"
+            t-params.bind="locConfig">
+      <i class="zmdi zmdi-delete"></i>
+    </button>
+    <button id="btn_Clear_List" type="button" disabled.bind="!isClearEnabled" bootstrap-tooltip button-waves 
+            class="btn btn-danger waves-effect"
+            data-toggle="tooltip" title="" data-original-title="" data-trigger="hover" 
+            click.trigger="clearList()" 
+            t="[data-original-title]Uploadcontrol.Buttons.Tooltip.Clear;[append]Uploadcontrol.Buttons.Text.Clear"
+            t-params.bind="locConfig">
+      <i class="zmdi zmdi-delete"></i>
+    </button>
+    <button id="btn_Start_Upload" type="button" disabled.bind="!isStartUploadEnabled" bootstrap-tooltip button-waves 
+            class="btn btn-primary waves-effect"
+            data-toggle="tooltip" title="" data-original-title="" data-trigger="hover" 
+            click.trigger="uploadFiles()" 
+            t="[data-original-title]Uploadcontrol.Buttons.Tooltip.Upload;[append]Uploadcontrol.Buttons.Text.Upload"
+            t-params.bind="locConfig">
+      <i class="zmdi zmdi-upload"></i>
+    </button>
   </div>
 </template>

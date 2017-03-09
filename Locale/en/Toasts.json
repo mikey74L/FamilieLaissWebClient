@@ -100,5 +100,11 @@
       "Success": "Nachricht erfolgreich quittiert",
       "Error": "Nachricht konnte nicht quittiert werden, da ein unerwarteter Fehler aufgetreten ist."
     }
+  },
+  "UploadControl": {
+    "Upload": {
+      "Success": "Die Datei '{{filename}}' wurde erfolgreich hochgeladen.",
+      "Error": "Die Datei '{{filename}}' konnte nicht erfolgreich hochgeladen werden."
+    }
   }
 }

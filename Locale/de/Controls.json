@@ -3,11 +3,13 @@
     "Status": {
       "Added": "Hinzugefügt",
       "Upload": "Wird hochgeladen",
-      "Success": "Erfolgreich hochgeladen"
+      "Success": "Erfolgreich hochgeladen",
+      "Error": "Mit Fehlern"
     },
     "Columns": {
       "Name": "Dateiname",
       "Size": "Dateigröße",
+      "UploadDone": "Ist hochgeladen?",
       "Percentage": "% hochgeladen",
       "Status": "Status"
     },

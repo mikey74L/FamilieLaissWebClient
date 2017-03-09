@@ -67,7 +67,9 @@
       "resources": [
         "aurelia-syncfusion-bridge/grid/grid",
         "aurelia-syncfusion-bridge/grid/column",
-        "aurelia-syncfusion-bridge/tab/tab"
+        "aurelia-syncfusion-bridge/tab/tab",
+        "aurelia-syncfusion-bridge/progressbar/progressbar",
+        "aurelia-syncfusion-bridge/common/template"
       ]
     }
   },
@@ -89,6 +91,7 @@
     "aurelia-route-recognizer": "^1.1.0",
     "aurelia-router": "^1.0.7",
     "aurelia-syncfusion-bridge": "^0.5.0",
+    "aurelia-templating": "^1.3.0",
     "aurelia-templating-binding": "^1.1.0",
     "aurelia-templating-resources": "^1.2.0",
     "aurelia-templating-router": "^1.0.0",

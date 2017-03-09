@@ -30,6 +30,8 @@ export async function configure(aurelia: Aurelia) {
     .plugin('aurelia-syncfusion-bridge', syncfusion => {
         syncfusion.ejGrid();
         syncfusion.ejTab();
+        syncfusion.ejProgressBar();
+        syncfusion.ejTemplate();
     })
     .plugin('aurelia-breeze')
     .plugin('aurelia-animator-css')

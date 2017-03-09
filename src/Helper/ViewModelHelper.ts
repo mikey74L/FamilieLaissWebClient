@@ -1,9 +1,9 @@
+import { ToastrHelper } from './ToastrHelper';
 import { DialogService } from 'aurelia-dialog';
 import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { ShowBusyBoxEvent } from '../Events/ShowBusyBoxEvent';
 import { AppRouter } from 'aurelia-router';
-import * as toastr from 'toastr';
 import swal from 'sweetalert2';
 import { LoadDataWithFatherModel, EditDataWithFatherModel} from '../Models/LoadDataWithFatherModel';
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal, ServiceModelStammdatenID, ServiceModelStammdatenEditID } from './ServiceHelper'
@@ -14,6 +14,7 @@ export abstract class ViewModelGeneral {
   protected loc: I18N;
   protected eventAggregator: EventAggregator;
   public isBusy: boolean;
+  private toastrHelper: ToastrHelper;
 
   //C'tor
   constructor(loc: I18N, eventAggregator: EventAggregator) {
@@ -21,6 +22,9 @@ export abstract class ViewModelGeneral {
     this.loc = loc;
     this.eventAggregator = eventAggregator;
     this.isBusy = false;
+
+    //Erzeugen des Toastr-Helper
+    this.toastrHelper = new ToastrHelper();
   }
 
   //Muss von der Kind-Klasse überschrieben werden um spezifische
@@ -30,56 +34,26 @@ export abstract class ViewModelGeneral {
 
   //Zeigt ein Info-Toastr an
   protected showNotifyInfo(message: string): void {
-    //Setzen der Optionen
-    this.setToastrOptions(5000);
-
     //Anzeigen des Toasts
-    toastr.info(message);
+    this.toastrHelper.showNotifyInfo(message);
   }
 
   //Zeigt ein Erfolgs-Toastr an
   protected showNotifySuccess(message: string): void {
-    //Setzen der Optionen
-    this.setToastrOptions(10000);
-
     //Anzeigen des Toasts
-    toastr.success(message);
+    this.toastrHelper.showNotifySuccess(message);
   }
 
   //Zeigt ein Error-Toastr an
   protected showNotifyError(message: string): void {
-    //Setzen der Optionen
-    this.setToastrOptions(10000);
-
     //Anzeigen des Toasts
-    toastr.error(message);
+    this.toastrHelper.showNotifyError(message);
   }
 
   //Zeigt ein Warning-Toastr an
   protected showNotifyWarning(message: string): void {
-    //Setzen der Optionen
-    this.setToastrOptions(5000);
-
     //Anzeigen des Toasts
-    toastr.warning(message);
-  }
-
-  //Liefert ein Objekt für die Notify-Optionen zurück
-  private setToastrOptions(delayTime: number): void {
-    toastr.options.closeButton = false;
-    toastr.options.debug = false;
-    toastr.options.newestOnTop = true;
-    toastr.options.progressBar = true;
-    toastr.options.positionClass = "toast-top-right";
-    toastr.options.preventDuplicates = false;
-    toastr.options.showDuration = 300;
-    toastr.options.hideDuration = 300;
-    toastr.options.timeOut = delayTime;
-    toastr.options.extendedTimeOut = 1000;
-    toastr.options.showEasing = "swing";
-    toastr.options.hideEasing = "linear";
-    toastr.options.showMethod = "slideDown";
-    toastr.options.hideMethod = "slideUp";
+    this.toastrHelper.showNotifyWarning(message);
   }
 
   //Anzeigen oder verbergen des Busy-Indicators in der Top-Bar

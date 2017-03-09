@@ -16,16 +16,39 @@
                 e-on-before-active.trigger="tabBeforeActive($event)" 
                 e-on-item-active.trigger="tabAfterActive($event)">
           <ul>
-            <li><a href="#uploadControl">Bilder hochladen</a></li>
-            <li><a href="#uploadList">Hochgeladene Bilder verwalten</a></li>
+            <li><a href="#uploadControl">${ 'Card.Header.TabPages.Upload' | t: { ns: 'StammPictureUpload'}}</a></li>
+            <li><a href="#uploadList">${ 'Card.Header.TabPages.List' | t: { ns: 'StammPictureUpload'}}</a></li>
           </ul>
           <!-- Die Tab-Seite mit dem Upload-Control ausgeben -->
           <div id="uploadControl">
-            <upload-control></upload-control>
+            <!-- Ausgeben des Headers-->
+            <div class="card-header">
+              <h2>
+                ${ 'Card.Header.TextUpload' | t: { ns: 'StammPictureUpload'}}
+                <small>${ 'Card.Header.DescriptionUpload' | t: { ns: 'StammPictureUpload'}}</small>
+              </h2>
+            </div>
+
+            <!-- Ausgeben des Upload-Controls -->
+            <upload-control text-upload-error-header="${ 'Upload.Picture.Error.Header' | t: { ns: 'Alerts'}}"
+                            text-upload-error-body="${ 'Upload.Picture.Error.Body' | t: { ns: 'Alerts'}}"
+                            text-error-confirm-button="${ 'Upload.Picture.Error.Confirm_Button' | t: { ns: 'Alerts'}}"
+                            text-upload-success-header="${ 'Upload.Picture.Success.Header' | t: { ns: 'Alerts'}}"
+                            text-upload-success-body="${ 'Upload.Picture.Success.Body' | t: { ns: 'Alerts'}}"
+                            text-success-confirm-button="${ 'Upload.Picture.Success.Confirm_Button' | t: { ns: 'Alerts'}}"
+                            upload-type=1>
+            </upload-control>
           </div>
           <!-- Die Seite mit den hochgeladenen Bildern ausgeben -->
           <div id="uploadList">
-          </div>
+            <!-- Ausgeben des Beschriftungs-Headers -->
+            <div class="card-header">
+              <h2>
+                ${ 'Card.Header.TextListe' | t: { ns: 'StammPictureUpload'}}
+                <small>${ 'Card.Header.DescriptionListe' | t: { ns: 'StammPictureUpload'}}</small>
+              </h2>
+            </div>
+         </div>
         </ej-tab>
       </div>
     </div>

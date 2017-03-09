@@ -28,8 +28,8 @@
                              e-scroll-settings.bind="gridScrollSettings"
                              e-selection-type="single" e-enable-alt-row=false
                              e-on-row-selected.trigger="rowHasBeenSelected($event.detail)">
-                        <ej-column e-field="NameGerman" e-width=300 e-header-text="${ 'Facet_Value.Name_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
-                        <ej-column e-field="NameEnglish" e-width=300 e-header-text="${ 'Facet_Value.Name_English.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
+                        <ej-column e-field="NameGerman" e-type="string" e-width=300 e-header-text="${ 'Facet_Value.Name_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
+                        <ej-column e-field="NameEnglish" e-type="string" e-width=300 e-header-text="${ 'Facet_Value.Name_English.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
                     </ej-grid>  
                 </div>
 
