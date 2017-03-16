@@ -2,7 +2,8 @@
 import * as $ from 'jquery';
 import { UploadFileInfo } from '../Models/UploadFileInfo';
 import { UploadInProgressEvent } from './../Events/UploadControlEvents';
-import { StorageService, enUploadType } from './../Service/StorageService';
+import { StorageService } from './../Service/StorageService';
+import { enUploadType } from '../Enum/FamilieLaissEnum';
 import { autoinject } from 'aurelia-dependency-injection';
 import { Exception404, Exception500 } from './../Exception/UserException';
 import { bindable, customElement, containerless } from 'aurelia-framework';
@@ -10,6 +11,7 @@ import swal from 'sweetalert2';
 import {I18N} from 'aurelia-i18n';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import { ToastrHelper } from './../Helper/ToastrHelper';
+import { ExtractFilename, ExtractExtension } from '../Helper/HelperFunctions';
 
 @autoinject()
 @customElement('upload-control')
@@ -52,6 +54,8 @@ export class UploadControl {
   private service: StorageService;
 
   //Deklarationen für den REST-Upload 
+  private currentUploadID: number;
+  private currentFilenameForUpload: string;
   private uploadWithErrors: boolean;
   private maxBlockSize: number = 512 * 1024; //Jede Datei wird in Chunks von 512K aufgeteilt
   private numberOfBlocks: number = 1;
@@ -229,32 +233,57 @@ export class UploadControl {
 
   //Initialiseren des Uploads für ein File
   //Setzen der Properties wie BlockSize, Filepointer, etc.
-  private uploadFile(): void {
-    //Status setzen
-    this.uploadingFile.statusText = this.loc.tr('Uploadcontrol.Status.Upload', { ns: 'Controls' });
-    this.refreshGrid();
+  private async uploadFile(): Promise<void> {
+    try 
+    {
+      //Ermitteln der nächsten ID für das Upload-Item 
+      this.currentUploadID = await this.service.getIDForUploadFromServer(this.uploadType);
+      this.currentFilenameForUpload = this.currentUploadID.toString() + '.' + ExtractExtension(this.uploadingFile.fileName);
 
-    //Initialisierung der globalen Members für aktuelles File
-    this.maxBlockSize = 512 * 1024;
-    this.currentFilePointer = 0;
-    this.totalBytesRemaining = 0;
-    this.blockIds = [];
+      //Status setzen
+      this.uploadingFile.statusText = this.loc.tr('Uploadcontrol.Status.Upload', { ns: 'Controls' });
+      this.refreshGrid();
 
-    //Ermitteln der Blockanzahl und der maximalen Größe der Blöcke
-    var fileSize: number = this.uploadingFile.file.size;
-    if (fileSize < this.maxBlockSize) {
-      this.maxBlockSize = fileSize;
-    }
-    this.totalBytesRemaining = fileSize;
-    if (fileSize % this.maxBlockSize == 0) {
-      this.numberOfBlocks = fileSize / this.maxBlockSize;
-    } 
-    else {
-      this.numberOfBlocks = parseInt((fileSize / this.maxBlockSize).toString(), 10) + 1;
-    }
+      //Initialisierung der globalen Members für aktuelles File
+      this.maxBlockSize = 512 * 1024;
+      this.currentFilePointer = 0;
+      this.totalBytesRemaining = 0;
+      this.blockIds = [];
 
-    //Aufrufen der Methode zum Start des eigentlichen Hochladens
-    this.uploadOrCommit();
+      //Ermitteln der Blockanzahl und der maximalen Größe der Blöcke
+      var fileSize: number = this.uploadingFile.file.size;
+      if (fileSize < this.maxBlockSize) {
+        this.maxBlockSize = fileSize;
+      }
+      this.totalBytesRemaining = fileSize;
+      if (fileSize % this.maxBlockSize == 0) {
+        this.numberOfBlocks = fileSize / this.maxBlockSize;
+      } 
+      else {
+        this.numberOfBlocks = parseInt((fileSize / this.maxBlockSize).toString(), 10) + 1;
+      }
+
+      //Aufrufen der Methode zum Start des eigentlichen Hochladens
+      this.uploadOrCommit();
+    }
+    catch (ex)
+    {
+       //Es ist ein Fehler beim Schreiben des Chunks in Azure aufgetreten. Datei
+       //wird als fehlerhafter Upload markiert und es wird mit der nächsten Datei fortgefahren
+       this.uploadWithErrors = true;
+       this.uploadingFile.statusText = this.loc.tr('Uploadcontrol.Status.Error', { ns: 'Controls' });;
+       this.uploadingFile.percentageDone = 0;
+       this.uploadingFile.withError = true;
+
+       //Ausgeben eines Toasts
+       this.toastrHelper.showNotifySuccess(this.loc.tr('UploadControl.Upload.Error', { ns: 'Toasts', 'filename' : this.uploadingFile.fileName }));
+
+       //Aktualisieren des Grids
+       this.refreshGrid();
+
+       //Das nächste File ermitteln
+       this.getNextFile();
+    }
   }
 
   //Nächsten Chunk aus dem File auslesen oder die Block-Liste im
@@ -283,6 +312,11 @@ export class UploadControl {
       else {
         //Schreiben der Block-Liste wenn die Datei fertig hochgeladen wurde
         await this.commitBlockList();
+
+        //Den Eintrag in der Azure-Queue machen die zur Weiterverarbeitung des Upload-Items über
+        //den Web-Job führt
+        await this.service.writeToUploadQueue(this.uploadType, this.currentUploadID, this.currentFilenameForUpload, 
+                                              this.uploadingFile.fileName);
 
         //Setzen der Prozentzahl auf 100%
         this.uploadingFile.percentageDone = 100;
@@ -326,7 +360,7 @@ export class UploadControl {
     try {
       if (evt.target.readyState == 2) { // DONE == 2
         //Schreiben des ausgelesenen Chunks im Azure-Storage über den Service
-        this.bytesUploaded += await this.service.submitBlock(this.uploadType, this.uploadingFile.fileName, 
+        this.bytesUploaded += await this.service.submitBlock(this.uploadType, this.currentFilenameForUpload, 
                                                              this.blockIds, evt.target.result);
 
         //Ermitteln der Prozentzahl, wieviel schon hochgeladen wurde
@@ -363,7 +397,7 @@ export class UploadControl {
   //Schreibt die Block-List in den Azure-Storage
   private commitBlockList(): Promise<void> {
     //Aufrufen der Methode im Service zum Schreiben der Block-List
-    return this.service.commitBlockList(this.uploadType, this.uploadingFile.fileName, this.blockIds, 
+    return this.service.commitBlockList(this.uploadType, this.currentFilenameForUpload, this.blockIds, 
       this.uploadingFile.file.type)
   }
   
@@ -406,9 +440,7 @@ export class UploadControl {
 
       //Zurücksetzen der SAS für den Upload, so dass beim
       //nächsten Upload wieder eine neue SAS angefordert wird
-      if (this.uploadType == enUploadType.Picture) {
-        this.service.resetSASForPictureUpload();
-      }
+      this.service.resetSASForUploadItem();
 
       //Enabled-State der Buttons
       this.checkEnabledState();

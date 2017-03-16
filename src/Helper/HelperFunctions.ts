@@ -39,3 +39,11 @@ export function SizeToString(size: number): string {
 export function RoundWithPlaces(value: number, places: number): number {
   return + (Math.round(parseFloat(value + "e+" + places))  + "e-" + places);
 }
+
+export function ExtractFilename(filenameComplete: string): string {
+  return filenameComplete.substr(0, filenameComplete.lastIndexOf('.'));
+}
+
+export function ExtractExtension(filenameComplete: string): string {
+  return filenameComplete.substr(filenameComplete.lastIndexOf('.') + 1);
+}
