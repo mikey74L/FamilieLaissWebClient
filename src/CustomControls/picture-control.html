@@ -1,0 +1,62 @@
+<template>
+    <require from="../Converter/date-time-format"></require>
+
+    <div class="picture-item col-lg-4 col-md-6" style="padding: 0 0 0 0;">
+        <div class="picture-item-top">
+            <h5 class="picture-item-header">
+                <a class="picture-item-link" click.trigger="showPicture()">${uploadItem.NameOriginal}</a>
+            </h5>
+        </div>
+        <img class="picture-item-picture" src.bind="getImageURL()" click.trigger="showPicture()" />
+        <dl class="picture-item-values">
+            <dt>${'Picturecontrol.Labels.UploadDate' | t : {ns: 'Controls'}}</dt>
+            <dd>${uploadItem.UploadDate | dateTimeFormat}</dd>
+            <dt if.bind="modus == 3">${'Picturecontrol.Labels.AssignDate' | t : {ns: 'Controls'}}</dt>
+            <dd if.bind="modus == 3">${pictureItem.CreateDate | dateTimeFormat}</dd>
+        </dl>
+        <div class="picture-item-buttons">
+            <button if.bind="modus == 3"
+                    type="button"
+                    click.trigger="editPicture()"
+                    bootstrap-tooltip
+                    button-waves
+                    data-toggle="tooltip"
+                    title=""
+                    data-original-title=""
+                    data-trigger="hover"
+                    class="btn btn-primary btn-icon-text waves-effect"
+                    t="[data-original-title]Picturecontrol.Tooltips.Edit;[append]Picturecontrol.Buttons.Edit"
+                    t-params.bind="locConfig">
+                <i class="zmdi zmdi-edit"></i>
+            </button>
+            <button if.bind="modus == 1 || modus == 3"
+                    type="button"
+                    click.trigger="deletePicture()"
+                    bootstrap-tooltip
+                    button-waves
+                    data-toggle="tooltip"
+                    title=""
+                    data-original-title="${'Picturecontrol.Tooltips.Delete' | t: {ns: 'Controls', context: i18nContext}}"
+                    data-trigger="hover"
+                    class="btn btn-danger btn-icon-text waves-effect"
+                    t="[append]Picturecontrol.Buttons.Delete"
+                    t-params.bind="locConfig">
+                <i class="zmdi zmdi-delete"></i>
+            </button>
+            <button if.bind="modus == 2"
+                    type="button"
+                    click.trigger="choosePicture()"
+                    bootstrap-tooltip
+                    button-waves
+                    data-toggle="tooltip"
+                    title=""
+                    data-original-title=""
+                    data-trigger="hover"
+                    class="btn btn-primary btn-icon-text waves-effect"
+                    t="[data-original-title]Picturecontrol.Tooltips.Choose;[append]Picturecontrol.Buttons.Choose"
+                    t-params.bind="locConfig">
+                <i class="zmdi zmdi-delete"></i>
+            </button>
+        </div>
+    </div>
+</template>

@@ -25,7 +25,8 @@ export async function configure(aurelia: Aurelia) {
     .standardConfiguration()
     .globalResources(['CustomControls/loading-indicator', 'CustomControls/input-text', 'CustomControls/input-textarea',
                       'CustomAttributes/bootstrap-tooltip', 'CustomAttributes/button-waves', 
-                      'CustomAttributes/autosize-textarea', 'CustomControls/upload-control'])
+                      'CustomAttributes/autosize-textarea', 'CustomControls/upload-control',
+                      'CustomAttributes/bootstrap-dropdown', 'CustomControls/picture-control'])
     .developmentLogging()
     .plugin('aurelia-syncfusion-bridge', syncfusion => {
         syncfusion.ejGrid();

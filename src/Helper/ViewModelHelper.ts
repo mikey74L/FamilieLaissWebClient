@@ -6,7 +6,9 @@ import { ShowBusyBoxEvent } from '../Events/ShowBusyBoxEvent';
 import { AppRouter } from 'aurelia-router';
 import swal from 'sweetalert2';
 import { LoadDataWithFatherModel, EditDataWithFatherModel} from '../Models/LoadDataWithFatherModel';
-import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal, ServiceModelStammdatenID, ServiceModelStammdatenEditID } from './ServiceHelper'
+import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal, 
+         ServiceModelStammdatenID, ServiceModelStammdatenEditID,
+         ServiceModelLoadDataDelete } from './ServiceHelper'
 import {EntityManager, Entity, ValidationError, ValidationErrorsChangedEventArgs, PropertyChangedEventArgs} from 'breeze-client';
 
 export abstract class ViewModelGeneral {
@@ -543,5 +545,39 @@ export abstract class ViewModelEditID extends ViewModelEdit {
 
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);
+    }
+}
+
+export abstract class ViewModelGeneralDataDelete extends ViewModelGeneralView {
+    //Members
+    router: AppRouter;
+    entities: Array<any>;
+    service: ServiceModelLoadDataDelete;
+
+    //C'tor
+    constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, router: AppRouter, service: ServiceModelLoadDataDelete) {
+        //Aufrufen des Konstruktors für die Vater Klasse
+        super(loc, eventAggregator, dialogService);
+
+        //Übernehmen der Parameter
+        this.service = service;
+        this.router = router;
+    }
+
+    //Wird aufgerufen wenn der Aurelia-Router Aurelia die View anzeigen möchte.
+    //Hier können asynchrone Vorgänge durchgeführt werden
+    public async activate(info: any): Promise<void> {
+        //Aufrufen der Lade-Methode
+        await this.load(info);
+
+        //Aufrufen der Child-Methode
+        return this.activateChild(info);
+    }
+
+    //Laden der Daten über den Service
+    protected async load(info: any): Promise<any> {
+        //Aufrufen der Lade-Methode im Service
+        //und übernehmen der Entitites
+        this.entities = await this.service.getData();
     }
 }

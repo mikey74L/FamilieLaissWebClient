@@ -1,4 +1,6 @@
 <template>
+  <require from="../../../Converter/sort-value-converter"></require>
+
   <section class="au-animate">
     <!-- Überschrift ausgeben -->
     <div class="block-header">
@@ -39,6 +41,7 @@
                             upload-type=1>
             </upload-control>
           </div>
+      
           <!-- Die Seite mit den hochgeladenen Bildern ausgeben -->
           <div id="uploadList">
             <!-- Ausgeben des Beschriftungs-Headers -->
@@ -48,7 +51,56 @@
                 <small>${ 'Card.Header.DescriptionListe' | t: { ns: 'StammPictureUpload'}}</small>
               </h2>
             </div>
-         </div>
+
+            <!-- Ausgeben des Headers mit der Auswahl des Sortierkriteriums -->
+            <div class="card-header ch-alt">
+              <h2>${sortCriteriaHeaderText}</h2>
+
+              <ul class="actions">
+                <li class="dropdown">
+                  <a href=""
+                     bootstrap-tooltip
+                     title=""
+                     data-original-title=""
+                     data-trigger="hover"
+                     bootstrap-dropdown
+                     data-toggle="dropdown"
+                     aria-expanded="true"
+                     t="[data-original-title]Card.Header.Tooltips.Sort"
+                     t-params.bind="locConfig">
+                     <i class="zmdi zmdi-sort"></i>
+                  </a>
+
+                  <ul class="dropdown-menu dropdown-menu-right">
+                    <li repeat.for="Item of sortCriteriaList">
+                      <a href="#" click.trigger="sortBy(Item)">${Item.displayText}</a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#"
+                     click.trigger="refreshList()"
+                     bootstrap-tooltip
+                     data-toggle="tooltip"
+                     title=""
+                     data-original-title=""
+                     data-trigger="hover"
+                     t="[data-original-title]Card.Header.Tooltips.Refresh"
+                     t-params.bind="locConfig">
+                     <i class="zmdi zmdi-refresh"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Ausgeben der Liste der hochgeladenen Bilder -->
+            <div class="card-body card-padding">
+              <div id="containerItems" class="container-fluid">
+                <picture-control item.bind="Item" modus.bind="1" repeat.for="Item of entities | sort: { propertyName: currentSortCriteria.propertyName, direction: currentSortCriteria.direction }">
+                </picture-control>
+              </div>           
+            </div>
+          </div>
         </ej-tab>
       </div>
     </div>

@@ -95,7 +95,7 @@ export class FamilieLaissApp {
         }     
         
         //Registrieren für das "ShowBusyBoxEvent"
-        this.aggregator.subscribe(ShowBusyBoxEvent, message => {
+        this.aggregator.subscribe(ShowBusyBoxEvent, (message: ShowBusyBoxEvent) => {
             //Anzeigen oder verbergen des Indicators
             if (message.isVisible) {
                 this.showBusyIndicator();

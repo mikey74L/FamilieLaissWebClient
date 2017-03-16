@@ -44,7 +44,7 @@ export abstract class ServiceModelLoadData extends ServiceModel {
 
 export abstract class ServiceModelLoadDataDelete extends ServiceModelLoadData {
     //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
-    public abstract async deleteItem(ID: number): Promise<void>;
+    public abstract async deleteItem(ID: number): Promise<SaveResult>;
 }
 
 export abstract class ServiceModelStammdaten extends ServiceModel {
