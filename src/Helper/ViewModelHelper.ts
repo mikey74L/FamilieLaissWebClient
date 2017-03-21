@@ -1,15 +1,17 @@
+/// <reference path="../../typings/globals/syncfusion/ej.web.all.d.ts" />
 import { ToastrHelper } from './ToastrHelper';
 import { DialogService } from 'aurelia-dialog';
 import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { ShowBusyBoxEvent } from '../Events/ShowBusyBoxEvent';
 import { AppRouter } from 'aurelia-router';
+import { DialogController } from 'aurelia-dialog';
 import swal from 'sweetalert2';
 import { LoadDataWithFatherModel, EditDataWithFatherModel} from '../Models/LoadDataWithFatherModel';
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal, 
          ServiceModelStammdatenID, ServiceModelStammdatenEditID,
          ServiceModelLoadDataDelete } from './ServiceHelper'
-import {EntityManager, Entity, ValidationError, ValidationErrorsChangedEventArgs, PropertyChangedEventArgs} from 'breeze-client';
+import { EntityManager, Entity, ValidationError, ValidationErrorsChangedEventArgs, PropertyChangedEventArgs } from 'breeze-client';
 
 export abstract class ViewModelGeneral {
   //Members
@@ -81,6 +83,24 @@ export abstract class ViewModelGeneral {
   //Wird aufgerufen wenn sich der Busy-State geändert hat
   //(Ist abstract und muss überschrieben werden)
   protected abstract busyStateChanged(): void
+}
+
+export abstract class ViewModelGeneralDialog extends ViewModelGeneral {
+    //Members
+    controller: DialogController;
+
+    //C'tor
+    constructor (localize: I18N, eventAggregator: EventAggregator, dialogController: DialogController) {
+        //Aufrufen des Constructors der Vater-Klasse
+        super(localize, eventAggregator);
+
+        //Übernehmen der restlichen Parameter
+        this.controller = dialogController;
+    }
+
+    public async activate(info: any): Promise<void> {
+        return this.activateChild(info);
+    }
 }
 
 export abstract class ViewModelGeneralView extends ViewModelGeneral {

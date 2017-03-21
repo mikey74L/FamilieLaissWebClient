@@ -129,6 +129,12 @@ export class UploadControl {
       this.refreshGrid();
   }
   
+  //Wird vom Syncfusion Grid aufgerufen wenn die Column-Templates aktualisiert werden sollen
+  private gridTemplateRefresh(args: ej.Grid.TemplateRefreshEventArgs) : void {
+      //Initialisieren des Progess-Bars für das Template
+      $(args.cell).find("#progressBarDone").ejProgressBar({value: args.data.percentageDone, height: "20"});
+  }
+
   //Wird vom Grid aufgerufen wenn eine Zeile selektiert wurde
   private rowHasBeenSelected(args: ej.Grid.RowSelectedEventArgs): void {
     if (args.rowIndex != undefined && args.rowIndex >= 0) {

@@ -4,9 +4,9 @@ import {autoinject} from 'aurelia-framework';
 import {I18N} from 'aurelia-i18n';
 import {DeletePictureEvent, ChoosePictureEvent, EditPictureEvent} from '../Events/PictureEvents';
 import {PictureURLHelper} from '../Helper/PictureURLHelper';
-// import {ShowPictureStartArgs} from '../helper/FamilieLaissHelper';
-import {DialogService} from 'aurelia-dialog';
-// import {ShowPictureDialog} from '../CustomDialogs/ShowPictureDialog';
+import {ShowPictureBigArgs} from '../Models/ShowPictureBigArgs';
+import {DialogService, DialogResult} from 'aurelia-dialog';
+import {ShowPictureBigDialog} from '../CustomDialogs/ShowPictureBigDialog';
 
 @customElement('picture-control')
 @containerless()
@@ -33,14 +33,14 @@ export class PictureControl {
     //Members
     loc: I18N;
     aggregator: EventAggregator;
-    dialog;
+    dialog: DialogService;
 
     //C'tor
-    constructor(loc: I18N, eventAggregator: EventAggregator, urlHelper: PictureURLHelper) {
+    constructor(loc: I18N, eventAggregator: EventAggregator, urlHelper: PictureURLHelper, dialogService: DialogService) {
         //Übernehmen der Parameter
         this.loc = loc;
         this.aggregator = eventAggregator;
-        // this.dialog = dialog;
+        this.dialog = dialogService;
         this.URLHelper = urlHelper;
 
         //Initialisieren
@@ -97,21 +97,25 @@ export class PictureControl {
     //Ermittelt die Image-URL für das übergebene Image
     private getImageURL(): string {
         //Return-Value
-        return this.URLHelper.getImageURL(this.uploadItem);
+        return this.URLHelper.getImageURLUpload(this.uploadItem);
     }
 
     //Zeigt das ausgewählte Photo in Großansicht an
-    public showPicture(): void {
-        // //Aufrufen des Aurelia-Dialoges zur Anzeige des Bildes
-        // //im Großformat
-        // this.dialog.open({ viewModel: ShowPictureDialog, model: new ShowPictureStartArgs(1, this.uploadItem)}).then(response => {
-        //     if (response.wasCancelled) {
-        //         //Nichts zu tun
-        //     } 
-        //     else {
-        //         //Nichts zu tun
-        //     }
-        // });
+    public async showPicture(): Promise<void> {
+        //Aufrufen des Aurelia-Dialoges zur Anzeige des Bildes
+        //im Großformat
+        var Result: DialogResult = await this.dialog.open({ 
+          viewModel: 'CustomDialogs/ShowPictureBigDialog', 
+          model: new ShowPictureBigArgs(1, this.uploadItem)
+        });
+        
+        //Result des Dialoges auswerten
+        if (Result.wasCancelled) {
+            //Nichts zu tun
+        } 
+        else {
+            //Nichts zu tun
+        }
     }
 
     //Das Bild soll gelöscht werden. 

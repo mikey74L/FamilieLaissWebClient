@@ -20,12 +20,13 @@
                 <!-- Das Grid für die Alben ausgeben -->
                 <div>
                     <ej-grid id="grid_Media_Group" e-data-source.bind="gridData" e-allow-filtering=true 
-                             e-allow-sorting=true e-allow-scrolling=true
+                             e-allow-sorting=true e-allow-scrolling=true e-allow-grouping=true
                              e-allow-multi-sorting=true e-allow-reordering=true e-allow-resizing=true
                              e-enable-header-hover=true e-enable-row-hover=true e-filter-settings.bind="gridFilterSettings"
                              e-sort-settings.bind="gridSortSettings"
                              e-edit-settings.bind="gridEditSettings" e-selection-settings.bind="gridSelectionSettings"
                              e-scroll-settings.bind="gridScrollSettings"
+                             e-group-settings.bind="gridGroupSettings"
                              e-selection-type="single" e-enable-alt-row=false
                              e-on-row-selected.trigger="rowHasBeenSelected($event.detail)">
                         <ej-column e-field="Type_DisplayName" e-type="string" e-width=180 e-header-text="${ 'Media_Group.Type.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>

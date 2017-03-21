@@ -19,10 +19,10 @@
                 <!-- Das Grid für die Kategorien ausgeben -->
                 <div >
                     <ej-grid id="grid_Category" e-data-source.bind="gridData" e-allow-filtering=true 
-                             e-allow-sorting=true e-allow-scrolling=true
+                             e-allow-sorting=true e-allow-scrolling=true e-allow-grouping=true
                              e-allow-multi-sorting=true e-allow-reordering=true e-allow-resizing=true
                              e-enable-header-hover=true e-enable-row-hover=true e-filter-settings.bind="gridFilterSettings"
-                             e-sort-settings.bind="gridSortSettings"
+                             e-sort-settings.bind="gridSortSettings" e-group-settings.bind="gridGroupSettings"
                              e-edit-settings.bind="gridEditSettings" e-selection-settings.bind="gridSelectionSettings"
                              e-scroll-settings.bind="gridScrollSettings"
                              e-selection-type="single" e-enable-alt-row=false

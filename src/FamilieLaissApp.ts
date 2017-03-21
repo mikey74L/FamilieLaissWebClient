@@ -249,13 +249,14 @@ export class FamilieLaissApp {
                           this.loc.tr('Stammdaten.PictureUploadList', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
         
-        Item.addChildItem(undefined, 'pictureadmin', 'pictureadmin', './stammdaten/pictureadmin/picture-admin-list', true, 
+        //Routes für "Stammdaten Bilder zuweisen"
+        Item.addChildItem(undefined, 'pictureadmin', 'pictureadmin', './Views/Stammdaten/PictureAdmin/picture-admin-list', true, 
                           this.loc.tr('Stammdaten.PictureAdminList', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'pictureadmin/:idFather', 'pictureadminwithid', './stammdaten/pictureadmin/picture-admin-list', true, 
+        Item.addChildItem(undefined, 'pictureadmin/:idFather', 'pictureadminwithid', './Views/Stammdaten/PictureAdmin/picture-admin-list', true, 
                           this.loc.tr('Stammdaten.PictureAdminList', {ns: 'Router'}), 'pictureadminwithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'pictureadminedit/:operation/:idFather/:id', 'pictureadminedit', './stammdaten/pictureadmin/picture-admin-edit', true, 
+        Item.addChildItem(undefined, 'pictureadminedit/:operation/:idFather/:id', 'pictureadminedit', './Views/Stammdaten/PictureAdmin/picture-admin-edit', true, 
                           this.loc.tr('Stammdaten.PictureAdminEdit', {ns: 'Router'}), 'pictureadminedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
         
@@ -349,8 +350,8 @@ export class FamilieLaissApp {
     public async clearLocalStorageClicked(eventdata): Promise<any> {
         //Ausgeben einer Sicherheitsabfrage ob der Local-Storage wirklich gelöscht
         //werden soll
-        var Response: Promise<any>;
-        Response = await swal({
+        try {
+          await swal({
             title: this.loc.tr('Delete_Local_Storage.Question.Header', {ns: 'Alerts'}),
             text: this.loc.tr('Delete_Local_Storage.Question.Body', {ns: 'Alerts'}),
             type: "warning",
@@ -360,21 +361,19 @@ export class FamilieLaissApp {
             cancelButtonText: this.loc.tr('Delete_Local_Storage.Question.Cancel_Button', {ns: 'Alerts'}),
             allowOutsideClick: false,
             allowEscapeKey: false
-        });
-        
-        
-        
-        // (isConfirm: boolean) => {
-        //     if (isConfirm) {
-        //         //Löschen des Local-Storage
-        //         localStorage.clear();
+          });
 
-        //         //Bestätigungsmeldung über das Löschen des Local-Storage
+          //Löschen des Local-Storage
+          localStorage.clear();
+
+          //Bestätigungsmeldung über das Löschen des Local-Storage
         //         swal(this.loc.tr('Delete_Local_Storage.Success.Header', {ns: 'Alerts'}), 
         //              this.loc.tr('Delete_Local_Storage.Success.Body', {ns: 'Alerts'}), "success");
-        //     }
-        // });
- 
+        }
+        catch (ex) {
+
+        }
+        
         //Das Dropdown-Menü schließen
         this.dropdownSettingsVisible = false;
     }

@@ -7,7 +7,9 @@ import {AppRouter} from 'aurelia-router';
 import {DialogService} from 'aurelia-dialog';
 import {enSortDirection} from '../../../Enum/FamilieLaissEnum';
 import {UploadInProgressEvent} from '../../../Events/UploadControlEvents';
+import {DeletePictureEvent} from '../../../Events/PictureEvents';
 import {PictureUploadService} from './picture-upload-service';
+import swal from 'sweetalert2';
 
 @autoinject()
 export class PictureUploadList extends ViewModelGeneralDataDelete {
@@ -24,6 +26,7 @@ export class PictureUploadList extends ViewModelGeneralDataDelete {
 
     //Event-Aggregator 
     subscribeProgressEvent: Subscription;
+    subscribeDeleteEvent: Subscription;
 
     //C'tor
     constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, router: AppRouter, service: PictureUploadService) {
@@ -70,6 +73,13 @@ export class PictureUploadList extends ViewModelGeneralDataDelete {
             //Übernehmen des Status
             this.uploadInProgress = message.isInProgress;
         });
+
+        //Registrieren für das "Delete-Picture-Event"
+        this.subscribeDeleteEvent = this.eventAggregator.subscribe(DeletePictureEvent, 
+          (message: DeletePictureEvent) => {
+            //Aufrufen der Methode zum Löschen des Bildes
+            this.deletePicture(message.item);
+        });
     }
 
     //Wird aufgerufen wenn der Anwender im Dropdown den entsprechenden
@@ -96,6 +106,56 @@ export class PictureUploadList extends ViewModelGeneralDataDelete {
         this.setBusyState(false);
     }
 
+    //Löscht ein Upload-Picture. Wird über das Event vom Aggregator aufgerufen
+    private async deletePicture(itemToDelete: any): Promise<void> {
+      try {
+        //Ausgeben einer Sicherheitsabfrage
+        await swal({
+          title: this.loc.tr('Delete.UploadPicture.Header', { ns: 'Alerts' }),
+          text: this.loc.tr('Delete.UploadPicture.Body', { ns: 'Alerts', 'name': itemToDelete.Name_Original }),
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: this.loc.tr('Delete.UploadPicture.Confirm_Button', { ns: 'Alerts' }),
+          cancelButtonText: this.loc.tr('Delete.UploadPicture.Cancel_Button', { ns: 'Alerts' }),
+          allowOutsideClick: false,
+          allowEscapeKey: false});
+
+          //Einblenden der Busy-Box
+          this.setBusyState(true);
+          
+          try {
+            //Löschen des Items auf dem Server
+            await this.service.deleteItem(itemToDelete.ID);
+
+            //Ermitteln des Index des Items
+            var Index = this.entities.indexOf(itemToDelete);
+
+            //Entfernen des Elements aus dem Array
+            this.entities.splice(Index, 1);
+
+            //Ausblenden der Busy-Box
+            this.setBusyState(false);
+                       
+            //Ausgeben einer Erfolgsmeldung
+            this.showNotifySuccess(this.loc.tr('PictureUpload.Delete.Success', { ns: 'Toasts' }));
+          }
+          catch (ex) {
+            //Ausblenden der Busy-Box
+            this.setBusyState(false);
+
+            //Zurücknehmen der Änderungen (Delete-State)
+            this.service.rejectChanges();
+
+            //Ausgeben einer Fehlermeldung
+            this.showNotifyError(this.loc.tr('PictureUpload.Delete.Error', { ns: 'Toasts' }));
+          }
+      }
+      catch (ex) {
+        //Wenn auf den Abbrechen-Button geklickt wird muss nichts gemacht werden
+      }
+    }
+
     //Wird von Aurelia aufgerufen
     protected attachedChild(): void {
     }
@@ -108,11 +168,41 @@ export class PictureUploadList extends ViewModelGeneralDataDelete {
     //aktiviert wird aber noch nicht angezeigt. 
     protected async activateChild(info: any): Promise<void> {
     }
+    
+    //Wird von Aurelia aufgerufen ob die View verlassen werden kann
+    public async canDeactivate(): Promise<boolean> {
+        //Wenn ein Upload aktiv ist, dann darf die View nicht verlassen werden
+        if (this.uploadInProgress) {
+          try {
+            //Meldungsfenster anzeigen
+            await swal({
+              title: this.loc.tr('Upload.Picture.LeavePage.Header', { ns: 'Alerts' }),
+              text: this.loc.tr('Upload.Picture.LeavePage.Body', { ns: 'Alerts' }),
+              type: "info",
+              showCancelButton: false,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: this.loc.tr('Upload.Picture.LeavePage.Confirm_Button', { ns: 'Alerts' }),
+              allowOutsideClick: false,
+              allowEscapeKey: false});
+
+            //Promise zurückliefern
+            return Promise.resolve(true)  
+          }
+          catch(ex) {
+            return Promise.reject(false);
+          }
+        }
+        else {
+          //Promise zurückliefern
+          return Promise.resolve(true);
+        }
+    }
 
     //Wird von Aurelia aufgerufen
     public deactivate(): void {
         //Deregistrieren beim Event-Aggregator
         this.subscribeProgressEvent.dispose();
+        this.subscribeDeleteEvent.dispose();
     }
 
     //Wird durch Framework automatisch aufgerufen wenn der Enabled-State der Buttons 

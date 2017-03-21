@@ -1,0 +1,28 @@
+<template>
+    <ai-dialog>
+        <ai-dialog-header>
+            <h4>${'ShowPicture.Title' | t: { ns: 'Dialogs' } } <small>${currentName}</small></h4>
+        </ai-dialog-header>
+
+        <ai-dialog-body>
+            <img width=880 height=660 src.bind="getImageURL()"/>
+        </ai-dialog-body>
+
+        <ai-dialog-footer>
+            <button type="button"
+                    click.trigger="controller.cancel()"
+                    class="btn btn-default btn-icon-text waves-effect"
+                    button-waves
+                    data-dismiss="modal"
+                    bootstrap-tooltip
+                    data-toggle="tooltip"
+                    title=""
+                    data-original-title=""
+                    data-trigger="hover"
+                    t="[data-original-title]ShowPicture.Tooltips.Close;[append]ShowPicture.Buttons.Close"
+                    t-params.bind="locConfig">
+                <i class="zmdi zmdi-close"></i>
+            </button>
+        </ai-dialog-footer>
+    </ai-dialog>
+</template>
