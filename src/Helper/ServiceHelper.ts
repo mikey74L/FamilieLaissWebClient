@@ -67,6 +67,9 @@ export abstract class ServiceModelStammdatenID extends ServiceModelStammdaten {
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
     public abstract async getData(ID: number): Promise<LoadDataWithFatherModel>;
 
+    //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
+    public abstract async deleteItem(ID: number): Promise<SaveResult>;
+
     //Refresh Data from Server (Ist abstract und muss überschrieben werden)
     public abstract async refreshData(ID: number): Promise<LoadDataWithFatherModel>;
 }
@@ -93,4 +96,38 @@ export abstract class ServiceModelStammdatenEditID extends ServiceModelStammdate
 
     //Ermittelt das Vater-Item (Ist abstract und muss überschrieben werden)
     public abstract async getFather(idFather: number): Promise<any>;
+}
+
+export abstract class ServiceModelAssign extends ServiceModel {
+    //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
+    public abstract async getData(ID: number): Promise<Array<any>>;
+
+    //Lädt die Alben (Ist abstract und muss überschrieben werden)
+    public abstract async loadAlben(): Promise<Array<any>>;
+
+    //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
+    public abstract async deleteItem(ID: number): Promise<SaveResult>;
+}
+
+export abstract class ServiceModelAssignEdit extends ServiceModelStammdatenEdit {
+    //Ermittelt das Item
+    public abstract async getItem(ID: number): Promise<EditDataWithFatherModel>;
+
+    //Ermittelt alle Upload-Items die noch nicht zugeordnet wurden
+    public abstract async getUploadItems(): Promise<Array<any>>;
+
+    //Ermittelt alle Kategorien die zugeordnet werden können
+    public abstract async getCategories(): Promise<Array<any>>;
+
+    //Ermittelt das Vater-Item
+    public abstract async getFather(ID: number):Promise<any>;
+
+    //Erzeugt ein neues Item
+    public abstract async createNew(idFather: number): Promise<any>;
+
+    //Erzeugt eine neue Zuweisung für einen Kategoriewert
+    public abstract async createNewAssignedCategory(item: any, idCategory: number): Promise<any>;
+
+    //Entfernt einen zugewießenen Kategoriewert
+    public abstract async removeAssignedCategory(assignedCategoryItem: any): Promise<void>;
 }

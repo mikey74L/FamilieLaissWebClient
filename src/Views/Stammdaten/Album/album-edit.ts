@@ -6,6 +6,7 @@ import {DialogService} from 'aurelia-dialog';
 import {AppRouter} from 'aurelia-router';
 import {autoinject} from 'aurelia-dependency-injection';
 import swal from 'sweetalert2';
+import {enViewModelEditMode} from '../../../Enum/FamilieLaissEnum';
 
 @autoinject()
 export class AlbumEdit extends ViewModelEditNormal {
@@ -82,7 +83,7 @@ export class AlbumEdit extends ViewModelEditNormal {
         this.unsubscribeEvents();
 
         //Zurückkehren zur Liste der Alben
-        if (this.editMode == "edit") {
+        if (this.editMode == enViewModelEditMode.Edit) {
             var MyEntity: any = this.itemToEdit;
             this.router.navigate(this.routeForList + "/" + MyEntity.ID);
         }
@@ -95,7 +96,7 @@ export class AlbumEdit extends ViewModelEditNormal {
     public async cancelChanges(): Promise<void> {
         //Nur wenn sich auch etwas geändert hat oder es sich um einen neuen Eintrag handelt, dann wird auch eine
         //Sicherheitsabfrage ausgegeben
-        if (this.editMode == "new" || (this.editMode == "edit" && this.hasChanges())) {
+        if (this.editMode == enViewModelEditMode.New || (this.editMode == enViewModelEditMode.Edit && this.hasChanges())) {
             //Anzeigen einer Sicherheitsabfrage ob wirklich abgebrochen werden soll
             try {
               await swal(

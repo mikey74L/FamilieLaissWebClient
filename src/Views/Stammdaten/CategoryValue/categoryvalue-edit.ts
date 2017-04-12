@@ -7,6 +7,7 @@ import {I18N} from 'aurelia-i18n';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {DialogService} from 'aurelia-dialog';
 import swal from 'sweetalert2';
+import {enViewModelEditMode} from '../../../Enum/FamilieLaissEnum';
 
 @autoinject()
 export class CategoryValueEdit extends ViewModelEditID {
@@ -82,7 +83,7 @@ export class CategoryValueEdit extends ViewModelEditID {
         this.unsubscribeEvents();
 
         //Zurückkehren zur Liste der Kategorien
-        if (this.editMode == "edit") {
+        if (this.editMode == enViewModelEditMode.Edit) {
             var MyEntity: any = this.itemToEdit;
             this.router.navigate(this.routeForList + "/" + this.fatherItem.ID + "/" + MyEntity.ID);
         }
@@ -95,7 +96,7 @@ export class CategoryValueEdit extends ViewModelEditID {
     public async cancelChanges(): Promise<void> {
         //Nur wenn sich auch etwas geändert hat oder es sich um einen neuen Eintrag handelt, dann wird auch eine
         //Sicherheitsabfrage ausgegeben
-        if (this.editMode == "new" || (this.editMode == "edit" && this.hasChanges())) {
+        if (this.editMode == enViewModelEditMode.New || (this.editMode == enViewModelEditMode.Edit && this.hasChanges())) {
             //Anzeigen einer Sicherheitsabfrage ob wirklich abgebrochen werden soll
             try {
               await swal(

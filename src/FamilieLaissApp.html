@@ -199,7 +199,7 @@
         <!-- Ausgeben des Inhaltes der aktuellen View -->
         <section id.bind="showNavigation ? 'content' : ''">
             <div class.bind="showNavigation ? 'container' : ''">
-                <router-view></router-view>
+                <router-view swap-order="after"></router-view>
             </div>
         </section>
     </section>

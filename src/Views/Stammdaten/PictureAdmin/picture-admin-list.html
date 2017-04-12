@@ -1,0 +1,108 @@
+<template>
+    <require from="../../../Converter/sort-value-converter"></require>
+
+    <section class="au-animate">
+        <!-- Überschrift ausgeben -->
+        <div class="block-header">
+            <h2 t="AdminList.Header.Text" t-params.bind="locConfig"></h2>
+        </div>
+
+        <!-- Card ausgeben -->
+        <div class="card">
+            <div class="card-body card-padding">
+                <!-- Ausgeben des Headers-->
+                <div class="card-header">
+                    <!-- Ausgeben der Überschrift -->
+                    <h2>
+                        ${ 'AdminList.Card.Header.Text' | t: { ns: 'StammPictureAdmin', album: selectedFatherItem.NameGerman, context: albumContext}}
+                        <small>${ 'AdminList.Card.Header.Description' | t: { ns: 'StammPictureAdmin', context: albumContext}}</small>
+                    </h2>
+                </div>
+
+                <!-- Ausgeben des Headers mit der Auswahl-Leiste -->
+                <div class.bind="albumChoosed ? 'card-header ch-alt' : 'card-header bgm-red'">
+                    <!-- Ausgeben des aktuellen Sortierkriteriums -->
+                    <h2>${sortCriteriaHeaderText}</h2>
+
+                    <!-- Ausgeben der Steuerungselemente -->
+                    <ul class="actions">
+                        <!-- Button für die Auswahl des Albums -->
+                        <li if.bind="isChooseAlbumEnabled">
+                            <a href="#"
+                               click.trigger="chooseAlbum()"
+                               bootstrap-tooltip
+                               data-toggle="tooltip"
+                               title=""
+                               data-original-title=""
+                               data-trigger="hover"
+                               t="[data-original-title]AdminList.Card.Header.Tooltips.SelectAlbum"
+                               t-params.bind="locConfig">
+                                <i class="zmdi zmdi-album"></i>
+                            </a>
+                        </li>
+
+                        <!-- Button für das Hinzufügen eines Photos -->
+                        <li if.bind="isAddEnabled">
+                            <a href="#"
+                               click.trigger="addPicture()"
+                               bootstrap-tooltip
+                               data-toggle="tooltip"
+                               title=""
+                               data-original-title=""
+                               data-trigger="hover"
+                               t="[data-original-title]AdminList.Card.Header.Tooltips.AddPhoto"
+                               t-params.bind="locConfig">
+                                <i class="zmdi zmdi-plus"></i>
+                            </a>
+                        </li>
+
+                        <!-- Drop-Down mit den Einträgen für das Sortierkriterium -->
+                        <li if.bind="isChangeSortEnabled" class="dropdown">
+                            <a href=""
+                               bootstrap-tooltip
+                               title=""
+                               data-original-title=""
+                               data-trigger="hover"
+                               bootstrap-dropdown
+                               data-toggle="dropdown"
+                               aria-expanded="true"
+                               t="[data-original-title]AdminList.Card.Header.Tooltips.Sort"
+                               t-params.bind="locConfig">
+                                <i class="zmdi zmdi-sort"></i>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li repeat.for="Item of sortCriteriaList">
+                                    <a href="#" click.trigger="sortBy(Item)">${Item.displayText}</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Button für den Refresh -->
+                        <li if.bind="isRefreshEnabled">
+                            <a href="#"
+                               click.trigger="refreshList()"
+                               bootstrap-tooltip
+                               data-toggle="tooltip"
+                               title=""
+                               data-original-title=""
+                               data-trigger="hover"
+                               t="[data-original-title]AdminList.Card.Header.Tooltips.Refresh"
+                               t-params.bind="locConfig">
+                                <i class="zmdi zmdi-refresh"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Ausgeben der Liste der hochgeladenen Bilder -->
+                <div class="card-body card-padding">
+                    <div id="containerItems" class="container-fluid">
+                        <picture-control item.bind="Item" modus.bind="3" repeat.for="Item of entities | sort: { propertyName: currentSortCriteria.propertyName, direction: currentSortCriteria.direction }">
+                        </picture-control>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>

@@ -1,5 +1,6 @@
 {
   "globalDependencies": {
+    "bootstrap-select": "registry:dt/bootstrap-select#1.11.2+20161110161159",
     "i18next-browser-languagedetector": "registry:dt/i18next-browser-languagedetector#0.0.14+20160811131240",
     "i18next-xhr-backend": "registry:dt/i18next-xhr-backend#1.2.0+20161005184000",
     "jquery": "registry:dt/jquery#1.10.0+20170104155652",

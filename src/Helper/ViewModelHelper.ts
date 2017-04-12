@@ -7,10 +7,11 @@ import { ShowBusyBoxEvent } from '../Events/ShowBusyBoxEvent';
 import { AppRouter } from 'aurelia-router';
 import { DialogController } from 'aurelia-dialog';
 import swal from 'sweetalert2';
+import { enViewModelEditMode } from '../Enum/FamilieLaissEnum';
 import { LoadDataWithFatherModel, EditDataWithFatherModel} from '../Models/LoadDataWithFatherModel';
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal, 
          ServiceModelStammdatenID, ServiceModelStammdatenEditID,
-         ServiceModelLoadDataDelete } from './ServiceHelper'
+         ServiceModelLoadDataDelete, ServiceModelAssign, ServiceModelAssignEdit } from './ServiceHelper'
 import { EntityManager, Entity, ValidationError, ValidationErrorsChangedEventArgs, PropertyChangedEventArgs } from 'breeze-client';
 
 export abstract class ViewModelGeneral {
@@ -248,7 +249,7 @@ export abstract class ViewModelEdit extends ViewModelGeneralView {
     hasValidationErrors: boolean;
     validationErrors: Array<ValidationError>;
     isSavingEnabled: boolean;
-    editMode: string;
+    editMode: enViewModelEditMode;
     keySubscribePropertyChanged: number;
     keySubscribeErrorsChanged: number;
 
@@ -271,7 +272,7 @@ export abstract class ViewModelEdit extends ViewModelGeneralView {
     public async activate(info: any): Promise<void> {
         if (info.operation == "new") {
             //Setzen des Edit-Modes
-            this.editMode = "new";
+            this.editMode = enViewModelEditMode.New;
 
             //Aufrufen der Methode zum Anlegen eines neuen Items
             if (info.idFather) {
@@ -297,7 +298,7 @@ export abstract class ViewModelEdit extends ViewModelGeneralView {
         }
         else {
             //Setzen des Edit-Modes
-            this.editMode = "edit";
+            this.editMode = enViewModelEditMode.Edit;
 
             //Aufrufen der Lade-Methode und der Child-Methode
             if (info.idFather) {
@@ -599,5 +600,141 @@ export abstract class ViewModelGeneralDataDelete extends ViewModelGeneralView {
         //Aufrufen der Lade-Methode im Service
         //und übernehmen der Entitites
         this.entities = await this.service.getData();
+    }
+}
+
+export abstract class AssignViewModelStammdaten extends ViewModelGeneralView {
+    //Member-Deklarationen
+    routeForEdit: string;
+    router: AppRouter;
+    selectedFatherItem: any;
+    entities: Array<any>;
+    service: ServiceModelAssign;
+
+    isChooseAlbumEnabled: boolean;
+    isAddEnabled: boolean;
+    isRefreshEnabled: boolean;
+    isChangeSortEnabled: boolean;
+
+    //C'tor
+    constructor (loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, router: AppRouter, 
+                 service: ServiceModelAssign, routeForEdit: string) {
+        //Aufrufen des Konstruktors für die Vater-Klasse
+        super(loc, eventAggregator, dialogService);
+
+        //Übernehmen der restlichen Parameter
+        this.router = router;
+        this.service = service;
+        this.routeForEdit = routeForEdit;
+
+        //Setzen der Standard-Werte für die Properties
+        this.isChooseAlbumEnabled = true;
+        this.isAddEnabled = false;
+        this.isRefreshEnabled = false;
+        this.isChangeSortEnabled = false;
+    }
+
+    //Wird aufgerufen wenn der Aurelia-Router die View anzeigen möchte.
+    //Hier können asynchrone Vorgänge durchgeführt werden. Daher ist der Return-Value
+    //dieser Methode entweder ein Promise oder null
+    public async activate(info: any): Promise<void> {
+        //Aufrufen der Kind-Methode
+        return this.activateChild(info);
+    }
+
+    //Wird von Vaterklasse überschrieben
+    protected checkEnabledState(): void {
+        if (this.isBusy) {
+          this.isAddEnabled = false;
+          this.isChangeSortEnabled = false;
+          this.isChooseAlbumEnabled = false;
+          this.isRefreshEnabled = false;
+        }
+        else {
+          if (this.selectedFatherItem != null) {
+            //Wenn ein Vater-Item (Album) ausgewählt wurde,
+            //dann können auch die Buttons aktiviert werden
+            this.isAddEnabled = true;
+            this.isRefreshEnabled = true;
+            this.isChangeSortEnabled = true;
+          }
+          else {
+            //Wenn kein Vater-Item (Album) ausgewählt wurde,
+            //dann müssen auch die Buttons deaktiviert werden
+            this.isAddEnabled = false;
+            this.isRefreshEnabled = false;
+            this.isChangeSortEnabled = false;
+          }
+        }
+    }
+}
+
+export abstract class ViewModelAssignEdit extends ViewModelEdit {
+    //Members
+    service: ServiceModelAssignEdit;
+    fatherItem: any;
+
+    //C'tor
+    constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, 
+                routeForList: string, router: AppRouter, service: ServiceModelAssignEdit) {
+        //Aufrufen des Konstruktors für die Vater Klasse
+        super(loc, eventAggregator, dialogService, routeForList, router);
+
+        //Übernehmen der Parameter
+        this.service = service;
+    }
+
+    //Liefert zurück ob der Service aktuell ausstehende Änderungen hat
+    protected hasChanges(): boolean {
+        return this.service.hasChanges();
+    }
+
+    //Verwerfen der Änderungen im Service
+    protected rejectChanges(): void {
+        //Verwerfen der Änderungen
+        this.service.rejectChanges();
+
+        //Die-Events deregistrieren
+        this.unsubscribeEvents();
+
+        //Benachrichtigung, dass die Änderungen zurückgenommen wurden
+        this.cancelChanges();
+    }
+
+    //Laden der Daten über den Service
+    protected async load(info: any): Promise<any> {
+        //Über Promise das Laden des zu editierenden Items anstoßen
+        var ResultSet: EditDataWithFatherModel = await this.service.getItem(info.id);
+
+        //Übernehmen der Entity
+        this.itemToEdit = ResultSet.editItem;
+        this.fatherItem = ResultSet.fatherItem;
+
+        //Verdrahten des Events für das Property-Changed Event
+        this.subscribePropertyChanged();
+
+        //Subscribe to Validation changed
+        this.subscribeToValidationChanged();
+
+        //Promise zurückmelden
+        return Promise.resolve(this.itemToEdit);
+    }
+
+    //Erstellt ein neues Item
+    protected async createNew(info: any): Promise<any> {
+        //Erzeugen einer neuen Entity
+        this.itemToEdit = await this.service.createNew(info.idFather);
+
+        //Ermitteln der Daten des Vaters
+        this.fatherItem = await this.service.getFather(info.idFather);
+        
+        //Verdrahten des Events für das Property-Changed Event
+        this.subscribePropertyChanged();
+
+        //Subscribe to Validation changed
+        this.subscribeToValidationChanged();
+
+        //Promise zurückmelden
+        return Promise.resolve(this.itemToEdit);
     }
 }

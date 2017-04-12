@@ -7,14 +7,14 @@ import 'aurelia-syncfusion-bridge';
 
 //Styles von Drittanbietern
 import 'sweetalert2/dist/sweetalert2.css';
-//import 'bootstrap-select/dist/css/bootstrap-select.css';
-import 'animate.css/animate.css';
+import 'bootstrap-select/dist/css/bootstrap-select.css';
 import 'material-design-iconic-font/dist/css/material-design-iconic-font.css';
 
 //Styles für die Applikation
 import '../styles/css/app_1.css';
 import '../styles/css/app_2.css';
 import '../styles/css/appstyles.css';
+import '../styles/css/view_animations.css';
 
 // comment out if you don't want a Promise polyfill (remove also from webpack.config.js)
 import * as Bluebird from 'bluebird';
@@ -26,7 +26,8 @@ export async function configure(aurelia: Aurelia) {
     .globalResources(['CustomControls/loading-indicator', 'CustomControls/input-text', 'CustomControls/input-textarea',
                       'CustomAttributes/bootstrap-tooltip', 'CustomAttributes/button-waves', 
                       'CustomAttributes/autosize-textarea', 'CustomControls/upload-control',
-                      'CustomAttributes/bootstrap-dropdown', 'CustomControls/picture-control'])
+                      'CustomAttributes/bootstrap-dropdown', 'CustomControls/picture-control',
+                      'CustomControls/select-picker-multiple', 'CustomControls/select-picker-single'])
     .developmentLogging()
     .plugin('aurelia-syncfusion-bridge', syncfusion => {
         syncfusion.ejGrid();
