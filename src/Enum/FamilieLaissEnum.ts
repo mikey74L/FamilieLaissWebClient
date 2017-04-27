@@ -9,6 +9,6 @@ export enum enSortDirection {
 }
 
 export enum enViewModelEditMode {
-  New = 1,
-  Edit = 2
+  New = <any>"new",
+  Edit = <any>"edit"
 }

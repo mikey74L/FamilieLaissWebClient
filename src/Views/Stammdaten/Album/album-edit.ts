@@ -104,6 +104,7 @@ export class AlbumEdit extends ViewModelEditNormal {
                     titleText: this.loc.tr('Cancel_Edit.Question.Header', { ns: 'Alerts' }),
                     text: this.loc.tr('Cancel_Edit.Question.Body', { ns: 'Alerts' }),
                     type: 'warning',
+                    width: 600,
                     showCancelButton: true,
                     confirmButtonColor: '#DD6B55',
                     confirmButtonText: this.loc.tr('Cancel_Edit.Question.Confirm_Button', { ns: 'Alerts' }),

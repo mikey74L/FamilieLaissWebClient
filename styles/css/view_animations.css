@@ -1,10 +1,28 @@
-/* animate page transitions */
+/* Das Einblenden der Views animieren */
 section.au-enter-active {
   -webkit-animation: fadeInRight 1s;
   animation: fadeInRight 1s;
 }
 
-/* animation definitions */
+/* Das Einblenden der Picture-Controls animieren */
+.picture-item.au-enter {
+  opacity: 0 !important;
+}
+
+.picture-item.au-enter-active {
+  animation: fadeIn 2s;
+}
+
+/* Das verzögerte Einblenden der Picture-Controls in einer Liste animieren */
+.picture-container-styleless {
+
+}
+
+.picture-container-styleless.au-stagger {
+  animation-delay: 300ms;
+}
+
+/* Animationsdefinitionen */
 @-webkit-keyframes fadeInRight {
   0% {
     opacity: 0;
@@ -15,6 +33,15 @@ section.au-enter-active {
     opacity: 1;
     -webkit-transform: none;
     transform: none
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 
@@ -30,5 +57,14 @@ section.au-enter-active {
     -webkit-transform: none;
     -ms-transform: none;
     transform: none
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

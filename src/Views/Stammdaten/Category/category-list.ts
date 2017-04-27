@@ -234,6 +234,7 @@ export class CategoryList extends GridViewModelStammdatenNormal {
                     titleText: this.loc.tr('Delete.Facet_Group.Header', { ns: 'Alerts' }),
                     text: this.loc.tr('Delete.Facet_Group.Body', { ns: 'Alerts' }),
                     type: 'warning',
+                    width: 600,
                     showCancelButton: true,
                     confirmButtonColor: '#DD6B55',
                     confirmButtonText: this.loc.tr('Delete.Facet_Group.Confirm_Button', { ns: 'Alerts' }),

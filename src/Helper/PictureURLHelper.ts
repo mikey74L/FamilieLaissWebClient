@@ -32,6 +32,29 @@ export class PictureURLHelper {
         return URL;
     }
 
+    public getImageURLPlaceholderPicture (width: number, height: number): string {
+      //Deklarationen
+      var URL: string;
+
+      //Zusammenstellen der URL
+      URL = GeneralConfig.baseURLImagePlaceholder + 'placeholder_picture.png';
+      if (width > 0) {
+        URL += '?width=' + width.toString();
+      }
+      if (height > 0) {
+        if (URL.indexOf('?') > -1) {
+          URL += '&';
+        }
+        else {
+          URL += '?';
+        }
+        URL += 'height=' + height.toString();
+      }
+
+      //Funktionsergebnis
+      return URL;
+    }
+
     public getImageURLUpload(uploadItem: any): string {
         //Deklarationen
         var URL: string;

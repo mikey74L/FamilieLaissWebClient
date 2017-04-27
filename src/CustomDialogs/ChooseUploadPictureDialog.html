@@ -1,0 +1,33 @@
+<template>
+    <ai-dialog >
+        <!-- Header des Dialoges ausgeben -->
+        <ai-dialog-header>
+            <h4>${'ChooseUploadPicture.Title' | t: { ns: 'Dialogs' } }</h4>
+        </ai-dialog-header>
+
+        <!-- Inhalt des Dialoges ausgeben -->
+        <ai-dialog-body>
+            <div style="max-height:600px; overflow-x:hidden; overflow-y:auto" class="picture-container-styleless au-stagger">
+                <picture-control item.bind="Item" modus.bind="2" repeat.for="Item of entities">
+                </picture-control>
+            </div>
+        </ai-dialog-body>
+
+        <!-- Footer (Buttons) des Dialoges ausgeben -->
+        <ai-dialog-footer>
+            <button type="button"
+                    click.trigger="controller.cancel()"
+                    class="btn btn-danger waves-effect"
+                    button-waves
+                    data-dismiss="modal"
+                    bootstrap-tooltip
+                    data-toggle="tooltip"
+                    title=""
+                    data-original-title=""
+                    data-trigger="hover"
+                    t="[data-original-title]ChooseUploadPicture.Tooltips.Close;[html]ChooseUploadPicture.Buttons.Close"
+                    t-params.bind="locOptions">
+            </button>
+        </ai-dialog-footer>
+    </ai-dialog>
+</template>

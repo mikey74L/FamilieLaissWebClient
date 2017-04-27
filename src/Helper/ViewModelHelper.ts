@@ -338,6 +338,7 @@ export abstract class ViewModelEdit extends ViewModelGeneralView {
                     titleText: this.loc.tr('Leave_Page.Question.Header', { ns: 'Alerts' }),
                     text: this.loc.tr('Leave_Page.Question.Body', { ns: 'Alerts' }),
                     type: 'warning',
+                    width: 600,
                     showCancelButton: true,
                     confirmButtonColor: '#DD6B55',
                     confirmButtonText: this.loc.tr('Leave_Page.Question.Confirm_Button', { ns: 'Alerts' }),

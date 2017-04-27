@@ -3,11 +3,13 @@ import {AppRouter} from 'aurelia-router';
 import {autoinject} from 'aurelia-dependency-injection';
 import {I18N} from 'aurelia-i18n';
 import {EventAggregator} from 'aurelia-event-aggregator';
-import {DialogService} from 'aurelia-dialog';
+import {DialogService, DialogResult} from 'aurelia-dialog';
 import {PictureURLHelper} from '../../../Helper/PictureURLHelper';
 import {SelectPickerListMultiple, SelectPickerGroupItem} from '../../../Helper/SelectPickerHelper';
 import {PictureAdminServiceEdit} from './picture-admin-service';
 import {enViewModelEditMode} from '../../../Enum/FamilieLaissEnum';
+import {ShowPictureBigArgs} from '../../../Models/ShowPictureBigArgs';
+import swal from 'sweetalert2';
 
 @autoinject()
 export class PictureAdminEdit extends ViewModelAssignEdit {
@@ -21,7 +23,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
     categoryList: SelectPickerListMultiple;
     titleSelectPickerCategoryList;
 
-    currentPhotoURL;
+    currentPhotoURL: string;
     isChoosePictureEnabled: boolean;
     isChangeImageParameterEnabled: boolean;
 
@@ -40,7 +42,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
         this.photoChoosed = false;
 
         //Zusammenstellen der URL für das Placeholder-Photo
-        //this.currentPhotoURL = window.location.protocol + '//' + window.location.host + '/Images/placeholder_picture.png?width=300&height=230';
+        this.currentPhotoURL = this.URLHelper.getImageURLPlaceholderPicture(300, 230); 
 
         //Ermitteln des lokalisierten Textes für den Titel des Select-Pickers
         this.titleSelectPickerCategoryList = this.loc.tr('Edit.Card.Body.Form.Selects.Category.Placeholder', { ns: 'StammPictureAdmin'});
@@ -50,32 +52,35 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
     }
 
     //Anzeigen des Dialoges zur Auswahl eines Upload-Photos
-    public choosePicture(): void {
-        //Deklaration
-        //Aurelia-Dialog instanziieren
-        // this.dialog.open({ viewModel: ChooseUploadPictureDialog, model: this.service}).then(response => {
-        //     if (response.wasCancelled) {
-        //         //Ausgeben von Logging-Informationen
-        //         console.log('Photo not choosed - Dialog cancelled');
-        //     } 
-        //     else {
-        //         //Ausgeben von Logging-Informationen
-        //         console.log('Photo choosed');
+    public async choosePicture(): Promise<void> {
+      //Deklaration
+      var Result: DialogResult;
 
-        //         //Übernehmen des ausgewählten Bildes
-        //         this.uploadItem = response.output;
-        //         this.photoChoosed = true;
+      //Aurelia-Dialog instanziieren
+      Result = await this.dialogService.open({ viewModel: 'CustomDialogs/ChooseUploadPictureDialog', model: this.service});
+ 
+      //Auswerten des Results
+      if (Result.wasCancelled) {
+        //Ausgeben von Logging-Informationen
+        console.log('Photo not choosed - Dialog cancelled');
+      } 
+      else {
+        //Ausgeben von Logging-Informationen
+        console.log('Photo choosed');
 
-        //         //Setzen der ID für das Bild im Media-Item
-        //         this.itemToEdit.Upload_Picture = this.uploadItem.ID;
+        //Übernehmen des ausgewählten Bildes
+        this.uploadItem = Result.output;
+        this.photoChoosed = true;
 
-        //         //Setzen der URL
-        //         this.setCurrentPhotoURL();
+        //Setzen der ID für das Bild im Media-Item
+        (<any>this.itemToEdit).ID_UploadPicture = this.uploadItem.ID;
 
-        //         //Validierung erneut starten wenn ein Bild ausgewählt wurde
-        //         this.itemToEdit.entityAspect.validateEntity();
-        //     }
-        // });
+        //Setzen der URL
+        this.setCurrentPhotoURL();
+
+        //Validierung erneut starten wenn ein Bild ausgewählt wurde
+        this.itemToEdit.entityAspect.validateEntity();
+      }
     }
 
     //Wird von Aurelia aufgerufen wenn die View
@@ -129,27 +134,24 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
     }
 
     //Setzen der aktuellen URL für das Bild
-    // setCurrentPhotoURL() {
-    //     //Setzen der aktuellen URL
-    //     this.currentPhotoURL = this.URLHelper.getImageURL(this.uploadItem);
-    // }
+    private setCurrentPhotoURL(): void {
+        //Setzen der aktuellen URL
+        this.currentPhotoURL = this.URLHelper.getImageURLUpload(this.uploadItem);
+    }
 
     //Aufrufen des Dialoges zur Anzeige des Photos in Großansicht
-    public showPicture(): void {
-        // if (this.photoChoosed) {
-        //     //Aufrufen des Aurelia-Dialoges zur Anzeige des Bildes
-        //     //im Großformat
-        //     this.dialog.open({ viewModel: ShowPictureDialog, model: new ShowPictureStartArgs(1, this.uploadItem)}).then(response => {
-        //         if (response.wasCancelled) {
-        //             //Nichts zu tun
-        //         } 
-        //         else {
-        //             //Nichts zu tun
-        //         }
-        //     });
-        // }
+    public async showPicture(): Promise<void> {
+        //Deklaration
+        var Result: DialogResult;
+
+        //Wenn ein Photo ausgewählt wurde, dann wird dieses in Großansicht angezeigt
+        if (this.photoChoosed) {
+            //Aufrufen des Aurelia-Dialoges zur Anzeige des Bildes
+            //im Großformat
+            Result = await this.dialogService.open({ viewModel: 'CustomDialogs/ShowPictureBigDialog', model: new ShowPictureBigArgs(1, this.uploadItem)});
+        }
     }
-    
+   
     //Hiermit wird der Dialog zur Bildbearbeitung aufgerufen
     public changeImageParameter(): void {
         // //Erstellen der Start-Args
@@ -187,45 +189,51 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
 
     //Wird aufgerufen wenn auf den Cancel-Button geklickt wird
     public async cancelChanges(): Promise<void> {
-        // //Nur wenn sich auch etwas geändert hat oder es sich um einen neuen Eintrag handelt, dann wird auch eine
-        // //Sicherheitsabfrage ausgegeben
-        // if (this.editMode == "new" || (this.editMode == "edit" && this.service.hasChanges())) {
-        //     //Anzeigen einer Sicherheitsabfrage ob wirklich abgebrochen werden soll
-        //     swal({
-        //         title: this.loc.tr('Cancel_Edit.Question.Header', { ns: 'Alerts' }),
-        //         text: this.loc.tr('Cancel_Edit.Question.Body', { ns: 'Alerts' }),
-        //         type: "warning",
-        //         showCancelButton: true,
-        //         confirmButtonColor: "#DD6B55",
-        //         confirmButtonText: this.loc.tr('Cancel_Edit.Question.Confirm_Button', { ns: 'Alerts' }),
-        //         cancelButtonText: this.loc.tr('Cancel_Edit.Question.Cancel_Button', { ns: 'Alerts' }),
-        //         closeOnConfirm: true,
-        //         closeOnCancel: true,
-        //         allowEscapeKey: false
-        //     }, (isConfirm) => {
-        //         if (isConfirm) {
-        //             this.cancelChangesExecute();
-        //         }
-        //     });
-        // }
-        // else {
-        //     this.cancelChangesExecute();
-        // }
+        //Nur wenn sich auch etwas geändert hat oder es sich um einen neuen Eintrag handelt, dann wird auch eine
+        //Sicherheitsabfrage ausgegeben
+        if (this.editMode == enViewModelEditMode.New || (this.editMode == enViewModelEditMode.Edit && this.service.hasChanges())) {
+            //Anzeigen einer Sicherheitsabfrage ob wirklich abgebrochen werden soll
+            try {
+              await swal(
+                {
+                    titleText: this.loc.tr('Cancel_Edit.Question.Header', { ns: 'Alerts' }),
+                    text: this.loc.tr('Cancel_Edit.Question.Body', { ns: 'Alerts' }),
+                    type: 'warning',
+                    width: 600,
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: this.loc.tr('Cancel_Edit.Question.Confirm_Button', { ns: 'Alerts' }),
+                    cancelButtonText: this.loc.tr('Cancel_Edit.Question.Cancel_Button', { ns: 'Alerts' }),
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }
+              );
+
+              //Ausführen der eigentlichen Cancel-Prozedur
+              this.cancelChangesExecute();
+            }
+            catch (ex) {
+            }
+        }
+        else {
+            //Ausführen der eigentlichen Cancel-Prozedur
+            this.cancelChangesExecute();
+        }
     }
  
     //Führt den tatsächlichen Cancel aus
     private cancelChangesExecute(): void {
-        // //Verwerfen der Änderungen
-        // this.service.rejectChanges();
+        //Verwerfen der Änderungen
+        this.service.rejectChanges();
                 
-        // //Benachrichtigung ausgeben
-        // this.showNotifyInfo(this.loc.tr('PictureAdmin.Cancel.Success', { ns: 'Toasts', context: this.editMode }));
+        //Benachrichtigung ausgeben
+        this.showNotifyInfo(this.loc.tr('PictureAdmin.Cancel.Success', { ns: 'Toasts', context: this.editMode }));
 
-        // //Die Event-Handler deregistrieren
-        // this.unsubscribeEvents();
+        //Die Event-Handler deregistrieren
+        this.unsubscribeEvents();
 
-        // //Zurückkehren zur Liste der Kategorien
-        // this.router.navigate(this.route + "/" + this.fatherItem.ID);
+        //Zurückkehren zur Liste der Kategorien
+        this.router.navigate(this.routeForList + "/" + this.fatherItem.ID);
     }
 
     //Überprüft den Status der Buttons

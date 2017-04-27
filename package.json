@@ -101,6 +101,8 @@
     "bootstrap": "^3.3.7",
     "bootstrap-select": "^1.12.2",
     "breeze-client": "^1.6.2",
+    "easel-js": "^1.0.0",
+    "fabric": "^1.7.11",
     "font-awesome": "^4.7.0",
     "i18next": "^4.2.0",
     "i18next-browser-languagedetector": "^1.0.1",
@@ -111,6 +113,7 @@
     "moment": "^2.17.1",
     "node-waves": "^0.7.5",
     "nprogress": "^0.2.0",
+    "preload-js": "^0.6.3",
     "sweetalert2": "^6.3.1",
     "syncfusion-javascript": "^15.1.33",
     "toastr": "^2.1.2"

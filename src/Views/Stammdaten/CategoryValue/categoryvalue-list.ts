@@ -202,6 +202,7 @@ export class CategoryValueList extends GridViewModelStammdatenID {
                     titleText: this.loc.tr('Delete.Facet_Value.Header', { ns: 'Alerts' }),
                     text: this.loc.tr('Delete.Facet_Value.Body', { ns: 'Alerts' }),
                     type: 'warning',
+                    width: 600,
                     showCancelButton: true,
                     confirmButtonColor: '#DD6B55',
                     confirmButtonText: this.loc.tr('Delete.Facet_Value.Confirm_Button', { ns: 'Alerts' }),

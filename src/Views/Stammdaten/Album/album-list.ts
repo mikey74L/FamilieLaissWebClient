@@ -220,6 +220,7 @@ export class AlbumList extends GridViewModelStammdatenNormal {
                     titleText: this.loc.tr('Delete.Media_Group.Header', { ns: 'Alerts' }),
                     text: this.loc.tr('Delete.Media_Group.Body', { ns: 'Alerts' }),
                     type: 'warning',
+                    width: 600,
                     showCancelButton: true,
                     confirmButtonColor: '#DD6B55',
                     confirmButtonText: this.loc.tr('Delete.Media_Group.Confirm_Button', { ns: 'Alerts' }),

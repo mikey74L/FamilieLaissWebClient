@@ -132,7 +132,10 @@ export class PictureAdminServiceEdit extends ServiceModelAssignEdit {
         await this.getEntityManager();
 
         //Query für die Kategorie ausführen 
-        return this.manager.executeQueryLocally(queryAlbum)[0];
+        var Result: QueryResult = await this.manager.executeQuery(queryAlbum);
+
+        //Funktionsergebnis
+        return Promise.resolve(Result.results[0]);
     }
   
     //Erstellt eine neues Media-Item im Entity-Manager

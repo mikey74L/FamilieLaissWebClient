@@ -355,6 +355,7 @@ export class FamilieLaissApp {
             title: this.loc.tr('Delete_Local_Storage.Question.Header', {ns: 'Alerts'}),
             text: this.loc.tr('Delete_Local_Storage.Question.Body', {ns: 'Alerts'}),
             type: "warning",
+            width: 600,
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: this.loc.tr('Delete_Local_Storage.Question.Confirm_Button', {ns: 'Alerts'}),

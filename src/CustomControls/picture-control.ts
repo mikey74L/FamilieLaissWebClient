@@ -7,6 +7,11 @@ import {PictureURLHelper} from '../Helper/PictureURLHelper';
 import {ShowPictureBigArgs} from '../Models/ShowPictureBigArgs';
 import {DialogService, DialogResult} from 'aurelia-dialog';
 import {ShowPictureBigDialog} from '../CustomDialogs/ShowPictureBigDialog';
+import 'preload-js';
+import 'fabric';
+import '../../vendors/heartcode/heartcode-canvasloader.js';
+
+declare var CanvasLoader;
 
 @customElement('picture-control')
 @containerless()
@@ -35,6 +40,21 @@ export class PictureControl {
     aggregator: EventAggregator;
     dialog: DialogService;
 
+    //Die Queue, Stage und das Bitmap für CreateJS
+    queue : createjs.LoadQueue;
+    canvas: fabric.ICanvas;
+    image: fabric.IImage;
+
+    //Die Hilfselmente für das Handling des Bildes über CreateJS und Canvas
+    spinner : any;
+    idPlaceholderSpinner: string;
+    idCanvas: string;
+    showPlaceholder: boolean;
+    downloadCompleted: boolean;
+    downloadWithError: boolean;
+    canvasWidth: number;
+    canvasHeight: number;
+
     //C'tor
     constructor(loc: I18N, eventAggregator: EventAggregator, urlHelper: PictureURLHelper, dialogService: DialogService) {
         //Übernehmen der Parameter
@@ -46,6 +66,15 @@ export class PictureControl {
         //Initialisieren
         this.modus = -1;
         this.item = null;
+        this.showPlaceholder = true;
+        this.downloadWithError = false;
+
+        //Die Queue für den Download des Bildes initialisieren
+        this.queue = new createjs.LoadQueue(false);
+
+        //Die Event-Handler für die Queue zuweisen
+        this.queue.addEventListener ('complete', () => { this.onDownloadCompleted(); });
+        this.queue.addEventListener ('error', () => { this.onDownloadError(); });
     }
   
     //Je nach Modus auftrennen des Items in seine Bestandteile
@@ -72,6 +101,16 @@ export class PictureControl {
             //Separieren des Items
             this.seperateItem();
         }
+
+        //Setzen der ID
+        try {
+          this.idPlaceholderSpinner = 'id_PlaceholderSpinner_' + this.uploadItem.ID;
+          this.idCanvas = 'id_Canvas_' + this.uploadItem.ID;
+        }
+        catch (ex) {
+          this.idPlaceholderSpinner = 'ToBeSet';
+          this.idCanvas = 'ToBeSet';
+        }
     }
 
     //Wird von Aurelia aufgerufen wenn sich der Modus durch das Binding geändert hat
@@ -91,6 +130,16 @@ export class PictureControl {
         if (this.modus != -1 && this.item != null) {
             //Separieren des Items
             this.seperateItem();
+        }
+
+        //Setzen der ID
+        try {
+          this.idPlaceholderSpinner = 'id_PlaceholderSpinner_' + this.uploadItem.ID;
+          this.idCanvas = 'id_Canvas_' + this.uploadItem.ID;
+        }
+        catch (ex) {
+          this.idPlaceholderSpinner = 'ToBeSet';
+          this.idCanvas = 'ToBeSet';
         }
     }
 
@@ -125,9 +174,6 @@ export class PictureControl {
             case 1:
                 this.aggregator.publish(new DeletePictureEvent(this.uploadItem));
                 break;
-            case 2:
-                this.aggregator.publish(new DeletePictureEvent(this.uploadItem));
-                break;
             case 3:
                 this.aggregator.publish(new DeletePictureEvent(this.pictureItem));
                 break;
@@ -144,15 +190,142 @@ export class PictureControl {
     public editPicture(): void {
         //Feuern des entsprechenden Events
         switch (this.modus) {
-            case 1:
-                this.aggregator.publish(new EditPictureEvent(this.uploadItem));
-                break;
-            case 2:
-                this.aggregator.publish(new EditPictureEvent(this.uploadItem));
-                break;
             case 3:
                 this.aggregator.publish(new EditPictureEvent(this.pictureItem));
                 break;
         }
+    }
+
+    //Wird von Aurelia aufgerufen
+    public attached(): void {
+      //Wenn das Control zum DOM hinzugefügt wird, wird der Spinner angezeigt
+      this.spinner = new CanvasLoader(this.idPlaceholderSpinner);
+      this.spinner.setColor('#0f07ed'); 
+      this.spinner.setShape('spiral'); 
+      this.spinner.setDiameter(80); 
+      this.spinner.setDensity(106); 
+      this.spinner.setRange(0.8); 
+      this.spinner.setSpeed(4); 
+      this.spinner.show(); 
+
+      //Wenn Control zum DOM hinzugefügt wird, dann wird der Download des
+      //Bildes gestartet
+      this.queue.loadFile({id:"picture", src: this.getImageURL()});
+    }
+
+    //Wird von Aurelia aufgerufen
+    public detached(): void {
+      //Wenn das Control vom DOM entfernt wird, dann werden die Event-Listener
+      //deregistriert
+      this.queue.removeAllEventListeners();
+    }
+
+    //Wird von der Queue aufgerufen wenn der Download des Bildes
+    //erfolgreich abgeschlossen ist
+    private onDownloadCompleted(): void {
+        //Ausblenden des Spinners
+        this.showPlaceholder = false;
+        this.spinner.hide();
+        this.spinner.kill();
+
+        //Wenn das Bild ohne Fehler heruntergeladen werden konnte, dann wird dieses
+        //im Canvas angezeigt, ansonsten wird eine Fehlermeldung ausgegeben
+        if (!this.downloadWithError) {
+          //Das Hinzufügen des Bildes zum Canvas über einen Timeout entkoppeln
+          //so dass Aurelia zeit hat den DOM anhand der "showPlaceholder" Property zu aktualisieren
+          setTimeout(() => { this.showPictureAfterDownload(); }, 150);
+        }
+        else {
+          setTimeout(() => { this.showErrorMessage(); }, 150);
+        }
+    }
+
+    //Zeigt eine Fehlermeldung im Canvas an, dass das Bild nicht
+    //heruntergeladen werden konnte
+    private showErrorMessage(): void {
+      //Initialisieren der Stage
+      this.initializeStage();
+
+      //Den Fehlertext für den Canvas erstellen
+      var TextOptions: fabric.ITextOptions = {
+        left: 0,
+        top: 0,
+        fontSize: 20,
+        fontFamily: 'Arial',
+        fill: 'red'
+      };
+      var ErrorText: fabric.IText = new fabric.Text("Picture load error!!!", TextOptions);
+
+      //Den Text zur Stage hinzufügen
+      this.canvas.add(ErrorText);
+
+      //Den Text zentrieren
+      this.canvas.centerObject(ErrorText);
+
+      //Den Canvas aktualisieren
+      this.canvas.renderAll();
+    }
+
+    //Initialisiert die Stage für den Canvas
+    private initializeStage(): void {
+        //Setzen der Width und Height Properties für den Canvas anhand der über CSS ermittelten
+        //Höhe und Breite des Canvas. Dieses ist zwingend notwendig da sonst eine automatische
+        //Skalierung im Canvas stattfindet
+        this.canvasWidth = $("#" + this.idCanvas).width();
+        this.canvasHeight = $("#" + this.idCanvas).height();
+        $("#" + this.idCanvas).attr("width", this.canvasWidth);
+        $("#" + this.idCanvas).attr("height", this.canvasHeight);
+
+        //Initialisieren der Stage
+        this.canvas = new fabric.Canvas(this.idCanvas);
+
+        //Verdrahten des Event-Handlers für das Mouse-Up-Event auf dem Canvas
+        this.canvas.on('mouse:up', (e: fabric.IEvent) => { this.onMouseUpCanvas(e); });
+    }
+
+    //Wird aufgerufen wenn der Mouse-Button auf dem Canvas losgelassen wird
+    private onMouseUpCanvas(e: fabric.IEvent): void {
+        //Wenn der Download abgeschlossen ist, und erfolgreich war, dann
+        //soll das Bild in Großansicht angezeigt werden
+        if (this.downloadCompleted && !this.downloadWithError) {
+          this.showPicture();
+        }
+    }
+
+    //Wird aufgerufen wenn der Download eines Bilder abgeschlossen wurde
+    private showPictureAfterDownload(): void {
+        //Initialisieren der Stage
+        this.initializeStage();
+
+        //Hinzufügen des Bildes zum Canvas
+        var ImageOptions: fabric.IObjectOptions;
+        ImageOptions = {
+          top: 0, 
+          left: 0, 
+          width: this.canvasWidth, 
+          height: this.canvasHeight, 
+          opacity: 0, 
+          angle: 0,
+          hasBorders : false,
+          hasControls: false,
+          hasRotatingPoint: false,
+          selectable: false,
+          hoverCursor: 'pointer'
+        };
+        this.image = new fabric.Image(<HTMLImageElement>(this.queue.getResult('picture')), ImageOptions);
+        this.canvas.add(this.image);
+    
+        //Die Animation für das Einblenden des Bildes erstellen
+        this.image.animate('opacity', 1, {duration: 1000, onChange: this.canvas.renderAll.bind(this.canvas)});
+
+        //Download abgeschlossen
+        this.downloadCompleted = true;
+    }
+
+    //Wird von der Queue aufgerufen wenn beim Download des Bildes
+    //ein Fehler aufgetreten ist
+    private onDownloadError(): void {
+        //Setzen des Fehlerflags
+        this.downloadWithError = true;
     }
 }

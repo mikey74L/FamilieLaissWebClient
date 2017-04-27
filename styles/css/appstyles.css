@@ -79,13 +79,28 @@ a.picture-item-link:active {
     text-decoration: none;
 }
 
-.picture-item-picture {
+.picture-item-container {
     width:298px;
     height:230px;
+    max-height: 230px;
+    max-width: 298px;
+    min-height: 230px;
+    min-width: 298px;
 }
 
-.picture-item-picture:hover {
-    cursor: pointer;
+.picture-item-picture {
+    width: inherit;
+    height: inherit;
+    max-height: inherit;
+    max-width: inherit;
+    min-height: inherit;
+    min-width: inherit;
+}
+
+.picture-item-loader {
+    position: absolute;
+    top: 33%;
+    left: 37%;
 }
 
 .picture-item-overlay {
