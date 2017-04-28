@@ -1,3 +1,4 @@
+import { SelectPickerValueItem } from './../../../Helper/SelectPickerHelper';
 import {ViewModelAssignEdit} from '../../../Helper/ViewModelHelper';
 import {AppRouter} from 'aurelia-router';
 import {autoinject} from 'aurelia-dependency-injection';
@@ -21,7 +22,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
     photoChoosed: boolean;
 
     categoryList: SelectPickerListMultiple;
-    titleSelectPickerCategoryList;
+    titleSelectPickerCategoryList: string;
 
     currentPhotoURL: string;
     isChoosePictureEnabled: boolean;
@@ -119,18 +120,18 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
         }
       }
       
-      // //Im Editiermodus müssen die Properties für das Photo noch richtig gesetzt werden
-      //       if (this.editMode == "edit") {
-      //           //Auswählen des Photos
-      //           this.uploadItem = this.itemToEdit.UploadPicture;
-      //           this.photoChoosed = true;
+      //Im Editiermodus müssen die Properties für das Photo noch richtig gesetzt werden
+      if (this.editMode == enViewModelEditMode.Edit) {
+        //Auswählen des Photos
+        this.uploadItem = (<any>this.itemToEdit).UploadPicture;
+        this.photoChoosed = true;
 
-      //           //Setzen der URL für das Photo
-      //           this.setCurrentPhotoURL();
-      //       }
+        //Setzen der URL für das Photo
+        this.setCurrentPhotoURL();
+      }
 
-            //Überprüfen der Buttons
-            this.checkEnabledState();
+      //Überprüfen der Buttons
+      this.checkEnabledState();
     }
 
     //Setzen der aktuellen URL für das Bild
@@ -274,63 +275,61 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
 
     //Wird aufgerufen wenn auf den Save-Button geklickt wird
     public async saveChanges(): Promise<void> {
-        // //Deklaration
-        // var PromiseArray = [];
-        // var CurrentPromise;
+        //Einblenden der Busy-Box
+        this.setBusyState(true);
 
-        // //Einblenden der Busy-Box
-        // this.setBusyState(true);
+        //Auswerten der Kategorie-Werte die sich geändert haben
+        var ChangedCategories: Array<SelectPickerValueItem> = this.categoryList.getChangedValues();
 
-        // //Auswerten der Kategorie-Werte die sich geändert haben
-        // var ChangedCategories = this.categoryList.getChangedValues();
+        //Alle neuen Kategorie-Werte dem Medien-Item zuweisen
+        for (var CategoryValue of ChangedCategories) {
+            if (CategoryValue.assigned) {
+                await this.service.createNewAssignedCategory(this.itemToEdit, CategoryValue.id);
+            }
+        }
 
-        // //Für alle hinzugefügten Kategoriewerte ein Promise erstellen
-        // for (var CategoryValue of ChangedCategories) {
-        //     if (CategoryValue.assigned) {
-        //         CurrentPromise = this.service.createNewAssignedCategory(this.itemToEdit, CategoryValue.id);
-        //         PromiseArray.push(CurrentPromise);
-        //     }
-        // }
+        //Für alle entfernten Kategoriewerte aus dem Medien-Item entfernen
+        for (var CategoryValue of ChangedCategories) {
+            if (!CategoryValue.assigned) {
+                await this.service.removeAssignedCategory(CategoryValue.originalItem);
+            }
+        }
 
-        // //Für alle entfernten Kategoriewerte ein Promise erstellen
-        // for (var CategoryValue of ChangedCategories) {
-        //     if (!CategoryValue.assigned) {
-        //         CurrentPromise = this.service.removeAssignedCategory(CategoryValue.originalItem);
-        //         PromiseArray.push(CurrentPromise);
-        //     }
-        // }
+        //Den Name des Medien-Elements auf die ID des Upload-Items setzen,
+        //da es sonst zu einer PK-Veretzung kommt
+        (<any>this.itemToEdit).NameGerman = this.uploadItem.ID;
+        (<any>this.itemToEdit).NameEnglish = this.uploadItem.ID;
+        
+        //Speichern des Medien-Items
+        try {
+            //Speichern in der Datenbank
+            await this.service.saveChanges();
+  
+            //Ausblenden der Busy-Box
+            this.setBusyState(false);
 
-        // //Speichervorgang in einem Promise ausführen
-        // Promise.all(PromiseArray).then((results) => {
-        //     //Aufrufen der Speicherroutine
-        //     return this.service.saveChanges();
-        // })
-        // .then(() => {
-        //     //Ausblenden der Busy-Box
-        //     this.setBusyState(false);
+            //Ausgeben einer Erfolgsmeldung
+            this.showNotifySuccess(this.loc.tr('PictureAdmin.Save.Success', { ns: 'Toasts' }));
 
-        //     //Ausgeben einer Erfolgsmeldung
-        //     this.showNotifySuccess(this.loc.tr('PictureAdmin.Save.Success', { ns: 'Toasts' }));
+            //Die Event-Handler deregistrieren
+            this.unsubscribeEvents();
 
-        //     //Die Event-Handler deregistrieren
-        //     this.unsubscribeEvents();
+            //Zurück zur Administrations-Liste der Bilder springen
+            this.router.navigate(this.routeForList + "/" + this.fatherItem.ID);
+        }
+        catch (ex) {
+            //Ausblenden der Busy-Box
+            this.setBusyState(false);
 
-        //     //Zurück zur Administrations-Liste der Bilder springen
-        //     this.router.navigate(this.route + "/" + this.fatherItem.ID);
-        // })
-        // .catch((reason) => {
-        //     //Ausblenden der Busy-Box
-        //     this.setBusyState(false);
-
-        //     //Überprüfen ob Validierungsfehler anstehen. Wenn ja liegt das
-        //     //fehlerhafte Speichern an den Validierungsfehlern und es muss nichts
-        //     //weiter gemacht werden.
-        //     //Wenn nicht muss eine entsprechende Fehlermeldung angezeigt werden,
-        //     //dass das Speichern nicht funktioniert hat
-        //     if (!this.itemToEdit.entityAspect.hasValidationErrors) {
-        //         this.showNotifyError(this.loc.tr('PictureAdmin.Save.Error', { ns: 'Toasts' }));
-        //     }
-        // })
+            //Überprüfen ob Validierungsfehler anstehen. Wenn ja liegt das
+            //fehlerhafte Speichern an den Validierungsfehlern und es muss nichts
+            //weiter gemacht werden.
+            //Wenn nicht muss eine entsprechende Fehlermeldung angezeigt werden,
+            //dass das Speichern nicht funktioniert hat
+            if (!this.itemToEdit.entityAspect.hasValidationErrors) {
+                this.showNotifyError(this.loc.tr('PictureAdmin.Save.Error', { ns: 'Toasts' }));
+            }
+        }
     }
 
     //Wird hier nicht benötigt

@@ -13,12 +13,7 @@ section.au-enter-active {
   animation: fadeIn 2s;
 }
 
-/* Das verzögerte Einblenden der Picture-Controls in einer Liste animieren */
-.picture-container-styleless {
-
-}
-
-.picture-container-styleless.au-stagger {
+.picture-container-flex.au-stagger {
   animation-delay: 300ms;
 }
 

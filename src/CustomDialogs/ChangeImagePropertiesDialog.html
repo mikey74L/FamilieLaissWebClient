@@ -1,0 +1,77 @@
+<template>
+    <ai-dialog>
+        <!-- Den Header für den Dialog ausgeben -->
+        <ai-dialog-header>
+            <h4>${'ChangeImageProperties.Title' | t: { ns: 'Dialogs' } } <small>${uploadItem.Name}</small></h4>
+        </ai-dialog-header>
+
+        <!-- Den Body (Inhalt) für den Dialog ausgeben -->
+        <ai-dialog-body>
+            <div class="row" style="width:700px;">
+                <div class="col-sm-4">
+                    <h5 t-params.bind="locOptions" t="ChangeImageProperties.Labels.ImageOriginal"></h5>
+                </div>
+                <div class="col-sm-4 col-sm-offset-2">
+                    <h5 t-params.bind="locOptions" t="ChangeImageProperties.Labels.ImageModified"></h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <image src.bind="imageURLOriginal" width="300" height="230"></image>
+                </div>
+                <div class="col-sm-4 col-sm-offset-2">
+                    <image src.bind="imageURLModified" width="300" height="230"></image>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 30px;">
+                <div class="col-sm-2">
+                    <h5 t-params.bind="locOptions" t="ChangeImageProperties.Labels.Rotation"></h5>
+                </div>
+                <div class="col-sm-4" style="margin-top:15px;">
+                    <slider id.bind="idSlider" 
+                            start.bind="start" 
+                            step.bind="step" 
+                            range.bind="range" 
+                            connect.bind="connect" 
+                            orientation.bind="orientation"
+                            animate.bind="animate">
+                    </slider>
+                </div>
+            </div>
+        </ai-dialog-body>
+
+        <!-- Den Footer für den Dialog ausgeben -->
+        <ai-dialog-footer>
+            <button type="button"
+                    click.trigger="save()"
+                    disabled.bind="isBusy"
+                    class="btn btn-primary btn-icon-text waves-effect"
+                    button-waves
+                    data-dismiss="modal"
+                    bootstrap-tooltip
+                    data-toggle="tooltip"
+                    title=""
+                    data-original-title=""
+                    data-trigger="hover"
+                    t="[data-original-title]ChangeImageProperties.Tooltips.Save;[append]General.Buttons.Save"
+                    t-params.bind="locOptions">
+                <i class="zmdi zmdi-floppy"></i>
+            </button>
+            <button type="button"
+                    click.trigger="cancel()"
+                    disabled.bind="isBusy"
+                    class="btn btn-default btn-icon-text waves-effect"
+                    button-waves
+                    data-dismiss="modal"
+                    bootstrap-tooltip
+                    data-toggle="tooltip"
+                    title=""
+                    data-original-title=""
+                    data-trigger="hover"
+                    t="[data-original-title]ChangeImageProperties.Tooltips.Cancel;[append]General.Buttons.Cancel"
+                    t-params.bind="locOptions">
+                <i class="zmdi zmdi-close"></i>
+            </button>
+        </ai-dialog-footer>
+    </ai-dialog>
+</template>

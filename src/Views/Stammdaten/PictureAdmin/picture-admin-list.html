@@ -96,8 +96,8 @@
                 </div>
 
                 <!-- Ausgeben der Liste der hochgeladenen Bilder -->
-                <div class="card-body card-padding">
-                    <div id="containerItems" class="picture-container-styleless au-stagger">
+                <div class="card-body">
+                    <div id="containerItems" class="picture-container-flex au-stagger">
                         <picture-control item.bind="Item" modus.bind="3" repeat.for="Item of entities | sort: { propertyName: currentSortCriteria.propertyName, direction: currentSortCriteria.direction }">
                         </picture-control>
                     </div>

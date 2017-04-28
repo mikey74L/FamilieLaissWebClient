@@ -34,6 +34,7 @@ export async function configure(aurelia: Aurelia) {
         syncfusion.ejTab();
         syncfusion.ejProgressBar();
         syncfusion.ejTemplate();
+        syncfusion.ejSlider();
     })
     .plugin('aurelia-breeze')
     .plugin('aurelia-animator-css')

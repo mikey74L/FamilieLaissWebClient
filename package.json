@@ -69,7 +69,8 @@
         "aurelia-syncfusion-bridge/grid/column",
         "aurelia-syncfusion-bridge/tab/tab",
         "aurelia-syncfusion-bridge/progressbar/progressbar",
-        "aurelia-syncfusion-bridge/common/template"
+        "aurelia-syncfusion-bridge/common/template",
+        "aurelia-syncfusion-bridge/slider/slider"
       ]
     }
   },
