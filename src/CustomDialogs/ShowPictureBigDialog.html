@@ -1,14 +1,14 @@
 <template>
-    <ai-dialog>
-        <ai-dialog-header>
+    <ux-dialog>
+        <ux-dialog-header>
             <h4>${'ShowPicture.Title' | t: { ns: 'Dialogs' } } <small>${currentName}</small></h4>
-        </ai-dialog-header>
+        </ux-dialog-header>
 
-        <ai-dialog-body>
+        <ux-dialog-body>
             <img width=880 height=660 src.bind="getImageURL()"/>
-        </ai-dialog-body>
+        </ux-dialog-body>
 
-        <ai-dialog-footer>
+        <ux-dialog-footer>
             <button type="button"
                     click.trigger="controller.cancel()"
                     class="btn btn-default btn-icon-text waves-effect"
@@ -23,6 +23,6 @@
                     t-params.bind="locConfig">
                 <i class="zmdi zmdi-close"></i>
             </button>
-        </ai-dialog-footer>
-    </ai-dialog>
+        </ux-dialog-footer>
+    </ux-dialog>
 </template>

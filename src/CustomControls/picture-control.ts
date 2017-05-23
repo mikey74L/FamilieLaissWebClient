@@ -159,7 +159,7 @@ export class PictureControl {
     }
 
     //Zeigt das ausgewählte Photo in Großansicht an
-    public async showPicture(): Promise<void> {
+    public async showPictureBig(): Promise<void> {
         try {     
            //Aufrufen des Aurelia-Dialoges zur Anzeige des Bildes
            //im Großformat
@@ -292,7 +292,7 @@ export class PictureControl {
         //Wenn der Download abgeschlossen ist, und erfolgreich war, dann
         //soll das Bild in Großansicht angezeigt werden
         if (this.downloadCompleted && !this.downloadWithError) {
-          this.showPicture();
+          this.showPictureBig();
         }
     }
 

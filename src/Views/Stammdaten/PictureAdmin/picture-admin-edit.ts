@@ -142,22 +142,6 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
         this.currentPhotoURL = this.URLHelper.getImageURLUpload(this.uploadItem);
     }
 
-    //Aufrufen des Dialoges zur Anzeige des Photos in Großansicht
-    public async showPicture(): Promise<void> {
-        //Wenn ein Photo ausgewählt wurde, dann wird dieses in Großansicht angezeigt
-        if (this.photoChoosed) {
-            //Aufrufen des Aurelia-Dialoges zur Anzeige des Bildes
-            //im Großformat
-            try {
-              var Result: DialogCloseResult = await this.dialogService.open({viewModel: ShowPictureBigDialog, model: new ShowPictureBigArgs(1, this.uploadItem)})
-                                                                      .whenClosed((reason: DialogCloseResult) => { return reason;});
-            }
-            catch (ex) {
-              //Dialog wurde abgebrochen es muss nichts gemacht werden
-            }
-        }
-    }
-   
     //Hiermit wird der Dialog zur Bildbearbeitung aufgerufen
     public async changeImageParameter(): Promise<void> {
         //Deklaration

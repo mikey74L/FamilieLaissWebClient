@@ -1,12 +1,12 @@
 <template>
-    <ai-dialog>
+    <ux-dialog>
         <!-- Den Header für den Dialog ausgeben -->
-        <ai-dialog-header>
+        <ux-dialog-header>
             <h4>${'ChangeImageProperties.Title' | t: { ns: 'Dialogs' } } <small>${uploadItem.Name}</small></h4>
-        </ai-dialog-header>
+        </ux-dialog-header>
 
         <!-- Den Body (Inhalt) für den Dialog ausgeben -->
-        <ai-dialog-body>
+        <ux-dialog-body>
             <!-- Ausgeben der Row für die Überschriften -->
             <div class="row" style="width:700px;">
                 <div class="col-sm-5">
@@ -43,10 +43,10 @@
                     </slider>
                 </div>
             </div>
-        </ai-dialog-body>
+        </ux-dialog-body>
 
         <!-- Den Footer für den Dialog ausgeben -->
-        <ai-dialog-footer>
+        <ux-dialog-footer>
             <button type="button"
                     click.trigger="save()"
                     disabled.bind="isBusy"
@@ -77,6 +77,6 @@
                     t-params.bind="locConfig">
                 <i class="zmdi zmdi-close"></i>
             </button>
-        </ai-dialog-footer>
-    </ai-dialog>
+        </ux-dialog-footer>
+    </ux-dialog>
 </template>
