@@ -1,7 +1,15 @@
+import { EntityManagerFactory } from '../../../Helper/EntityManagerFactory';
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal } from '../../../Helper/ServiceHelper'
 import { EntityQuery, Entity, QueryResult, SaveResult } from 'breeze-client';
+import {autoinject} from 'aurelia-dependency-injection';
 
+@autoinject()
 export class AlbumService extends ServiceModelStammdatenNormal {
+    //C'tor
+    constructor (emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt alle Alben vom Server oder wenn schon mal geladen aus dem EntityManager lokal
     public async getData(): Promise<Array<any>> {
         //Query zusammenbauen
@@ -51,7 +59,13 @@ export class AlbumService extends ServiceModelStammdatenNormal {
     }
 }
 
+@autoinject()
 export class AlbumServiceEdit extends ServiceModelStammdatenEditNormal {
+    //C'tor
+    constructor (emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt die Daten für ein einzelnes Album
     //um dieses zu editieren
     public async getItem(ID: number): Promise<any> {

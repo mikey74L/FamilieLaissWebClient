@@ -1,9 +1,7 @@
 import { EntityManagerFactory } from './EntityManagerFactory';
 import { LoadDataWithFatherModel, EditDataWithFatherModel } from '../Models/LoadDataWithFatherModel'
 import {EntityManager, SaveResult} from 'breeze-client';
-import {autoinject} from 'aurelia-dependency-injection';
 
-@autoinject(EntityManagerFactory)
 export abstract class ServiceModel {
     //Members
     protected emFactory: EntityManagerFactory;
@@ -18,7 +16,7 @@ export abstract class ServiceModel {
     //Ermitteln des Entity-Managers
     public async getEntityManager(): Promise<EntityManager>
     {
-        //Entity-Manager aus der Factory generieren
+        // //Entity-Manager aus der Factory generieren
         this.manager = await this.emFactory.getEntityManager(false);
 
         //Funktionsergebnis
@@ -38,11 +36,21 @@ export abstract class ServiceModel {
 }
 
 export abstract class ServiceModelLoadData extends ServiceModel {
+    //C'tor
+    constructor(emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
     public abstract async getData(): Promise<Array<any>>;
 }
 
 export abstract class ServiceModelLoadDataDelete extends ServiceModelLoadData {
+    //C'tor
+    constructor(emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
     public abstract async deleteItem(ID: number): Promise<SaveResult>;
 }
@@ -51,11 +59,21 @@ export abstract class ServiceModelStammdaten extends ServiceModel {
     //Members
     protected loadedFromServer: boolean = false;
 
+    //C'tor
+    constructor(emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
     public abstract async deleteItem(ID: number): Promise<SaveResult>;
 }
 
 export abstract class ServiceModelStammdatenNormal extends ServiceModelStammdaten {
+    //C'tor
+    constructor(emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
     public abstract async getData(): Promise<Array<any>>;
 
@@ -64,6 +82,11 @@ export abstract class ServiceModelStammdatenNormal extends ServiceModelStammdate
 }
 
 export abstract class ServiceModelStammdatenID extends ServiceModelStammdaten {
+    //C'tor
+    constructor(emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
     public abstract async getData(ID: number): Promise<LoadDataWithFatherModel>;
 
@@ -75,11 +98,21 @@ export abstract class ServiceModelStammdatenID extends ServiceModelStammdaten {
 }
 
 export abstract class ServiceModelStammdatenEdit extends ServiceModel {
+    //C'tor
+    constructor(emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Speichern der Änderungen auf dem Server (Ist abstract und muss überschrieben werden)
     public abstract async saveChanges(): Promise<SaveResult>;
 }
 
 export abstract class ServiceModelStammdatenEditNormal extends ServiceModelStammdatenEdit {
+    //C'tor
+    constructor(emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt die Daten zu einem bestimmten Item (Ist abstract und muss überschrieben werden)
     public abstract async getItem(ID: number): Promise<any>;
 
@@ -88,6 +121,11 @@ export abstract class ServiceModelStammdatenEditNormal extends ServiceModelStamm
 }
 
 export abstract class ServiceModelStammdatenEditID extends ServiceModelStammdatenEdit {
+    //C'tor
+    constructor(emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt die Daten zu einem bestimmten Item (Ist abstract und muss überschrieben werden)
     public abstract async getItem(ID: number, idFather: number): Promise<EditDataWithFatherModel>;
 
@@ -99,6 +137,11 @@ export abstract class ServiceModelStammdatenEditID extends ServiceModelStammdate
 }
 
 export abstract class ServiceModelAssign extends ServiceModel {
+    //C'tor
+    constructor(emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
     public abstract async getData(ID: number): Promise<Array<any>>;
 
@@ -110,6 +153,11 @@ export abstract class ServiceModelAssign extends ServiceModel {
 }
 
 export abstract class ServiceModelAssignEdit extends ServiceModelStammdatenEdit {
+    //C'tor
+    constructor(emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt das Item
     public abstract async getItem(ID: number): Promise<EditDataWithFatherModel>;
 

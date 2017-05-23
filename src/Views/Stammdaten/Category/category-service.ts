@@ -1,7 +1,15 @@
+import { EntityManagerFactory } from '../../../Helper/EntityManagerFactory';
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal } from '../../../Helper/ServiceHelper'
 import { EntityQuery, Entity, QueryResult, SaveResult } from 'breeze-client';
+import {autoinject} from 'aurelia-dependency-injection';
 
+@autoinject()
 export class CategoryService extends ServiceModelStammdatenNormal {
+    //C'tor
+    constructor (emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt alle Kategorien vom Server oder wenn schon mal geladen aus dem EntityManager lokal
     public async getData(): Promise<Array<any>> {
         //Query zusammenbauen
@@ -53,7 +61,13 @@ export class CategoryService extends ServiceModelStammdatenNormal {
     }
 }
 
+@autoinject()
 export class CategoryServiceEdit extends ServiceModelStammdatenEditNormal {
+    //C'tor
+    constructor (emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt die Daten für eine einzelne Kategorie
     //um dieses zu editieren
     public async getItem(ID: number): Promise<any> {

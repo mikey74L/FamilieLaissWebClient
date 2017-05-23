@@ -1,8 +1,16 @@
+import { EntityManagerFactory } from '../../../Helper/EntityManagerFactory';
 import {ServiceModel, ServiceModelAssign, ServiceModelAssignEdit} from '../../../Helper/ServiceHelper'
 import {EditDataWithFatherModel, LoadDataWithFatherModel} from '../../../Models/LoadDataWithFatherModel';
 import {EntityQuery, Entity, Predicate, QueryResult, SaveResult} from 'breeze-client';
+import {autoinject} from 'aurelia-dependency-injection';
 
+@autoinject()
 export class PictureAdminService extends ServiceModelAssign {
+    //C'tor
+    constructor (emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Lädt die Photos für das Album mit der angegebenen ID
     //vom Server
     public async getData(ID: number): Promise<Array<any>> {
@@ -57,7 +65,13 @@ export class PictureAdminService extends ServiceModelAssign {
     }
 }
 
+@autoinject()
 export class PictureAdminServiceEdit extends ServiceModelAssignEdit {
+    //C'tor
+    constructor (emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt die Daten für ein einzelnes Media-Item
     //um dieses zu editieren
     public async getItem(ID: number): Promise<EditDataWithFatherModel> {
@@ -186,7 +200,13 @@ export class PictureAdminServiceEdit extends ServiceModelAssignEdit {
     }
 }
 
+autoinject()
 export class PictureAdminServiceEditExtend extends ServiceModel {
+    //C'tor
+    constructor (emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Erstellt eine neue Image-Property
     public async createImageProperty(uploadPicture: any, rotate: number): Promise<any> {
         //Ermitteln des Entity-Manager

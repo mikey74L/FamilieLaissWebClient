@@ -3,7 +3,8 @@ import {EventAggregator, Subscription} from 'aurelia-event-aggregator';
 import { SortCriteria } from './../../../Models/SortCriteria';
 import {autoinject} from 'aurelia-dependency-injection';
 import {I18N} from 'aurelia-i18n';
-import {DialogService, DialogResult} from 'aurelia-dialog';
+import {DialogService, DialogCloseResult} from 'aurelia-dialog';
+import {ChooseAlbumDialog } from '../../../CustomDialogs/ChooseAlbumDialog';
 import {AppRouter} from 'aurelia-router';
 import {enSortDirection} from '../../../Enum/FamilieLaissEnum';
 import {DeletePictureEvent, EditPictureEvent} from '../../../Events/PictureEvents';
@@ -171,34 +172,34 @@ export class PictureAdminList extends AssignViewModelStammdaten {
 
   //Wird aufgerufen wenn auf den Button zur Auswahl eines Albums gedrückt wird
   public async chooseAlbum(): Promise<void> {
-    //Deklaration
-    var Result: DialogResult;
-    
-    //Anzeigen des Dialoges zur Auswahl eines Albums
-    Result = await this.dialogService.open({viewModel: 'CustomDialogs/ChooseAlbumDialog', model: this.service});
+     try { 
+       //Anzeigen des Dialoges zur Auswahl eines Albums
+       var Result: DialogCloseResult = await this.dialogService.open({viewModel: ChooseAlbumDialog, model: this.service})
+                                                               .whenClosed((reason: DialogCloseResult) => { return reason;});
 
-    //Nur wenn ein Album ausgewählt wurde dann muss was gemacht werden
-    if (!Result.wasCancelled) {
-      //Übernehmen des ausgewählten Albums
-      this.selectedFatherItem = Result.output;
-      this.albumContext = 'choosed';
-      this.albumChoosed = true;
+       //Übernehmen des ausgewählten Albums
+       this.selectedFatherItem = Result.output;
+       this.albumContext = 'choosed';
+       this.albumChoosed = true;
 
-      //Leeren des Arrays für die bisherigen Picture-Einträge
-      this.entities = [];
+       //Leeren des Arrays für die bisherigen Picture-Einträge
+       this.entities = [];
 
-      //Anzeigen der Busy-Box
-      this.setBusyState(true);
+       //Anzeigen der Busy-Box
+       this.setBusyState(true);
 
-      //Laden der neuen Daten
-      this.entities = await this.service.getData(this.selectedFatherItem.ID);
+       //Laden der neuen Daten
+       this.entities = await this.service.getData(this.selectedFatherItem.ID);
 
-      //Startsortierung nach dem ersten Sortierkriterium
-      this.sortBy(this.sortCriteriaList[0]);
+       //Startsortierung nach dem ersten Sortierkriterium
+       this.sortBy(this.sortCriteriaList[0]);
 
-      //Busy-Box ausblenden
-      this.setBusyState(false);
-    }
+       //Busy-Box ausblenden
+       this.setBusyState(false);
+     }
+     catch (ex) {
+       //Dialog wurde abgebrochen. Es muss nichts gemacht werden
+     }
   }
 
   //Wird aufgerufen wenn der Button zum Hinzufügen eines Bildes gedrückt wird

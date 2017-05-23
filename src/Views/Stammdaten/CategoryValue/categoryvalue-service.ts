@@ -2,8 +2,15 @@ import {ServiceModelStammdatenID, ServiceModelStammdatenEditID} from '../../../H
 import {LoadDataWithFatherModel, EditDataWithFatherModel} from '../../../Models/LoadDataWithFatherModel';
 import {EntityManagerFactory} from '../../../Helper/EntityManagerFactory';
 import {EntityQuery, Entity, Predicate, QueryResult, SaveResult} from 'breeze-client';
+import {autoinject} from 'aurelia-dependency-injection';
 
+@autoinject()
 export class CategoryValueService extends ServiceModelStammdatenID {
+    //C'tor
+    constructor (emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt alle Kategorie-Werte für eine Kategorie 
     public async getData(ID: number): Promise<LoadDataWithFatherModel> {
         //Query für die Group zusammenbauen
@@ -57,7 +64,13 @@ export class CategoryValueService extends ServiceModelStammdatenID {
     }
 }
 
+@autoinject()
 export class CategoryValueServiceEdit extends ServiceModelStammdatenEditID {
+    //C'tor
+    constructor (emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt die Daten für einen einzelnen Kategorie-Wert
     //um diesen zu editieren
     public async getItem(ID: number, idFather: number): Promise<EditDataWithFatherModel> {

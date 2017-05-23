@@ -1,7 +1,15 @@
+import {EntityManagerFactory} from '../../../Helper/EntityManagerFactory';
 import {ServiceModelLoadDataDelete} from '../../../Helper/ServiceHelper';
 import {EntityQuery, QueryResult, SaveResult, Entity} from 'breeze-client';
+import {autoinject} from 'aurelia-dependency-injection';
 
+@autoinject()
 export class PictureUploadService extends ServiceModelLoadDataDelete {
+    //C'tor
+    constructor (emFactory: EntityManagerFactory) {
+      super(emFactory);
+    }
+
     //Ermittelt alle Upload-Picture vom Server
     public async getData(): Promise<Array<any>> {
         //Query zusammenbauen

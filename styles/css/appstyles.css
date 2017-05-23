@@ -107,9 +107,9 @@ a.picture-item-link:active {
 }
 
 .picture-item-loader {
-    position: absolute;
-    top: 33%;
-    left: 37%;
+  position: relative;
+  top: 36%;
+  left: 36%;
 }
 
 .picture-item-overlay {

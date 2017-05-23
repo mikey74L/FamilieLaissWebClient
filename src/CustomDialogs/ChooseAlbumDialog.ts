@@ -1,10 +1,10 @@
 /// <reference path="../../typings/globals/syncfusion/ej.web.all.d.ts" />
-import {autoinject} from 'aurelia-dependency-injection';
-import {I18N} from 'aurelia-i18n';
-import {EventAggregator} from 'aurelia-event-aggregator';
+import { autoinject } from 'aurelia-dependency-injection';
+import { I18N } from 'aurelia-i18n';
+import { EventAggregator } from 'aurelia-event-aggregator';
 import { ViewModelGeneralDialog } from '../Helper/ViewModelHelper';
-import {DialogController} from 'aurelia-dialog';
-import {ServiceModelAssign} from '../Helper/ServiceHelper';
+import { DialogController } from 'aurelia-dialog';
+import { ServiceModelAssign } from '../Helper/ServiceHelper';
 
 @autoinject()
 export class ChooseAlbumDialog extends ViewModelGeneralDialog {

@@ -5,7 +5,7 @@ import {I18N} from 'aurelia-i18n';
 import {DeletePictureEvent, ChoosePictureEvent, EditPictureEvent} from '../Events/PictureEvents';
 import {PictureURLHelper} from '../Helper/PictureURLHelper';
 import {ShowPictureBigArgs} from '../Models/ShowPictureBigArgs';
-import {DialogService, DialogResult} from 'aurelia-dialog';
+import {DialogService, DialogCloseResult} from 'aurelia-dialog';
 import {ShowPictureBigDialog} from '../CustomDialogs/ShowPictureBigDialog';
 import 'preload-js';
 import 'fabric';
@@ -31,6 +31,8 @@ export class PictureControl {
     //1 = Upload-Item aus der Liste der Upload-Items
     //2 = Auswahl eines Upload-Items beim Hinzufügen eines neuen Photos zu einem Album
     //3 = Liste der zugewiesenen Photos zu einem Album in der Liste für die Administration
+    //4 = Anzeige eines Bildes ohne Zusatzinformationen (Upload-Item)
+    //5 = Anzeihe eines Bildes ohne Zusatzinformationen (Media-Item)
     @bindable() modus: number;
 
     i18nContext: string;
@@ -92,6 +94,10 @@ export class PictureControl {
                 this.pictureItem = this.item;
                 this.uploadItem = this.item.UploadPicture;
                 break;
+            case 4:
+                this.pictureItem = null;
+                this.uploadItem = this.item;
+                break;
         }
     }
 
@@ -125,6 +131,9 @@ export class PictureControl {
             case 3:
                 this.i18nContext = 'Album';
                 break;
+            case 4:
+                this.i18nContext = 'Upload';
+                break;
         }
 
         if (this.modus != -1 && this.item != null) {
@@ -151,19 +160,14 @@ export class PictureControl {
 
     //Zeigt das ausgewählte Photo in Großansicht an
     public async showPicture(): Promise<void> {
-        //Aufrufen des Aurelia-Dialoges zur Anzeige des Bildes
-        //im Großformat
-        var Result: DialogResult = await this.dialog.open({ 
-          viewModel: 'CustomDialogs/ShowPictureBigDialog', 
-          model: new ShowPictureBigArgs(1, this.uploadItem)
-        });
-        
-        //Result des Dialoges auswerten
-        if (Result.wasCancelled) {
-            //Nichts zu tun
-        } 
-        else {
-            //Nichts zu tun
+        try {     
+           //Aufrufen des Aurelia-Dialoges zur Anzeige des Bildes
+           //im Großformat
+           var Result: DialogCloseResult = await this.dialog.open({viewModel: ShowPictureBigDialog, model: new ShowPictureBigArgs(1, this.uploadItem)})
+                                                            .whenClosed((reason: DialogCloseResult) => { return reason;});
+        }
+        catch (ex) {
+           //Dialog wurde abgebrochen. Ess muss nichts gemacht werden
         }
     }
 

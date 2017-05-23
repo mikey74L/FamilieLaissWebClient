@@ -7,25 +7,30 @@
 
         <!-- Den Body (Inhalt) für den Dialog ausgeben -->
         <ai-dialog-body>
+            <!-- Ausgeben der Row für die Überschriften -->
             <div class="row" style="width:700px;">
-                <div class="col-sm-4">
-                    <h5 t-params.bind="locOptions" t="ChangeImageProperties.Labels.ImageOriginal"></h5>
+                <div class="col-sm-5">
+                    <h5 t-params.bind="locConfig" t="ChangeImageProperties.Labels.ImageOriginal"></h5>
                 </div>
-                <div class="col-sm-4 col-sm-offset-2">
-                    <h5 t-params.bind="locOptions" t="ChangeImageProperties.Labels.ImageModified"></h5>
+                <div class="col-sm-5 col-sm-offset-2">
+                    <h5 t-params.bind="locConfig" t="ChangeImageProperties.Labels.ImageModified"></h5>
                 </div>
             </div>
+
+            <!-- Ausgeben der Row mit den Bildern -->
             <div class="row">
-                <div class="col-sm-4">
-                    <image src.bind="imageURLOriginal" width="300" height="230"></image>
+                <div class="col-sm-5">
+                  <picture-control item.bind="" modus="4"></picture-control>
                 </div>
-                <div class="col-sm-4 col-sm-offset-2">
-                    <image src.bind="imageURLModified" width="300" height="230"></image>
+                <div class="col-sm-5 col-sm-offset-2">
+                  <picture-control item.bind="" modus="4"></picture-control>
                 </div>
             </div>
+
+            <!-- Ausgeben der Row mit dem Slider -->
             <div class="row" style="margin-top: 30px;">
                 <div class="col-sm-2">
-                    <h5 t-params.bind="locOptions" t="ChangeImageProperties.Labels.Rotation"></h5>
+                    <h5 t-params.bind="locConfig" t="ChangeImageProperties.Labels.Rotation"></h5>
                 </div>
                 <div class="col-sm-4" style="margin-top:15px;">
                     <slider id.bind="idSlider" 
@@ -53,8 +58,8 @@
                     title=""
                     data-original-title=""
                     data-trigger="hover"
-                    t="[data-original-title]ChangeImageProperties.Tooltips.Save;[append]General.Buttons.Save"
-                    t-params.bind="locOptions">
+                    t="[data-original-title]ChangeImageProperties.Tooltips.Save;[append]ChangeImageProperties.Buttons.Save"
+                    t-params.bind="locConfig">
                 <i class="zmdi zmdi-floppy"></i>
             </button>
             <button type="button"
@@ -68,8 +73,8 @@
                     title=""
                     data-original-title=""
                     data-trigger="hover"
-                    t="[data-original-title]ChangeImageProperties.Tooltips.Cancel;[append]General.Buttons.Cancel"
-                    t-params.bind="locOptions">
+                    t="[data-original-title]ChangeImageProperties.Tooltips.Cancel;[append]ChangeImageProperties.Buttons.Cancel"
+                    t-params.bind="locConfig">
                 <i class="zmdi zmdi-close"></i>
             </button>
         </ai-dialog-footer>

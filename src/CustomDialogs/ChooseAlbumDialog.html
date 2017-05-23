@@ -1,10 +1,10 @@
 <template>
-    <ai-dialog>
-        <ai-dialog-header>
+    <ux-dialog>
+        <ux-dialog-header>
             <h4>${'ChooseAlbum.Title' | t: { ns: 'Dialogs' } }</h4>
-        </ai-dialog-header>
+        </ux-dialog-header>
 
-        <ai-dialog-body>
+        <ux-dialog-body>
           <div style="width: 800px; height: 500px;">
             <ej-grid id="grid_Media_Group" e-data-source.bind="entities" e-allow-filtering=true 
                      e-allow-sorting=true e-allow-scrolling=true e-allow-grouping=false
@@ -19,9 +19,9 @@
               <ej-column e-field="DescriptionGerman" e-type="string" e-width=400 e-header-text="${ 'Media_Group.Description_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
             </ej-grid>  
           </div>
-        </ai-dialog-body>
+        </ux-dialog-body>
 
-        <ai-dialog-footer>
+        <ux-dialog-footer>
             <button type="button"
                     disabled.bind="!isOKEnabled"
                     click.trigger="controller.ok(selectedAlbum)"
@@ -50,6 +50,6 @@
                     t="[data-original-title]ChooseAlbum.Tooltips.Cancel;[append]ChooseAlbum.Buttons.Cancel"
                     t-params.bind="locOptions">
             </button>
-        </ai-dialog-footer>
-    </ai-dialog>
+        </ux-dialog-footer>
+    </ux-dialog>
 </template>

@@ -4,12 +4,14 @@ import {AppRouter} from 'aurelia-router';
 import {autoinject} from 'aurelia-dependency-injection';
 import {I18N} from 'aurelia-i18n';
 import {EventAggregator} from 'aurelia-event-aggregator';
-import {DialogService, DialogResult} from 'aurelia-dialog';
+import {DialogService, DialogCloseResult} from 'aurelia-dialog';
 import {PictureURLHelper} from '../../../Helper/PictureURLHelper';
 import {SelectPickerListMultiple, SelectPickerGroupItem} from '../../../Helper/SelectPickerHelper';
 import {PictureAdminServiceEdit} from './picture-admin-service';
 import {enViewModelEditMode} from '../../../Enum/FamilieLaissEnum';
 import {ShowPictureBigArgs} from '../../../Models/ShowPictureBigArgs';
+import {ChooseUploadPictureDialog} from '../../../CustomDialogs/ChooseUploadPictureDialog';
+import {ShowPictureBigDialog} from '../../../CustomDialogs/ShowPictureBigDialog';
 import swal from 'sweetalert2';
 
 @autoinject()
@@ -54,18 +56,12 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
 
     //Anzeigen des Dialoges zur Auswahl eines Upload-Photos
     public async choosePicture(): Promise<void> {
-      //Deklaration
-      var Result: DialogResult;
-
       //Aurelia-Dialog instanziieren
-      Result = await this.dialogService.open({ viewModel: 'CustomDialogs/ChooseUploadPictureDialog', model: this.service});
+      try { 
+        //Anzeigen des Dialoges zur Auswahl eines Albums
+        var Result: DialogCloseResult = await this.dialogService.open({viewModel: ChooseUploadPictureDialog, model: this.service})
+                                                                .whenClosed((reason: DialogCloseResult) => { return reason;});
  
-      //Auswerten des Results
-      if (Result.wasCancelled) {
-        //Ausgeben von Logging-Informationen
-        console.log('Photo not choosed - Dialog cancelled');
-      } 
-      else {
         //Ausgeben von Logging-Informationen
         console.log('Photo choosed');
 
@@ -81,6 +77,12 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
 
         //Validierung erneut starten wenn ein Bild ausgewählt wurde
         this.itemToEdit.entityAspect.validateEntity();
+
+        //Steuern der Buttons
+        this.checkEnabledState();
+      }
+      catch (ex) {
+
       }
     }
 
@@ -142,21 +144,29 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
 
     //Aufrufen des Dialoges zur Anzeige des Photos in Großansicht
     public async showPicture(): Promise<void> {
-        //Deklaration
-        var Result: DialogResult;
-
         //Wenn ein Photo ausgewählt wurde, dann wird dieses in Großansicht angezeigt
         if (this.photoChoosed) {
             //Aufrufen des Aurelia-Dialoges zur Anzeige des Bildes
             //im Großformat
-            Result = await this.dialogService.open({ viewModel: 'CustomDialogs/ShowPictureBigDialog', model: new ShowPictureBigArgs(1, this.uploadItem)});
+            try {
+              var Result: DialogCloseResult = await this.dialogService.open({viewModel: ShowPictureBigDialog, model: new ShowPictureBigArgs(1, this.uploadItem)})
+                                                                      .whenClosed((reason: DialogCloseResult) => { return reason;});
+            }
+            catch (ex) {
+              //Dialog wurde abgebrochen es muss nichts gemacht werden
+            }
         }
     }
    
     //Hiermit wird der Dialog zur Bildbearbeitung aufgerufen
-    public changeImageParameter(): void {
+    public async changeImageParameter(): Promise<void> {
+        //Deklaration
+        // var Result: DialogResult;
+
         // //Erstellen der Start-Args
         // var StartArgs = new ChangeImagePropertyStartArgs(this.uploadItem);
+
+        // Result = await this.dialogService.open({ viewModel: 'CustomDialogs/ChangeImagePropertiesDialog', model: new ShowPictureBigArgs(1, this.uploadItem)});
 
         // //Anzeigen des Aurelia-Dialoges zur Bildbearbeitung
         // this.dialog.open({ viewModel: ChangeImagePropertiesDialog, model: StartArgs}).then(response => {

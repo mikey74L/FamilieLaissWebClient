@@ -53,6 +53,10 @@
       "ImageModified": "Angepasstes-Bild:",
       "Rotation": "Drehung:"
     },
+    "Buttons": {
+      "Save": "Speichern",
+      "Cancel": "Abbrechen"
+    },
     "Tooltips": {
       "Save": "Die geänderten Bildparameter speichern und Dialog schließen",
       "Cancel": "Den Dialog schließen ohne Bildparameter zu speichern"

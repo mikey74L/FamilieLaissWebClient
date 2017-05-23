@@ -1,9 +1,10 @@
+import {I18N} from 'aurelia-i18n';
+import {PLATFORM} from 'aurelia-pal';
+import {RouterConfiguration, Router, AppRouter} from 'aurelia-router';
+import {EventAggregator} from 'aurelia-event-aggregator';
 import * as $ from 'jquery';
 import {SweetAlertOptions} from 'sweetalert2';
 import swal from 'sweetalert2';
-import {I18N} from 'aurelia-i18n';
-import {RouterConfiguration, Router, AppRouter} from 'aurelia-router';
-import {EventAggregator} from 'aurelia-event-aggregator';
 import {MenuItemList, MenuItemModel} from './Models/MenuItemModel';
 import {inject, NewInstance} from 'aurelia-dependency-injection';
 import { ShowBusyBoxEvent } from './Events/ShowBusyBoxEvent';
@@ -203,7 +204,7 @@ export class FamilieLaissApp {
         var Item: MenuItemModel;
 
         //Route für "Home"
-        this.menuItemList.addItem(undefined, ['', 'dashboard'], 'dashboard', './Dashboard', true, 
+        this.menuItemList.addItem(undefined, ['', 'dashboard'], 'dashboard', PLATFORM.moduleName('./Dashboard'), true, 
                                   this.loc.tr('Home', {ns: 'Router'}), undefined, 
                                   {showNavigation: true, needAuthentication: false}, [], true );
         
@@ -212,51 +213,51 @@ export class FamilieLaissApp {
                                          undefined, undefined, {showNavigation: true, needAuthentication: true}, ["Admin"], true );
         
         //Routes für "Stammdaten - Kategorie"
-        Item.addChildItem(undefined, 'category', 'category', './Views/Stammdaten/Category/category-list', true, 
+        Item.addChildItem(undefined, 'category', 'category', PLATFORM.moduleName('./Views/Stammdaten/Category/category-list'), true, 
                           this.loc.tr('Stammdaten.Category', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'category/:id', 'categorywithid', './Views/Stammdaten/Category/category-list', true, 
+        Item.addChildItem(undefined, 'category/:id', 'categorywithid', PLATFORM.moduleName('./Views/Stammdaten/Category/category-list'), true, 
                           this.loc.tr('Stammdaten.Category', {ns: 'Router'}), 'categorywithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'categoryedit/:operation/:id', 'categoryedit', './Views/Stammdaten/Category/category-edit', true, 
+        Item.addChildItem(undefined, 'categoryedit/:operation/:id', 'categoryedit', PLATFORM.moduleName('./Views/Stammdaten/Category/category-edit'), true, 
                           this.loc.tr('Stammdaten.CategoryEdit', {ns: 'Router'}), 'categoryedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
 
         //Routes für "Stammdaten - Album"      
-        Item.addChildItem(undefined, 'album', 'album', './Views/Stammdaten/Album/album-list', true, 
+        Item.addChildItem(undefined, 'album', 'album', PLATFORM.moduleName('./Views/Stammdaten/Album/album-list'), true, 
                           this.loc.tr('Stammdaten.Album', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'album/:id', 'albumwithid', './Views/Stammdaten/Album/album-list', true, 
+        Item.addChildItem(undefined, 'album/:id', 'albumwithid', PLATFORM.moduleName('./Views/Stammdaten/Album/album-list'), true, 
                           this.loc.tr('Stammdaten.Album', {ns: 'Router'}), 'albumwithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'albumedit/:operation/:id', 'albumedit', './Views/Stammdaten/Album/album-edit', true, 
+        Item.addChildItem(undefined, 'albumedit/:operation/:id', 'albumedit', PLATFORM.moduleName('./Views/Stammdaten/Album/album-edit'), true, 
                           this.loc.tr('Stammdaten.AlbumEdit', {ns: 'Router'}), 'albumedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
    
         //Routes für "Stammdaten - Kategoriewert"
-        Item.addChildItem(undefined, 'categoryvalue/:idFather', 'categoryvalue', './Views/Stammdaten/CategoryValue/categoryvalue-list', true, 
+        Item.addChildItem(undefined, 'categoryvalue/:idFather', 'categoryvalue', PLATFORM.moduleName('./Views/Stammdaten/CategoryValue/categoryvalue-list'), true, 
                           this.loc.tr('Stammdaten.CategoryValue', {ns: 'Router'}), 'categoryvalue', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'categoryvalue/:idFather/:id', 'categoryvaluewithid', './Views/Stammdaten/CategoryValue/categoryvalue-list', true, 
+        Item.addChildItem(undefined, 'categoryvalue/:idFather/:id', 'categoryvaluewithid', PLATFORM.moduleName('./Views/Stammdaten/CategoryValue/categoryvalue-list'), true, 
                           this.loc.tr('Stammdaten.CategoryValue', {ns: 'Router'}), 'categoryvaluewithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'categoryvalueedit/:operation/:idFather/:id', 'categoryvalueedit', './Views/Stammdaten/CategoryValue/categoryvalue-edit', true, 
+        Item.addChildItem(undefined, 'categoryvalueedit/:operation/:idFather/:id', 'categoryvalueedit', PLATFORM.moduleName('./Views/Stammdaten/CategoryValue/categoryvalue-edit'), true, 
                           this.loc.tr('Stammdaten.CategoryValueEdit', {ns: 'Router'}), 'categoryvalueedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
         
         //Routes für "Stammdaten - Picture Upload"
-        Item.addChildItem(undefined, 'pictureuploadlist', 'pictureuploadlist', './Views/Stammdaten/PictureUpload/picture-upload-list', true, 
+        Item.addChildItem(undefined, 'pictureuploadlist', 'pictureuploadlist', PLATFORM.moduleName('./Views/Stammdaten/PictureUpload/picture-upload-list'), true, 
                           this.loc.tr('Stammdaten.PictureUploadList', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
         
         //Routes für "Stammdaten Bilder zuweisen"
-        Item.addChildItem(undefined, 'pictureadmin', 'pictureadmin', './Views/Stammdaten/PictureAdmin/picture-admin-list', true, 
+        Item.addChildItem(undefined, 'pictureadmin', 'pictureadmin', PLATFORM.moduleName('./Views/Stammdaten/PictureAdmin/picture-admin-list'), true, 
                           this.loc.tr('Stammdaten.PictureAdminList', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'pictureadmin/:idFather', 'pictureadminwithid', './Views/Stammdaten/PictureAdmin/picture-admin-list', true, 
+        Item.addChildItem(undefined, 'pictureadmin/:idFather', 'pictureadminwithid', PLATFORM.moduleName('./Views/Stammdaten/PictureAdmin/picture-admin-list'), true, 
                           this.loc.tr('Stammdaten.PictureAdminList', {ns: 'Router'}), 'pictureadminwithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'pictureadminedit/:operation/:idFather/:id', 'pictureadminedit', './Views/Stammdaten/PictureAdmin/picture-admin-edit', true, 
+        Item.addChildItem(undefined, 'pictureadminedit/:operation/:idFather/:id', 'pictureadminedit', PLATFORM.moduleName('./Views/Stammdaten/PictureAdmin/picture-admin-edit'), true, 
                           this.loc.tr('Stammdaten.PictureAdminEdit', {ns: 'Router'}), 'pictureadminedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
         
