@@ -2,12 +2,12 @@
     <ux-dialog>
         <!-- Den Header für den Dialog ausgeben -->
         <ux-dialog-header>
-            <h4>${'ChangeImageProperties.Title' | t: { ns: 'Dialogs' } } <small>${uploadItem.Name}</small></h4>
+            <h4>${'ChangeImageProperties.Title' | t: { ns: 'Dialogs' } } <small>${uploadItem.NameOriginal}</small></h4>
         </ux-dialog-header>
 
         <!-- Den Body (Inhalt) für den Dialog ausgeben -->
         <ux-dialog-body>
-            <!-- Ausgeben der Row für die Überschriften -->
+            <!--Ausgeben der Row für die Überschriften -->
             <div class="row" style="width:700px;">
                 <div class="col-sm-5">
                     <h5 t-params.bind="locConfig" t="ChangeImageProperties.Labels.ImageOriginal"></h5>
@@ -20,10 +20,16 @@
             <!-- Ausgeben der Row mit den Bildern -->
             <div class="row">
                 <div class="col-sm-5">
-                  <picture-control item.bind="" modus="4"></picture-control>
+                  <picture-control item.bind="uploadItem" modus.bind="4"></picture-control>
                 </div>
                 <div class="col-sm-5 col-sm-offset-2">
-                  <picture-control item.bind="" modus="4"></picture-control>
+                  <picture-control 
+                    prefix.bind="'rotate'"
+                    item.bind="uploadItem" 
+                    modus.bind="4"
+                    callback-before-picture-show.call="disableSlider()"
+                    callback-after-picture-show.call="enableSlider()"
+                    additional-rotation.bind="sliderValue"></picture-control>
                 </div>
             </div>
 
@@ -33,14 +39,8 @@
                     <h5 t-params.bind="locConfig" t="ChangeImageProperties.Labels.Rotation"></h5>
                 </div>
                 <div class="col-sm-4" style="margin-top:15px;">
-                    <slider id.bind="idSlider" 
-                            start.bind="start" 
-                            step.bind="step" 
-                            range.bind="range" 
-                            connect.bind="connect" 
-                            orientation.bind="orientation"
-                            animate.bind="animate">
-                    </slider>
+                    <div ej-slider="e-enabled.bind:sliderEnabled;e-min-value.bind:sliderMinValue;e-max-value.bind:sliderMaxValue;e-show-scale.bind:sliderShowScale;e-show-small-ticks.bind:sliderShowSmallTicks;e-increment-step.bind:sliderIncrementStep;e-small-step.bind:sliderSmallStep;e-large-step.bind:sliderLargeStep;e-value.two-way:sliderValue">
+                    </div>
                 </div>
             </div>
         </ux-dialog-body>

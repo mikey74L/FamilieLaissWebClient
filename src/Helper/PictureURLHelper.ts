@@ -17,17 +17,22 @@ export class PictureURLHelper {
         return URL;
     }
 
-    private addRotationInfo(url: string, item: any): string {
+    private addRotationInfo(url: string, item: any, additionalRotation?: number): string {
         //Deklarationen
         var URL: string;
 
         //Überprüfen ob eine Image-Property vorhanden ist
         //Wenn ja werden die entsprechenden Werte übernommen
         URL = url;
-        if (item.ImageProperty != null) {
-            URL = URL + '&rotate=' + item.ImageProperty.Rotate;
+        if (additionalRotation != null) {
+            URL = URL + '&srotate=' + additionalRotation;
         }
-
+        else {
+          if (item.ImageProperty != null) {
+            URL = URL + '&srotate=' + item.ImageProperty.Rotate;
+          }
+        }
+      
         //Funktionsergebnis
         return URL;
     }
@@ -55,7 +60,7 @@ export class PictureURLHelper {
       return URL;
     }
 
-    public getImageURLUpload(uploadItem: any): string {
+    public getImageURLUpload(uploadItem: any, additionalRotation?: number): string {
         //Deklarationen
         var URL: string;
 
@@ -65,7 +70,7 @@ export class PictureURLHelper {
         URL = URL + '?width=300&height=230';
 
         //Etwaige Rotation zur URL hinzufügen
-        URL = this.addRotationInfo(URL, uploadItem);
+        URL = this.addRotationInfo(URL, uploadItem, additionalRotation);
 
         //Setzen der aktuellen URL
         return URL;

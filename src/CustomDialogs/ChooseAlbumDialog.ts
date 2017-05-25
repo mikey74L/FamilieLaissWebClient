@@ -5,6 +5,8 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { ViewModelGeneralDialog } from '../Helper/ViewModelHelper';
 import { DialogController } from 'aurelia-dialog';
 import { ServiceModelAssign } from '../Helper/ServiceHelper';
+import 'syncfusion-javascript/content/ej/web/ej.widgets.core.material.less';
+import 'syncfusion-javascript/content/ej/web/material/ej.theme.less';
 
 @autoinject()
 export class ChooseAlbumDialog extends ViewModelGeneralDialog {

@@ -10,3 +10,6 @@ git remote add origin https://github.com/mbcrump/SampleProject.git
 git push -u origin master
 
 Es muss der GIT Credential Manger für Windows installiert sein
+
+
+npm start -- webpack.server.hmr

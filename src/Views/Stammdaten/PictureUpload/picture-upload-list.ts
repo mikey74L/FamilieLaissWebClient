@@ -10,6 +10,8 @@ import {UploadInProgressEvent} from '../../../Events/UploadControlEvents';
 import {DeletePictureEvent} from '../../../Events/PictureEvents';
 import {PictureUploadService} from './picture-upload-service';
 import swal from 'sweetalert2';
+import 'syncfusion-javascript/content/ej/web/ej.widgets.core.material.less';
+import 'syncfusion-javascript/content/ej/web/material/ej.theme.less';
 
 @autoinject()
 export class PictureUploadList extends ViewModelGeneralDataDelete {

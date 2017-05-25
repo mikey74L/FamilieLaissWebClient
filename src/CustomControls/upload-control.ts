@@ -12,6 +12,8 @@ import {I18N} from 'aurelia-i18n';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import { ToastrHelper } from './../Helper/ToastrHelper';
 import { ExtractFilename, ExtractExtension } from '../Helper/HelperFunctions';
+import 'syncfusion-javascript/content/ej/web/ej.widgets.core.material.less';
+import 'syncfusion-javascript/content/ej/web/material/ej.theme.less';
 
 @autoinject()
 @customElement('upload-control')

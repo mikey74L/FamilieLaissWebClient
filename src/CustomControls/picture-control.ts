@@ -24,6 +24,8 @@ export class PictureControl {
     URLHelper: PictureURLHelper;
     pictureItem: any;
     uploadItem: any;
+
+    //Hier wird von außen das Objekt mit dem anzuzeigenden Bild übergeben
     @bindable() item: any;
 
     //Der Modus bestimmt aus welchem Kontext das Control angezeigt wird. Je nach Modus werden unterschiedliche
@@ -34,6 +36,20 @@ export class PictureControl {
     //4 = Anzeige eines Bildes ohne Zusatzinformationen (Upload-Item)
     //5 = Anzeihe eines Bildes ohne Zusatzinformationen (Media-Item)
     @bindable() modus: number;
+
+    //Hier kann ein Prefix für doe IDs der HTML-Elemente übergeben werden
+    //Wird dann gebraucht wenn auf einer Seite das Selbe Bild mit der gleichen ID
+    //mehrmals angezeigt wird
+    @bindable() prefix: string;
+
+    //Hier kann ein zusätzlicher Rotationswert von außen übergeben werden
+    @bindable() additionalRotation: number;
+
+    //Dieser Callback wird aufgerufen bevor das Bild angezeigt wird (vor dem Download)
+    @bindable() callbackBeforePictureShow: Function;
+
+    //Dieser Callback wird aufgerufen nach dem das Bild angezeigt wurde 
+    @bindable() callbackAfterPictureShow: Function;
 
     i18nContext: string;
 
@@ -56,6 +72,7 @@ export class PictureControl {
     downloadWithError: boolean;
     canvasWidth: number;
     canvasHeight: number;
+    stageInitialized: boolean;
 
     //C'tor
     constructor(loc: I18N, eventAggregator: EventAggregator, urlHelper: PictureURLHelper, dialogService: DialogService) {
@@ -70,6 +87,8 @@ export class PictureControl {
         this.item = null;
         this.showPlaceholder = true;
         this.downloadWithError = false;
+        this.downloadCompleted = false;
+        this.stageInitialized = false;
 
         //Die Queue für den Download des Bildes initialisieren
         this.queue = new createjs.LoadQueue(false);
@@ -101,6 +120,24 @@ export class PictureControl {
         }
     }
 
+    //Hiermit werden die IDs der HTML-Elemente bestimmt
+    private setIDForControls(): void {
+      try {
+        if (this.prefix != null) {
+          this.idPlaceholderSpinner = 'id_PlaceholderSpinner_' + this.prefix + '_' + this.uploadItem.ID;
+          this.idCanvas = 'id_Canvas_' + this.prefix + '_' + this.uploadItem.ID;
+        } 
+        else {
+          this.idPlaceholderSpinner = 'id_PlaceholderSpinner_' + this.uploadItem.ID;
+          this.idCanvas = 'id_Canvas_' + this.uploadItem.ID;
+        } 
+      }
+      catch (ex) {
+        this.idPlaceholderSpinner = 'ToBeSet';
+        this.idCanvas = 'ToBeSet';
+      }
+    }
+
     //Wird von Aurelia aufgerufen wenn sich das Item durch das Binding geändert hat
     private itemChanged(): void {
         if (this.modus != -1 && this.item != null) {
@@ -109,14 +146,7 @@ export class PictureControl {
         }
 
         //Setzen der ID
-        try {
-          this.idPlaceholderSpinner = 'id_PlaceholderSpinner_' + this.uploadItem.ID;
-          this.idCanvas = 'id_Canvas_' + this.uploadItem.ID;
-        }
-        catch (ex) {
-          this.idPlaceholderSpinner = 'ToBeSet';
-          this.idCanvas = 'ToBeSet';
-        }
+        this.setIDForControls();
     }
 
     //Wird von Aurelia aufgerufen wenn sich der Modus durch das Binding geändert hat
@@ -142,20 +172,49 @@ export class PictureControl {
         }
 
         //Setzen der ID
+        this.setIDForControls();
+    }
+
+    //Wird von Aurelia aufgerufen wenn sich der Wert für den Prefix über das
+    //Binding geändert hat
+    private prefixChanged(): void {
+      //Setzen der ID
+      this.setIDForControls();
+    }
+
+    //Wird von Aurelia aufgerufen wenn sich der Wert für die zusätzliche Rotation
+    //über das Binding geändert hat
+    private additionalRotationChanged(): void {
+      //Erst wenn das Bild vollständig heruntergeladen wurde, wird eine
+      //neue Rotation erlaubt
+      if (this.downloadCompleted && !this.downloadWithError) {
+        //Callback aufrufen
         try {
-          this.idPlaceholderSpinner = 'id_PlaceholderSpinner_' + this.uploadItem.ID;
-          this.idCanvas = 'id_Canvas_' + this.uploadItem.ID;
+          this.callbackBeforePictureShow();
         }
         catch (ex) {
-          this.idPlaceholderSpinner = 'ToBeSet';
-          this.idCanvas = 'ToBeSet';
+
         }
+
+        //Löschen der Queue
+        this.queue.removeAll();
+
+        //Anzeigen des Spinners
+        this.spinner.show();
+        this.showPlaceholder = true;
+
+        //Entfernen des aktuell angezeigten Bildes aus dem Canvas
+        this.canvas.clear();
+
+        //Laden des Bildes über die Queue
+        this.queue.loadFile({id:"picture", src: this.getImageURL(this.additionalRotation)});
+      }
     }
 
     //Ermittelt die Image-URL für das übergebene Image
-    private getImageURL(): string {
+    private getImageURL(additionalRotation?: number): string {
         //Return-Value
-        return this.URLHelper.getImageURLUpload(this.uploadItem);
+        return this.URLHelper.getImageURLUpload(this.uploadItem, additionalRotation);
     }
 
     //Zeigt das ausgewählte Photo in Großansicht an
@@ -202,6 +261,14 @@ export class PictureControl {
 
     //Wird von Aurelia aufgerufen
     public attached(): void {
+      //Callback aufrufen
+      try {
+        this.callbackBeforePictureShow();
+      }
+      catch (ex) {
+        
+      }
+
       //Wenn das Control zum DOM hinzugefügt wird, wird der Spinner angezeigt
       this.spinner = new CanvasLoader(this.idPlaceholderSpinner);
       this.spinner.setColor('#0f07ed'); 
@@ -230,7 +297,6 @@ export class PictureControl {
         //Ausblenden des Spinners
         this.showPlaceholder = false;
         this.spinner.hide();
-        this.spinner.kill();
 
         //Wenn das Bild ohne Fehler heruntergeladen werden konnte, dann wird dieses
         //im Canvas angezeigt, ansonsten wird eine Fehlermeldung ausgegeben
@@ -272,6 +338,7 @@ export class PictureControl {
 
     //Initialisiert die Stage für den Canvas
     private initializeStage(): void {
+      if (!this.stageInitialized) {
         //Setzen der Width und Height Properties für den Canvas anhand der über CSS ermittelten
         //Höhe und Breite des Canvas. Dieses ist zwingend notwendig da sonst eine automatische
         //Skalierung im Canvas stattfindet
@@ -285,6 +352,10 @@ export class PictureControl {
 
         //Verdrahten des Event-Handlers für das Mouse-Up-Event auf dem Canvas
         this.canvas.on('mouse:up', (e: fabric.IEvent) => { this.onMouseUpCanvas(e); });
+
+        //Setzen des Flags
+        this.stageInitialized = true;
+      }
     }
 
     //Wird aufgerufen wenn der Mouse-Button auf dem Canvas losgelassen wird
@@ -324,6 +395,14 @@ export class PictureControl {
 
         //Download abgeschlossen
         this.downloadCompleted = true;
+
+        //Aufrufen des Callback
+        try {
+          this.callbackAfterPictureShow();
+        }
+        catch (ex) {
+
+        }
     }
 
     //Wird von der Queue aufgerufen wenn beim Download des Bildes

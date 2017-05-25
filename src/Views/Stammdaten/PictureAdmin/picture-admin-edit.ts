@@ -1,4 +1,5 @@
 import { SelectPickerValueItem } from './../../../Helper/SelectPickerHelper';
+import {ChangeImagePropertyStartArgs} from '../../../Models/ChangeImagePropertyStartArgs';
 import {ViewModelAssignEdit} from '../../../Helper/ViewModelHelper';
 import {AppRouter} from 'aurelia-router';
 import {autoinject} from 'aurelia-dependency-injection';
@@ -11,6 +12,7 @@ import {PictureAdminServiceEdit} from './picture-admin-service';
 import {enViewModelEditMode} from '../../../Enum/FamilieLaissEnum';
 import {ShowPictureBigArgs} from '../../../Models/ShowPictureBigArgs';
 import {ChooseUploadPictureDialog} from '../../../CustomDialogs/ChooseUploadPictureDialog';
+import {ChangeImagePropertiesDialog} from '../../../CustomDialogs/ChangeImagePropertiesDialog';
 import {ShowPictureBigDialog} from '../../../CustomDialogs/ShowPictureBigDialog';
 import swal from 'sweetalert2';
 
@@ -144,12 +146,17 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
 
     //Hiermit wird der Dialog zur Bildbearbeitung aufgerufen
     public async changeImageParameter(): Promise<void> {
-        //Deklaration
-        // var Result: DialogResult;
+      try {
+        //Erstellen der Start-Args
+        var StartArgs = new ChangeImagePropertyStartArgs(this.uploadItem);
 
-        // //Erstellen der Start-Args
-        // var StartArgs = new ChangeImagePropertyStartArgs(this.uploadItem);
+        //Anzeigen des Dialoges zum Ändern der Picture-Parameter
+        var Result: DialogCloseResult = await this.dialogService.open({viewModel: ChangeImagePropertiesDialog, model: StartArgs})
+                                                                .whenClosed((reason: DialogCloseResult) => { return reason;});
+      }
+      catch (ex) {
 
+      }
         // Result = await this.dialogService.open({ viewModel: 'CustomDialogs/ChangeImagePropertiesDialog', model: new ShowPictureBigArgs(1, this.uploadItem)});
 
         // //Anzeigen des Aurelia-Dialoges zur Bildbearbeitung
