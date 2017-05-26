@@ -8,21 +8,21 @@
         <!-- Den Body (Inhalt) für den Dialog ausgeben -->
         <ux-dialog-body>
             <!--Ausgeben der Row für die Überschriften -->
-            <div class="row" style="width:700px;">
+            <div class="row" style="width:750px;">
                 <div class="col-sm-5">
                     <h5 t-params.bind="locConfig" t="ChangeImageProperties.Labels.ImageOriginal"></h5>
                 </div>
-                <div class="col-sm-5 col-sm-offset-2">
+                <div class="col-sm-5 col-sm-offset-1">
                     <h5 t-params.bind="locConfig" t="ChangeImageProperties.Labels.ImageModified"></h5>
                 </div>
             </div>
 
             <!-- Ausgeben der Row mit den Bildern -->
-            <div class="row">
+            <div class="row" style="width:750px;">
                 <div class="col-sm-5">
                   <picture-control item.bind="uploadItem" modus.bind="4"></picture-control>
                 </div>
-                <div class="col-sm-5 col-sm-offset-2">
+                <div class="col-sm-5 col-sm-offset-1">
                   <picture-control 
                     prefix.bind="'rotate'"
                     item.bind="uploadItem" 

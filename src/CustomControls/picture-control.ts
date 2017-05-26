@@ -10,6 +10,7 @@ import {ShowPictureBigDialog} from '../CustomDialogs/ShowPictureBigDialog';
 import 'preload-js';
 import 'fabric';
 import '../../vendors/heartcode/heartcode-canvasloader.js';
+import '../../styles/css/picture_item.css';
 
 declare var CanvasLoader;
 
@@ -34,7 +35,7 @@ export class PictureControl {
     //2 = Auswahl eines Upload-Items beim Hinzufügen eines neuen Photos zu einem Album
     //3 = Liste der zugewiesenen Photos zu einem Album in der Liste für die Administration
     //4 = Anzeige eines Bildes ohne Zusatzinformationen (Upload-Item)
-    //5 = Anzeihe eines Bildes ohne Zusatzinformationen (Media-Item)
+    //5 = Anzeige des Bildes im Großformat (Upload-Item)
     @bindable() modus: number;
 
     //Hier kann ein Prefix für doe IDs der HTML-Elemente übergeben werden
@@ -117,6 +118,10 @@ export class PictureControl {
                 this.pictureItem = null;
                 this.uploadItem = this.item;
                 break;
+            case 5:
+                this.pictureItem = null;
+                this.uploadItem = this.item;
+                break;
         }
     }
 
@@ -162,6 +167,9 @@ export class PictureControl {
                 this.i18nContext = 'Album';
                 break;
             case 4:
+                this.i18nContext = 'Upload';
+                break;
+            case 5:
                 this.i18nContext = 'Upload';
                 break;
         }
@@ -214,15 +222,31 @@ export class PictureControl {
     //Ermittelt die Image-URL für das übergebene Image
     private getImageURL(additionalRotation?: number): string {
         //Return-Value
-        return this.URLHelper.getImageURLUpload(this.uploadItem, additionalRotation);
+        if (this.modus == 5) {
+          return this.URLHelper.getImageURLBigPicture(this.uploadItem, additionalRotation);
+        }
+        else {
+          return this.URLHelper.getImageURLUpload(this.uploadItem, additionalRotation);
+        }
     }
 
     //Zeigt das ausgewählte Photo in Großansicht an
     public async showPictureBig(): Promise<void> {
         try {     
+           //Zusammenstellen der Argumente für den Dialog
+           var Arguments: ShowPictureBigArgs;
+           var CaptionForDialog: string;
+           if (this.modus == 1 || this.modus == 2 || this.modus == 4) {
+             CaptionForDialog = this.uploadItem.NameOriginal;
+           }
+           else {
+             CaptionForDialog = this.pictureItem.NameGerman;
+           }
+           Arguments = new ShowPictureBigArgs(CaptionForDialog, this.uploadItem, this.additionalRotation);
+
            //Aufrufen des Aurelia-Dialoges zur Anzeige des Bildes
            //im Großformat
-           var Result: DialogCloseResult = await this.dialog.open({viewModel: ShowPictureBigDialog, model: new ShowPictureBigArgs(1, this.uploadItem)})
+           var Result: DialogCloseResult = await this.dialog.open({viewModel: ShowPictureBigDialog, model: Arguments})
                                                             .whenClosed((reason: DialogCloseResult) => { return reason;});
         }
         catch (ex) {
@@ -362,7 +386,7 @@ export class PictureControl {
     private onMouseUpCanvas(e: fabric.IEvent): void {
         //Wenn der Download abgeschlossen ist, und erfolgreich war, dann
         //soll das Bild in Großansicht angezeigt werden
-        if (this.downloadCompleted && !this.downloadWithError) {
+        if (this.downloadCompleted && !this.downloadWithError && this.modus != 5) {
           this.showPictureBig();
         }
     }

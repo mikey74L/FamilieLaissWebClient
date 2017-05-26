@@ -1,0 +1,130 @@
+.picture-item {
+    width: 300px;
+    max-width: 300px;
+    margin-top: 0;
+    margin-right: 15px;
+    margin-bottom: 50px;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.picture-item-big {
+    width: 800px;
+    max-width: 800px;
+    margin-top: 0;
+    margin-right: 15px;
+    margin-bottom: 50px;
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.picture-item-top {
+    background-color: rgb(145,0,0);
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+}
+
+.picture-item-header {
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 15px;
+    color: white;
+    margin-top:0;
+    margin-bottom:0;
+    overflow: hidden;
+}
+
+a.picture-item-link {
+    color: white;
+    text-decoration: none;
+}
+
+a.picture-item-link:visited {
+    color: white;
+    text-decoration: none;
+}
+
+a.picture-item-link:hover {
+    color: white;
+    border-bottom: dotted;
+    border-bottom-color: white;
+    border-bottom-width: 1px;
+    cursor: pointer;
+}
+
+a.picture-item-link:active {
+    color: white;
+    text-decoration: none;
+}
+
+.picture-item-container {
+    width:298px;
+    height:230px;
+    max-height: 230px;
+    max-width: 298px;
+    min-height: 230px;
+    min-width: 298px;
+}
+
+.picture-item-container-big {
+    width:800px;
+    height:600px;
+    max-height: 600px;
+    max-width: 800px;
+    min-height: 600px;
+    min-width: 800px;
+}
+
+.picture-item-picture {
+    width: inherit;
+    height: inherit;
+    max-height: inherit;
+    max-width: inherit;
+    min-height: inherit;
+    min-width: inherit;
+}
+
+.picture-item-loader {
+  position: relative;
+  top: 36%;
+  left: 36%;
+}
+
+.picture-item-overlay {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background: url(images/trans-black-50.png);
+	width: 100%;
+	height: 100%;
+}
+
+.picture-item-values {
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.picture-item-values dt {
+    clear: both;
+    float: left;
+}
+
+.picture-item-values dd {
+    float: right;
+}
+
+.picture-item-buttons {
+    clear: both;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 2px;
+    padding-top: 10px;
+}

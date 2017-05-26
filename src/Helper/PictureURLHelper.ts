@@ -76,17 +76,17 @@ export class PictureURLHelper {
         return URL;
     }
 
-    public getImageURLBigPicture(pictureItem: any, modus: number): string {
+    public getImageURLBigPicture(pictureItem: any, additionalRotation?: number): string {
         //Deklarationen
         var URL: string;
 
         //Zusammenstellen der URL für das Image
         //Das Image wird auf 300 x 200 über den ImageResizer auf dem Server geändert
         URL = this.getBaseImageURL(pictureItem);
-        URL = URL + '?height=660';
+        URL = URL + '?width=800&height=600';
 
         //Etwaige Rotation zur URL hinzufügen
-        URL = this.addRotationInfo(URL, pictureItem);
+        URL = this.addRotationInfo(URL, pictureItem, additionalRotation);
 
         //Setzen der aktuellen URL
         return URL;

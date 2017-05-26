@@ -38,6 +38,11 @@ export class ChangeImagePropertiesDialog extends ViewModelGeneralDialog {
     protected async activateChild(info: any): Promise<void> {
       //Übernehmen des Upload-Items übergeben wird ein Objekt vom Typ ChangeImagePropertyStartArgs
       this.uploadItem = info.uploadItem;
+
+      //Übernehmen einer eventuell schon existierenden Rotation
+      if (this.uploadItem.ImageProperty != null) {
+        this.sliderValue = this.uploadItem.ImageProperty.Rotate;
+      }
     }
 
     //Wird von Aurelia aufgerufen
@@ -48,6 +53,12 @@ export class ChangeImagePropertiesDialog extends ViewModelGeneralDialog {
     //Wird von Aurelia aufgerufen
     protected busyStateChanged(): void {
 
+    }
+    
+    //Übernehmen der Rotation
+    private takeOver(): void {
+      //Übernehmen der aktuellen Rotation und schließen des Dialoges
+      this.controller.ok(this.sliderValue);
     }
 
     //Wird vom Cancel-Button aufgerufen

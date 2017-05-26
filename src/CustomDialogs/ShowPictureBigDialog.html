@@ -5,7 +5,12 @@
         </ux-dialog-header>
 
         <ux-dialog-body>
-            <img width=880 height=660 src.bind="getImageURL()"/>
+            <picture-control 
+              item.bind="item" 
+              prefix.bind="'showbig'"
+              modus.bind="5"
+              additional-rotation.bind="additionalRotation">
+            </picture-control>
         </ux-dialog-body>
 
         <ux-dialog-footer>

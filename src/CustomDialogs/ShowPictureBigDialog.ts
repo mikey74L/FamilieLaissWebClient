@@ -13,7 +13,7 @@ export class ShowPictureBigDialog extends ViewModelGeneralDialog {
     //Members
     URLHelper: PictureURLHelper;
     item: any;
-    modus: number;
+    additionalRotation?: number;
     currentName: string;
 
     //C'tor
@@ -25,21 +25,12 @@ export class ShowPictureBigDialog extends ViewModelGeneralDialog {
         this.URLHelper = urlHelper;
     }
 
-    //Ermittelt die URL für das anzuzeigende Bild
-    private getImageURL(): string {
-      return this.URLHelper.getImageURLBigPicture(this.item, this.modus);
-    }
-
     //Wird von Aurelia aufgerufen wenn der Dialog angezeigt wird
     protected async activateChild(info: any): Promise<void> {
         //Übernehmen des Items
         this.item = info.item;
-        this.modus = info.modus;
-
-        //Den aktuellen Namen ermitteln
-        if (this.modus == 1) {
-            this.currentName = this.item.Name;
-        }
+        this.currentName = info.nameForImage;
+        this.additionalRotation = info.additionalRotation;
     }
  
     //Wird von Aurelia aufgerufen

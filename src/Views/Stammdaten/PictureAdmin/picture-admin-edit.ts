@@ -8,7 +8,7 @@ import {EventAggregator} from 'aurelia-event-aggregator';
 import {DialogService, DialogCloseResult} from 'aurelia-dialog';
 import {PictureURLHelper} from '../../../Helper/PictureURLHelper';
 import {SelectPickerListMultiple, SelectPickerGroupItem} from '../../../Helper/SelectPickerHelper';
-import {PictureAdminServiceEdit} from './picture-admin-service';
+import {PictureAdminServiceEdit, PictureAdminServiceEditExtend} from './picture-admin-service';
 import {enViewModelEditMode} from '../../../Enum/FamilieLaissEnum';
 import {ShowPictureBigArgs} from '../../../Models/ShowPictureBigArgs';
 import {ChooseUploadPictureDialog} from '../../../CustomDialogs/ChooseUploadPictureDialog';
@@ -34,9 +34,11 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
 
     URLHelper: PictureURLHelper;
 
+    serviceExtended: PictureAdminServiceEditExtend;
+
     //C'tor
     constructor(loc:I18N, eventAggregator: EventAggregator, dialogService: DialogService, router: AppRouter, 
-                service: PictureAdminServiceEdit, urlHelper: PictureURLHelper) {
+                service: PictureAdminServiceEdit, serviceExtended: PictureAdminServiceEditExtend,urlHelper: PictureURLHelper) {
         //Aufrufen der Vater-Klasse
         super(loc, eventAggregator, dialogService, "pictureadmin", router, service);
 
@@ -54,6 +56,9 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
 
         //Initialisieren der Liste
         this.categoryList = new SelectPickerListMultiple();
+
+        //Übernehmen des erweiterten Service
+        this.serviceExtended = serviceExtended;
     }
 
     //Anzeigen des Dialoges zur Auswahl eines Upload-Photos
@@ -153,40 +158,20 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
         //Anzeigen des Dialoges zum Ändern der Picture-Parameter
         var Result: DialogCloseResult = await this.dialogService.open({viewModel: ChangeImagePropertiesDialog, model: StartArgs})
                                                                 .whenClosed((reason: DialogCloseResult) => { return reason;});
+
+        //Ermitteln ob es schon eine Image-Property gibt
+        if (this.uploadItem.ImageProperty != null) {
+          //Setzen der Rotation
+          this.uploadItem.ImageProperty.Rotate = Result.output;
+        }
+        else {
+          //Eine neue Image-Property-Erstellen
+          var Dummy: any = await this.serviceExtended.createImageProperty(this.uploadItem, Result.output);
+        }
       }
       catch (ex) {
 
       }
-        // Result = await this.dialogService.open({ viewModel: 'CustomDialogs/ChangeImagePropertiesDialog', model: new ShowPictureBigArgs(1, this.uploadItem)});
-
-        // //Anzeigen des Aurelia-Dialoges zur Bildbearbeitung
-        // this.dialog.open({ viewModel: ChangeImagePropertiesDialog, model: StartArgs}).then(response => {
-        //     if (response.wasCancelled) {
-        //         //Ausgeben von Logging-Informationen
-        //         console.log('Dialog cancelled - Image properties not changed');
-        //     } 
-        //     else {
-        //         //Ausgeben von Logging
-        //         console.log('Image properties changed');
-
-        //         //Ermitteln ob es schon eine Image-Property gibt
-        //         if (this.uploadItem.ImageProperty != null) {
-        //             //Setzen der Rotation
-        //             this.uploadItem.ImageProperty.Rotate = response.output;
-
-        //             //Aktualisieren der URL des Photos
-        //             this.setCurrentPhotoURL();
-        //         }
-        //         else {
-        //             //Eine neue Image-Property-Erstellen
-        //             this.service.createImageProperty(this.uploadItem, response.output)
-        //             .then( result => {
-        //                 //Aktualisieren der URL des Photos
-        //                 this.setCurrentPhotoURL();
-        //             });
-        //         }
-        //     }
-        // });
     }
 
     //Wird aufgerufen wenn auf den Cancel-Button geklickt wird

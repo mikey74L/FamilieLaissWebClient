@@ -1,12 +1,14 @@
 export class ShowPictureBigArgs {
     //Members
-    modus: number;
     item: any;
+    nameForImage: string;
+    additionalRotation?: number;
 
     //C'tor
-    constructor (modus: number, item: any) {
+    constructor (nameForImage: string, item: any, additionalRotation?: number) {
         //Übernehmen der Parameter
         this.item = item;
-        this.modus = modus;
+        this.nameForImage = nameForImage;
+        this.additionalRotation = additionalRotation;
     }
 }
