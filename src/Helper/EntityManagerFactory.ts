@@ -123,7 +123,7 @@ export class EntityManagerFactory {
         //Wird nur zuschlagen wenn der Typ auf 0 steht
         if (entity.getProperty('Typ') === 0) {
             //Ermitteln des Wertes für die Property der ID des Upload-Photo
-            var PhotoItemID: number = entity.getProperty('Upload_Picture');
+            var PhotoItemID: number = entity.getProperty('ID_UploadPicture');
 
             //Wenn keine ID gesetzt ist, dann ist es ein Fehler
             if (PhotoItemID == null) {
@@ -144,7 +144,7 @@ export class EntityManagerFactory {
         //Wird nur zuschlagen wenn der Typ auf 0 steht
         if (entity.getProperty('Typ') === 1) {
             //Ermitteln des Wertes für die Property der ID des Upload-Video
-            var VideoItemID: number = entity.getProperty('Upload_Video');
+            var VideoItemID: number = entity.getProperty('ID_UploadVideo');
 
             //Wenn keine ID gesetzt ist, dann ist es ein Fehler
             if (VideoItemID == null) {

@@ -14,8 +14,7 @@ export class CategoryService extends ServiceModelStammdatenNormal {
     public async getData(): Promise<Array<any>> {
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
-            .from('FacetGroups')
-            .where("FacetValueType", "==", 1);
+            .from('FacetGroups');
 
         //Query in einem Promise ausführen 
         if (!this.loadedFromServer) {

@@ -1,0 +1,19 @@
+<template>
+  <input type="text" 
+         id.bind="id" 
+         ej-drop-down-list="e-enable-filter-search.bind:configData.enableFilterSearch;
+                            e-enable-popup-resize.bind:configData.enablePopupResize;
+                            e-min-popup-height.bind:configData.minPopupHeight;
+                            e-min-popup-width.bind:configData.minPopupWidth;
+                            e-max-popup-height.bind:configData.maxPopupHeight;
+                            e-max-popup-width.bind:configData.maxPopupWidth;
+                            e-popup-height.bind:configData.popupHeight;
+                            e-popup-width.bind:configData.popupWidth;
+                            e-allow-grouping.bind:configData.allowGrouping;
+                            e-multi-select-mode.bind:configData.multipleSelectMode;
+                            e-show-checkbox.bind:configData.showCheckbox;
+                            e-data-source.bind:dataForControl;
+                            e-fields.bind:configData.fields;
+                            e-watermark-text.bind:configData.waterMarkText" 
+         e-on-create.trigger="dropdownCreated()" />
+</template>

@@ -6,7 +6,6 @@ import LngDetector from 'i18next-browser-languagedetector';
 
 //Styles von Drittanbietern
 import 'sweetalert2/dist/sweetalert2.css';
-import 'bootstrap-select/dist/css/bootstrap-select.css';
 import 'material-design-iconic-font/dist/css/material-design-iconic-font.css';
 
 //Styles für die Applikation
@@ -45,6 +44,7 @@ export async function configure(aurelia: Aurelia) {
                       PLATFORM.moduleName('CustomControls/upload-control'),
                       PLATFORM.moduleName('CustomAttributes/bootstrap-dropdown'), 
                       PLATFORM.moduleName('CustomControls/picture-control'),
+                      PLATFORM.moduleName('CustomControls/drop-down-control'),
                       PLATFORM.moduleName('CustomControls/select-picker-multiple'), 
                       PLATFORM.moduleName('CustomControls/select-picker-single')])
     .plugin(PLATFORM.moduleName('aurelia-syncfusion-bridge'), syncfusion => {
@@ -53,6 +53,7 @@ export async function configure(aurelia: Aurelia) {
         syncfusion.ejProgressBar();
         syncfusion.ejTemplate();
         syncfusion.ejSlider();
+        syncfusion.ejDropDownList();
     })
     .plugin(PLATFORM.moduleName('aurelia-breeze'))
     .plugin(PLATFORM.moduleName('aurelia-animator-css'))

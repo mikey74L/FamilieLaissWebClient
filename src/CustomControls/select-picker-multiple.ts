@@ -3,6 +3,7 @@ import { autoinject } from 'aurelia-framework';
 import { I18N } from 'aurelia-i18n';
 import 'bootstrap-select';
 import { SelectPickerListMultiple } from '../Helper/SelectPickerHelper';
+import 'bootstrap-select/dist/css/bootstrap-select.css';
 
 @customElement('select-picker-multiple')
 @containerless()
