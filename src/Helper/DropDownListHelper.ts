@@ -7,6 +7,7 @@ export class DropDownListConfig {
     public allowGrouping: boolean;
     public waterMarkText: string;
     
+    public width: number | string;
     public popupWidth: number;
     public popupHeight: number;
     public maxPopupWidth: number;
@@ -20,6 +21,7 @@ export class DropDownListConfig {
     //C'tor
     constructor () {
       //Initialisieren der Properties
+      this.width = '100%';
       this.showCheckbox = false;
       this.multipleSelectMode = ej.MultiSelectMode.None;
       this.waterMarkText = '';
@@ -44,19 +46,20 @@ export class DropDownListConfig {
     }
 }
 
-export class dropdownListData {
+export class DropdownListData {
     //Members
-    groups: Array<dropdownListGroupItem> = [];
+    useMultipleValues: boolean;
+    groups: Array<DropdownListGroupItem> = [];
 
     //C'tor
-    constructor () {
-
+    constructor (useMultipleValues: boolean) {
+      this.useMultipleValues = useMultipleValues;
     }
 
     //Fügt eine Gruppe hinzu
-    public addGroup(id: number, name: string): dropdownListGroupItem {
+    public addGroup(id: number, name: string): DropdownListGroupItem {
         //Ein neues Gruppen-Objekt erzeugen
-        var GroupItem: dropdownListGroupItem = new dropdownListGroupItem(id, name);
+        var GroupItem: DropdownListGroupItem = new DropdownListGroupItem(id, name);
 
         //Das Gruppen-Objekt zur Liste hinzufügen
         this.groups.push(GroupItem);
@@ -66,31 +69,35 @@ export class dropdownListData {
     }
 
     //Setzt alle Werte zurück
-    // private resetAll(): void {
-    //     for (var Group of this.groups) {
-    //         Group.resetAll();
-    //     }
-    // }
+    private resetAll(): void {
+        for (var Group of this.groups) {
+            Group.resetAll();
+        }
+    }
 
     //Setzt den Assign-Status für ein Element
-    // public setValue(id: number): void {
-    //     //Zurücksetzen aller Items
-    //     this.resetAll();
+    public setValue(id: number, value: boolean): void {
+        //Wenn es sich um eine Liste für einen Single-Wert handelt werden
+        //zuvor alle Werte zurückgesetzt
+        if (!this.useMultipleValues) {
+          this.resetAll();
+        }
 
-    //     for (var Group of this.groups) {
-    //         for (var Value of Group.values) {
-    //             if (Value.id == id) {
-    //                 Value.assigned = true;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    // }
+        //Setzen des Wertes für das entsprechende Item
+        for (var Group of this.groups) {
+            for (var Value of Group.values) {
+                if (Value.id == id) {
+                    Value.assigned = value;
+                    break;
+                }
+            }
+        }
+    }
 
     //Ermittelt alle geänderten Values
-    public getChangedValues(): Array<dropdownListValueItem> {
+    public getChangedValues(): Array<DropdownListValueItem> {
         //Deklaration
-        var changedItems: Array<dropdownListValueItem> = [];
+        var changedItems: Array<DropdownListValueItem> = [];
 
         //Ermitteln aller geänderten Values
         for (var Group of this.groups) {
@@ -105,15 +112,15 @@ export class dropdownListData {
         return changedItems;
     }
 
-    get dataForControl() : Array<dropdownListControlData> {
+    get dataForControl() : Array<DropdownListControlData> {
       //Deklaration
-      var returnValue: Array<dropdownListControlData> = [];
+      var returnValue: Array<DropdownListControlData> = [];
 
       //Durch alle Gruppen durchgehen und die
       //entsprechenden Values mit Ihren Gruppen-Namen zurückliefern
       for (var Group of this.groups) {
         for (var Value of Group.values) {
-          returnValue.push (new dropdownListControlData(Value.id, Value.name, Group.name, Value.assigned));
+          returnValue.push (new DropdownListControlData(Value.id, Value.name, Group.name));
         }
       }
 
@@ -122,11 +129,11 @@ export class dropdownListData {
     }
 }
 
-export class dropdownListGroupItem {
+export class DropdownListGroupItem {
     //Members
     id: number;
     name: string;
-    values: Array<dropdownListValueItem> = [];
+    values: Array<DropdownListValueItem> = [];
 
     //C'tor
     constructor (id: number, name: string) {
@@ -138,7 +145,7 @@ export class dropdownListGroupItem {
     //Fügt einen Wert zur Gruppe hinzu
     public addValue(id: number, name: string, assigned: boolean, originalItem: any): void {
         //Ein neues Value-Objekt erzeugen
-        var newValue: dropdownListValueItem = new dropdownListValueItem(id, name, assigned, originalItem);
+        var newValue: DropdownListValueItem = new DropdownListValueItem(id, name, assigned, originalItem);
 
         //Das Value-Objekt zur Liste der Werte hinzufügen
         this.values.push(newValue);
@@ -152,7 +159,7 @@ export class dropdownListGroupItem {
     }
 }
 
-export class dropdownListValueItem {
+export class DropdownListValueItem {
     //Members
     id: number;
     name: string;
@@ -171,16 +178,14 @@ export class dropdownListValueItem {
     }
 }
 
-export class dropdownListControlData {
+export class DropdownListControlData {
   public id: string | number;
   public text: string;
   public groupName: string;
-  public selected: boolean;
 
-  constructor (id: string | number, text: string, groupName: string, selected: boolean) {
+  constructor (id: string | number, text: string, groupName: string) {
     this.id = id;
     this.text = text;
     this.groupName = groupName;
-    this.selected = selected;
   }
 }

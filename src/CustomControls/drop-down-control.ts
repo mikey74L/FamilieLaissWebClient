@@ -1,5 +1,5 @@
 /// <reference path="../../typings/globals/syncfusion/ej.web.all.d.ts" />
-import { DropDownListConfig, dropdownListData, dropdownListControlData } from './../Helper/DropDownListHelper';
+import { DropDownListConfig, DropdownListData, DropdownListControlData } from './../Helper/DropDownListHelper';
 import { bindable, customElement, containerless } from 'aurelia-framework';
 
 @customElement('drop-down-control')
@@ -7,6 +7,9 @@ export class DropDownControl {
   //Die ID für das HTML-ELement
   @bindable() id: string;
   
+  //Property für die Breite des Controls nicht des Popups
+  @bindable() width: number | string;
+
   //Die Properties zur Steuerung der Größe der Drop-Down-Liste
   @bindable() popupWidth: number;
   @bindable() popupHeight: number;
@@ -32,7 +35,7 @@ export class DropDownControl {
   @bindable() multipleSelectionAllowed: boolean;
 
   //Enthält die Daten für das Drop-Down-Control
-  @bindable() data: dropdownListData;
+  @bindable() data: DropdownListData;
 
   //Hält die aktuelle Instanz des Dropdown-Controls
   private dropdownControl: ej.DropDownList;
@@ -41,12 +44,16 @@ export class DropDownControl {
   private configData: DropDownListConfig;
 
   //Das aufbereitete Array mit Daten für das Control
-  private dataForControl: Array<dropdownListControlData>;
+  private dataForControl: Array<DropdownListControlData>;
 
   //C'tor
   constructor() {
     //Erstellen des Config-Objektes
     this.configData = new DropDownListConfig();
+  }
+
+  widthChanged(): void {
+    this.configData.width = this.width;
   }
 
   popupWidthChanged(): void {
@@ -110,14 +117,40 @@ export class DropDownControl {
       }
     }
     catch (ex) {
-
     }
   }
 
+  //Wird vom Syncfusion-Control aufgerufen sobald das Control initialisiert wurde
   dropdownCreated(): void {
     //Ermitteln des Controls
     this.dropdownControl = $('#' + this.id).data('ejDropDownList');
 
-    //Setzen der initial zu selektierenden Items
+    // Setzen der initial zu selektierenden Items
+    for (var Group of this.data.groups) {
+      for (var Item of Group.values) {
+        if (Item.assigned) {
+          this.dropdownControl.selectItemByValue(Item.id);
+        }
+      }
+    }
+  }
+
+  //Wird vom Syncfusion-Control aufgerufen sobald die Selektion geändert wurde
+  madeSelection(e: any): void {
+    //Deklaration
+    var Args: ej.DropDownList.SelectEventArgs = e.detail;
+
+    //Übernehmen des aktuellen Status
+    if (this.multipleSelectionAllowed) {
+      if (!Args.isChecked) {
+        this.data.setValue(parseInt(Args.value), true);
+      }
+      else {
+        this.data.setValue(parseInt(Args.value), false);
+      }
+    }
+    else {
+      this.data.setValue(parseInt(Args.value), true);
+    }
   }
 }

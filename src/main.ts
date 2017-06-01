@@ -44,9 +44,7 @@ export async function configure(aurelia: Aurelia) {
                       PLATFORM.moduleName('CustomControls/upload-control'),
                       PLATFORM.moduleName('CustomAttributes/bootstrap-dropdown'), 
                       PLATFORM.moduleName('CustomControls/picture-control'),
-                      PLATFORM.moduleName('CustomControls/drop-down-control'),
-                      PLATFORM.moduleName('CustomControls/select-picker-multiple'), 
-                      PLATFORM.moduleName('CustomControls/select-picker-single')])
+                      PLATFORM.moduleName('CustomControls/drop-down-control')])
     .plugin(PLATFORM.moduleName('aurelia-syncfusion-bridge'), syncfusion => {
         syncfusion.ejGrid();
         syncfusion.ejTab();

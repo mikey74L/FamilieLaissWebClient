@@ -77,11 +77,14 @@
                         <small t="Edit.Card.Body.Form.Labels.Category" t-params.bind="locConfig"></small>
                         <div class="row">
                             <div class="col-sm-6" style="margin-top:10px;">
-                                <select-picker-multiple id.bind="idCategorySelect" 
-                                               items.bind="categoryList" 
-                                               title.bind="titleSelectPickerCategoryList"
-                                               is-busy.bind="isBusy">
-                                </select-picker-multiple>
+                                <drop-down-control id.bind="idCategorySelect" 
+                                                   data.bind="categoryList" 
+                                                   water-mark-text.bind="titleSelectPickerCategoryList"
+                                                   multiple-selection-allowed.bind="true"
+                                                   allow-grouping.bind="true"
+                                                   enable-filter-search.bind="true"
+                                                   is-enabled.bind="!isBusy">
+                                </drop-down-control>
                             </div>
                         </div>
                     </div>

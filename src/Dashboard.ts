@@ -3,7 +3,7 @@ import { ViewModelGeneral } from './Helper/ViewModelHelper';
 import { I18N } from 'aurelia-i18n';
 import {autoinject} from 'aurelia-dependency-injection';
 import {EventAggregator} from 'aurelia-event-aggregator';
-import { dropdownListData, dropdownListGroupItem, DropDownListConfig } from './Helper/DropDownListHelper';
+import { DropdownListData, DropdownListGroupItem, DropDownListConfig } from './Helper/DropDownListHelper';
 
 @autoinject()
 export class Dashboard extends ViewModelGeneral {
@@ -29,16 +29,16 @@ export class Dashboard extends ViewModelGeneral {
 //   }
 
 
-  data: dropdownListData;
+  data: DropdownListData;
 test: boolean = true;
   constructor(loc: I18N, eventAggregator: EventAggregator) {
     super(loc, eventAggregator);
 
    
-    this.data = new dropdownListData();
-    var Group: dropdownListGroupItem = this.data.addGroup(1, 'Gruppe 1');
+    this.data = new DropdownListData(true);
+    var Group: DropdownListGroupItem = this.data.addGroup(1, 'Gruppe 1');
     Group.addValue(1, 'Wert 1', false, null);
-    Group.addValue(2, 'Wert 2', false, null);
+    Group.addValue(2, 'Wert 2', true, null);
   }
 
     protected async activateChild(info: any): Promise<void> {
@@ -50,6 +50,12 @@ test: boolean = true;
     protected checkEnabledState(): void {
     }
   testClick() {
-    this.test = !this.test;
+    for (var Group of this.data.groups) {
+      for (var Item of Group.values) {
+        if (Item.assigned) {
+          alert(Item.name);
+        }
+      }
+    }
   }
 }

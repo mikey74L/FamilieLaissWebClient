@@ -2,6 +2,7 @@
   <input type="text" 
          id.bind="id" 
          ej-drop-down-list="e-enable-filter-search.bind:configData.enableFilterSearch;
+                            e-width.bind:configData.width;
                             e-enable-popup-resize.bind:configData.enablePopupResize;
                             e-min-popup-height.bind:configData.minPopupHeight;
                             e-min-popup-width.bind:configData.minPopupWidth;
@@ -15,5 +16,6 @@
                             e-data-source.bind:dataForControl;
                             e-fields.bind:configData.fields;
                             e-watermark-text.bind:configData.waterMarkText" 
-         e-on-create.trigger="dropdownCreated()" />
+         e-on-create.trigger="dropdownCreated()"
+         e-on-select.trigger="madeSelection($event)" />
 </template>

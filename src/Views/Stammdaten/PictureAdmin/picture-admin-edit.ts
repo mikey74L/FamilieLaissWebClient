@@ -1,4 +1,3 @@
-import { SelectPickerValueItem } from './../../../Helper/SelectPickerHelper';
 import {ChangeImagePropertyStartArgs} from '../../../Models/ChangeImagePropertyStartArgs';
 import {ViewModelAssignEdit} from '../../../Helper/ViewModelHelper';
 import {AppRouter} from 'aurelia-router';
@@ -7,7 +6,6 @@ import {I18N} from 'aurelia-i18n';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {DialogService, DialogCloseResult} from 'aurelia-dialog';
 import {PictureURLHelper} from '../../../Helper/PictureURLHelper';
-import {SelectPickerListMultiple, SelectPickerGroupItem} from '../../../Helper/SelectPickerHelper';
 import {PictureAdminServiceEdit, PictureAdminServiceEditExtend} from './picture-admin-service';
 import {enViewModelEditMode} from '../../../Enum/FamilieLaissEnum';
 import {ShowPictureBigArgs} from '../../../Models/ShowPictureBigArgs';
@@ -15,6 +13,7 @@ import {ChooseUploadPictureDialog} from '../../../CustomDialogs/ChooseUploadPict
 import {ChangeImagePropertiesDialog} from '../../../CustomDialogs/ChangeImagePropertiesDialog';
 import {ShowPictureBigDialog} from '../../../CustomDialogs/ShowPictureBigDialog';
 import swal from 'sweetalert2';
+import {DropdownListData, DropdownListGroupItem, DropdownListValueItem} from '../../../Helper/DropDownListHelper';
 
 @autoinject()
 export class PictureAdminEdit extends ViewModelAssignEdit {
@@ -25,7 +24,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
     uploadItem: any;
     photoChoosed: boolean;
 
-    categoryList: SelectPickerListMultiple;
+    categoryList: DropdownListData;
     titleSelectPickerCategoryList: string;
 
     currentPhotoURL: string;
@@ -55,7 +54,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
         this.titleSelectPickerCategoryList = this.loc.tr('Edit.Card.Body.Form.Selects.Category.Placeholder', { ns: 'StammPictureAdmin'});
 
         //Initialisieren der Liste
-        this.categoryList = new SelectPickerListMultiple();
+        this.categoryList = new DropdownListData(true);
 
         //Übernehmen des erweiterten Service
         this.serviceExtended = serviceExtended;
@@ -98,7 +97,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
     protected async activateChild(info: any): Promise<void> {
       //Deklarationen
       var CategoryResult: Array<any>;
-      var NewCategoryGroup: SelectPickerGroupItem;
+      var NewCategoryGroup: DropdownListGroupItem;
       var Assigned: boolean;
       var itemToEditTypeless: any = this.itemToEdit;
 
@@ -265,7 +264,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
         this.setBusyState(true);
 
         //Auswerten der Kategorie-Werte die sich geändert haben
-        var ChangedCategories: Array<SelectPickerValueItem> = this.categoryList.getChangedValues();
+        var ChangedCategories: Array<DropdownListValueItem> = this.categoryList.getChangedValues();
 
         //Alle neuen Kategorie-Werte dem Medien-Item zuweisen
         for (var CategoryValue of ChangedCategories) {
