@@ -9,6 +9,7 @@ import {AppRouter} from 'aurelia-router';
 import {enSortDirection} from '../../../Enum/FamilieLaissEnum';
 import {DeletePictureEvent, EditPictureEvent} from '../../../Events/PictureEvents';
 import {PictureAdminService} from './picture-admin-service';
+import swal from 'sweetalert2';
 
 @autoinject()
 export class PictureAdminList extends AssignViewModelStammdaten {
@@ -210,8 +211,63 @@ export class PictureAdminList extends AssignViewModelStammdaten {
   
   //Wird über den Event-Agg aufgerufen wenn im Picture-Control auf den 
   //Delete-Button gedrückt wird
-  private deletePicture(itemToDelete: any): void {
+  private async deletePicture(itemToDelete: any): Promise<void> {
+    try {
+      //Ausgeben einer Sicherheitsabfrage
+      await swal({
+              titleText: this.loc.tr('Delete.AdminPicture.Header', { ns: 'Alerts' }),
+              text: this.loc.tr('Delete.AdminPicture.Body', { ns: 'Alerts', 'namePicture': itemToDelete.UploadPicture.NameOriginal, 'nameAlbum': this.selectedFatherItem.NameGerman}),
+              type: 'warning',
+              width: 600,
+              showCancelButton: true,
+              confirmButtonColor: '#DD6B55',
+              confirmButtonText: this.loc.tr('Delete.AdminPicture.Confirm_Button', { ns: 'Alerts' }),
+              cancelButtonText: this.loc.tr('Delete.AdminPicture.Cancel_Button', { ns: 'Alerts' }),
+              allowOutsideClick: false,
+              allowEscapeKey: false
+            });
+            
+      //Einblenden der Busy-Box
+      this.setBusyState(true);
 
+      try {
+        //Deklaration
+        var NamePicture: string;
+        var NameAlbum: string;
+
+        //Zwischenspeichern der Namen
+        NamePicture = itemToDelete.UploadPicture.NameOriginal;
+        NameAlbum = this.selectedFatherItem.NameGerman;
+
+        //Wenn wirklich gelöscht werden soll, dann wird der Eintrag gelöscht
+        await this.service.deleteItem(itemToDelete.ID);
+
+        //Ermitteln des Index des Items
+        var Index = this.entities.indexOf(itemToDelete);
+
+        //Entfernen des Elements aus dem Array
+        this.entities.splice(Index, 1);
+
+        //Ausblenden der Busy-Box
+        this.setBusyState(false);
+
+        //Ausgeben einer Erfolgsmeldung
+        this.showNotifySuccess(this.loc.tr('PictureAdmin.Delete.Success', { ns: 'Toasts', 'namePicture': NamePicture, 'nameAlbum': NameAlbum }));
+      }
+      catch (ex) {
+        //Ausblenden der Busy-Box
+        this.setBusyState(false);
+
+        //Zurücknehmen der Änderungen (Delete-State)
+        this.service.rejectChanges();
+
+        //Ausgeben einer Fehlermeldung
+        this.showNotifyError(this.loc.tr('PictureAdmin.Delete.Error', { ns: 'Toasts', 'namePicture': NamePicture, 'nameAlbum': NameAlbum }));
+      }
+    }
+    catch (ex) {
+      //Die Sicherheitsfrage wurde mit nein beendet
+    }
   }
 
   //Wird über den Event-Agg aufgerufen wenn im Picture-Control auf den
