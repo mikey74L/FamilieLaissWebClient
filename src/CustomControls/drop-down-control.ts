@@ -115,6 +115,9 @@ export class DropDownControl {
   }
 
   dropdownCreated(): void {
+    //Ermitteln des Controls
     this.dropdownControl = $('#' + this.id).data('ejDropDownList');
+
+    //Setzen der initial zu selektierenden Items
   }
 }

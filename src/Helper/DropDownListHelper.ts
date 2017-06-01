@@ -113,7 +113,7 @@ export class dropdownListData {
       //entsprechenden Values mit Ihren Gruppen-Namen zurückliefern
       for (var Group of this.groups) {
         for (var Value of Group.values) {
-          returnValue.push (new dropdownListControlData(Value.id, Value.name, Group.name));
+          returnValue.push (new dropdownListControlData(Value.id, Value.name, Group.name, Value.assigned));
         }
       }
 
@@ -175,10 +175,12 @@ export class dropdownListControlData {
   public id: string | number;
   public text: string;
   public groupName: string;
+  public selected: boolean;
 
-  constructor (id: string | number, text: string, groupName: string) {
+  constructor (id: string | number, text: string, groupName: string, selected: boolean) {
     this.id = id;
     this.text = text;
     this.groupName = groupName;
+    this.selected = selected;
   }
 }
