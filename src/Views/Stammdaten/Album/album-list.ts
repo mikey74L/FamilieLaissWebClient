@@ -72,9 +72,8 @@ export class AlbumList extends GridViewModelStammdatenNormal {
            });
    }
 
-    //Wird von Aurelia zeitverzögert aufgerufen wenn die View zum DOM hinzugefügt wird
-    protected attachedChildTimeOut() : void 
-    {
+   //Wird vom Grid aufgerufen sobald dieses erstellt wurde
+   private gridCreated(): void {
         //Ermitteln der Grid-Instanz
         this.grid = $("#grid_Media_Group").data("ejGrid");
 
@@ -83,7 +82,7 @@ export class AlbumList extends GridViewModelStammdatenNormal {
 
         //Überprüfen des Enabled-State
         this.checkEnabledState();
-    }
+   }
 
     //Selektieren des Items mit der geforderten ID oder Grid ohne Selektion
     private selectItem(): void {

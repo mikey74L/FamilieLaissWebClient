@@ -121,23 +121,12 @@ export abstract class ViewModelGeneralView extends ViewModelGeneral {
   public attached(): void {
     //Aufrufen der Attached Implementierung für die Kindklasse
     this.attachedChild();
-
-    //Aufrufen der zeitverzögerten Kindmethode
-    setTimeout(() => {
-      this.attachedChildTimeOut();
-    }, 500);
   }
 
   //Muss von der Kindklasse überschrieben werden um spezifische
   //Attached Implementierungen auszuführen
   //(Ist abstract und muss überschrieben werden)
   protected abstract attachedChild(): void
-
-  //Muss von der Kindklasse überschrieben werden um spezifische
-  //Attached Implementierungen auszuführen
-  //Diese Methode wird von Aurelia zeitverzögert ausgeführt
-  //(Ist abstract und muss überschrieben werden)
-  protected abstract attachedChildTimeOut(): void
 }
 
 export abstract class GridViewModelStammdaten extends ViewModelGeneralView {
@@ -652,6 +641,9 @@ export abstract class AssignViewModelStammdaten extends ViewModelGeneralView {
           this.isRefreshEnabled = false;
         }
         else {
+          //Aktivieren der Items die immer aktiv sind
+          this.isChooseAlbumEnabled = true;
+
           if (this.selectedFatherItem != null) {
             //Wenn ein Vater-Item (Album) ausgewählt wurde,
             //dann können auch die Buttons aktiviert werden

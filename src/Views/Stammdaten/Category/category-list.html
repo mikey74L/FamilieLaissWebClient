@@ -26,7 +26,8 @@
                              e-edit-settings.bind="gridEditSettings" e-selection-settings.bind="gridSelectionSettings"
                              e-scroll-settings.bind="gridScrollSettings"
                              e-selection-type="single" e-enable-alt-row=false
-                             e-on-row-selected.trigger="rowHasBeenSelected($event.detail)">
+                             e-on-row-selected.trigger="rowHasBeenSelected($event.detail)"
+                             e-on-create.trigger="gridCreated()">
                         <ej-column e-field="Type_DisplayName" e-type="string" e-width=180 e-header-text="${ 'Facet_Group.Type.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
                         <ej-column e-field="NameGerman" e-type="string" e-width=300 e-header-text="${ 'Facet_Group.Name_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
                         <ej-column e-field="NameEnglish" e-type="string" e-width=300 e-header-text="${ 'Facet_Group.Name_English.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
