@@ -77,11 +77,11 @@ export class AlbumList extends GridViewModelStammdatenNormal {
         //Ermitteln der Grid-Instanz
         this.grid = $("#grid_Media_Group").data("ejGrid");
 
-        //Selektieren des gewünschten Items
-        this.selectItem();
-
         //Überprüfen des Enabled-State
         this.checkEnabledState();
+
+        //Selektieren des gewünschten Items (Muss in einem Timeout erfolgen, da sonst getCurrentViewData.length = 0 ist)
+        setTimeout(() => { this.selectItem()}, 200);
    }
 
     //Selektieren des Items mit der geforderten ID oder Grid ohne Selektion
@@ -284,6 +284,12 @@ export class AlbumList extends GridViewModelStammdatenNormal {
         //Busy-State setzen
         this.setBusyState(true);
 
+        //Auswerten ob eine ID nach dem Refresh selektiert werden muss
+        if (this.isItemSelected) {
+          this.haveToSelectID = true;
+          this.IDToSelect = this.selectedID;
+        }
+
         //Aktualisieren der Daten
         this.entities = await this.service.refreshData();
 
@@ -294,11 +300,8 @@ export class AlbumList extends GridViewModelStammdatenNormal {
             adaptor: new ej.ForeignKeyAdaptor(this.ForeignKeyAdaptorData, 'JsonAdaptor')
         });
 
-        //Das selektierte Item zurücksetzen
-        this.isItemSelected = false;
-
         //Selektieren des gewünschten Items
-        this.selectItem();
+        setTimeout(() => { this.selectItem() }, 200);
 
         //Busy-State zurücksetzen
         this.setBusyState(false);

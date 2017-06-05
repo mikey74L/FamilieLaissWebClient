@@ -51,11 +51,11 @@ export class CategoryValueList extends GridViewModelStammdatenID {
         //Ermitteln der Grid-Instanz
         this.grid = $("#grid_CategoryValue").data("ejGrid");
 
-        //Selektieren des gewünschten Items
-        this.selectItem();
-
         //Überprüfen des Enabled-State
         this.checkEnabledState();
+
+        //Selektieren des gewünschten Items (Muss in einem Timeout erfolgen, da sonst getCurrentViewData.length = 0 ist)
+        setTimeout(() => { this.selectItem()}, 200);
     }
 
     //Selektieren des Items mit der geforderten ID oder Grid ohne Selektion
@@ -260,6 +260,12 @@ export class CategoryValueList extends GridViewModelStammdatenID {
         //Busy-State setzen
         this.setBusyState(true);
 
+        //Auswerten ob eine ID nach dem Refresh selektiert werden muss
+        if (this.isItemSelected) {
+          this.haveToSelectID = true;
+          this.IDToSelect = this.selectedID;
+        }
+
         //Aktualisieren der Daten
         var Result: LoadDataWithFatherModel = await this.service.refreshData(this.fatherItem.ID);
         this.entities = Result.entities;
@@ -268,7 +274,7 @@ export class CategoryValueList extends GridViewModelStammdatenID {
         this.isItemSelected = false;
 
         //Selektieren des gewünschten Items
-        this.selectItem();
+        setTimeout(() => { this.selectItem() }, 200);
 
         //Busy-State zurücksetzen
         this.setBusyState(false);
