@@ -94,6 +94,7 @@ export async function configure(aurelia: Aurelia) {
                   'StammPictureUpload',
                   'StammVideoUpload',
                   'StammVideoAdmin',
+                  'PictureShow',
                   'VideoKonverter',
                   'Router', 
                   'Datamappings', 

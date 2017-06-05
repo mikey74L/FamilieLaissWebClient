@@ -1,5 +1,8 @@
 ﻿{
   "Home": "Home",
+  "Picture": "Photos",
+  "Video": "Videos",
+  "Blog": "Blog",
   "Stammdaten": {
     "Text": "Stammdaten",
     "Category": "Kategorien",

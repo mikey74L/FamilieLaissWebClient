@@ -151,10 +151,6 @@ export class PictureAdminList extends AssignViewModelStammdaten {
   protected attachedChild(): void {
   }
 
-  //Wird von Aurelia zeitverzögert aufgerufen wenn die View zum DOM hinzugefügt wird
-  protected attachedChildTimeOut() : void {
-  }
-
   //Wird vom Framework aufgerufen wenn sich der isBusy-Status geändert hat
   protected busyStateChanged(): void {
   }

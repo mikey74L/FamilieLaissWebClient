@@ -203,11 +203,26 @@ export class FamilieLaissApp {
         //Deklaration
         var Item: MenuItemModel;
 
-        //Route für "Home"
-        this.menuItemList.addItem(undefined, ['', 'dashboard'], 'dashboard', PLATFORM.moduleName('./Dashboard'), true, 
+        //Route für "Dashboard"
+        this.menuItemList.addItem(undefined, ['', 'dashboard'], 'dashboard', PLATFORM.moduleName('./Views/Dashboard'), true, 
                                   this.loc.tr('Home', {ns: 'Router'}), undefined, 
                                   {showNavigation: true, needAuthentication: false}, [], true );
-        
+
+        //Route für "Picture-Show"        
+        this.menuItemList.addItem(undefined, 'pictureshow', 'pictureshow', PLATFORM.moduleName('./Views/PictureShow'), true, 
+                                  this.loc.tr('Picture', {ns: 'Router'}), undefined, 
+                                  {showNavigation: true, needAuthentication: false}, [], true );
+
+        //Route für "Video-Show"        
+        this.menuItemList.addItem(undefined, 'videoshow', 'videoshow', PLATFORM.moduleName('./Views/VideoShow'), true, 
+                                  this.loc.tr('Video', {ns: 'Router'}), undefined, 
+                                  {showNavigation: true, needAuthentication: false}, [], true );
+
+        //Route für "Blog"        
+        this.menuItemList.addItem(undefined, 'blogshow', 'blogshow', PLATFORM.moduleName('./Views/BlogShow'), true, 
+                                  this.loc.tr('Blog', {ns: 'Router'}), undefined, 
+                                  {showNavigation: true, needAuthentication: false}, [], true );
+
         //Überschrift "Stammdaten"
         Item = this.menuItemList.addItem(this.loc.tr('Stammdaten.Text', {ns: 'Router'}), '', undefined, undefined, false, 
                                          undefined, undefined, {showNavigation: true, needAuthentication: true}, ["Admin"], true );
