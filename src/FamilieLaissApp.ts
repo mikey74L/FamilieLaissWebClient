@@ -227,17 +227,6 @@ export class FamilieLaissApp {
         Item = this.menuItemList.addItem(this.loc.tr('Stammdaten.Text', {ns: 'Router'}), '', undefined, undefined, false, 
                                          undefined, undefined, {showNavigation: true, needAuthentication: true}, ["Admin"], true );
         
-        //Routes für "Stammdaten - Kategorie"
-        Item.addChildItem(undefined, 'category', 'category', PLATFORM.moduleName('./Views/Stammdaten/Category/category-list'), true, 
-                          this.loc.tr('Stammdaten.Category', {ns: 'Router'}), undefined, 
-                          {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'category/:id', 'categorywithid', PLATFORM.moduleName('./Views/Stammdaten/Category/category-list'), true, 
-                          this.loc.tr('Stammdaten.Category', {ns: 'Router'}), 'categorywithid', 
-                          {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'categoryedit/:operation/:id', 'categoryedit', PLATFORM.moduleName('./Views/Stammdaten/Category/category-edit'), true, 
-                          this.loc.tr('Stammdaten.CategoryEdit', {ns: 'Router'}), 'categoryedit', 
-                          {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-
         //Routes für "Stammdaten - Album"      
         Item.addChildItem(undefined, 'album', 'album', PLATFORM.moduleName('./Views/Stammdaten/Album/album-list'), true, 
                           this.loc.tr('Stammdaten.Album', {ns: 'Router'}), undefined, 
@@ -249,6 +238,28 @@ export class FamilieLaissApp {
                           this.loc.tr('Stammdaten.AlbumEdit', {ns: 'Router'}), 'albumedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
    
+        //Routes für "Stammdaten - Blog"
+        Item.addChildItem(undefined, 'blog', 'blog', PLATFORM.moduleName('./Views/Stammdaten/Blog/blog-list'), true, 
+                          this.loc.tr('Stammdaten.Blog', {ns: 'Router'}), undefined, 
+                          {showNavigation: true, needAuthentication: true}, ["Admin"], true );
+        Item.addChildItem(undefined, 'blog/:id', 'blogwithid', PLATFORM.moduleName('./Views/Stammdaten/Blog/blog-list'), true, 
+                          this.loc.tr('Stammdaten.Blog', {ns: 'Router'}), 'blogwithid', 
+                          {showNavigation: true, needAuthentication: true}, ["Admin"], false );
+        Item.addChildItem(undefined, 'blogedit/:operation/:id', 'blogedit', PLATFORM.moduleName('./Views/Stammdaten/Blog/blog-edit'), true, 
+                          this.loc.tr('Stammdaten.BlogEdit', {ns: 'Router'}), 'blogedit', 
+                          {showNavigation: true, needAuthentication: true}, ["Admin"], false );
+
+        //Routes für "Stammdaten - Kategorie"
+        Item.addChildItem(undefined, 'category', 'category', PLATFORM.moduleName('./Views/Stammdaten/Category/category-list'), true, 
+                          this.loc.tr('Stammdaten.Category', {ns: 'Router'}), undefined, 
+                          {showNavigation: true, needAuthentication: true}, ["Admin"], true );
+        Item.addChildItem(undefined, 'category/:id', 'categorywithid', PLATFORM.moduleName('./Views/Stammdaten/Category/category-list'), true, 
+                          this.loc.tr('Stammdaten.Category', {ns: 'Router'}), 'categorywithid', 
+                          {showNavigation: true, needAuthentication: true}, ["Admin"], false );
+        Item.addChildItem(undefined, 'categoryedit/:operation/:id', 'categoryedit', PLATFORM.moduleName('./Views/Stammdaten/Category/category-edit'), true, 
+                          this.loc.tr('Stammdaten.CategoryEdit', {ns: 'Router'}), 'categoryedit', 
+                          {showNavigation: true, needAuthentication: true}, ["Admin"], false );
+
         //Routes für "Stammdaten - Kategoriewert"
         Item.addChildItem(undefined, 'categoryvalue/:idFather', 'categoryvalue', PLATFORM.moduleName('./Views/Stammdaten/CategoryValue/categoryvalue-list'), true, 
                           this.loc.tr('Stammdaten.CategoryValue', {ns: 'Router'}), 'categoryvalue', 

@@ -17,7 +17,8 @@
     "VideoUploadList": "Videos hochladen",
     "VideoAdminList": "Videos verwalten",
     "VideoAdminEdit": "Video editieren",
-    "Blog": "Blog"
+    "Blog": "Blog",
+    "BlogEdit": "Blog editieren"
   },
   "Services": {
     "Text": "Services",
