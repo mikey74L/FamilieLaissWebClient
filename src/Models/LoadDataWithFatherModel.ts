@@ -1,9 +1,11 @@
+import { EntityBase } from './Entities/EntityBase';
+
 export class LoadDataWithFatherModel {
-  public fatherItem: any;
-  public entities: Array<any>
+  public fatherItem: EntityBase;
+  public entities: Array<EntityBase>
 }
 
 export class EditDataWithFatherModel {
-  public fatherItem: any;
-  public editItem: any;
+  public fatherItem: EntityBase;
+  public editItem: EntityBase;
 }

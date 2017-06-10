@@ -1,3 +1,4 @@
+import { EntityBase } from './../Models/Entities/EntityBase';
 /// <reference path="../../typings/globals/syncfusion/ej.web.all.d.ts" />
 import { ToastrHelper } from './ToastrHelper';
 import { DialogService } from 'aurelia-dialog';
@@ -12,7 +13,7 @@ import { LoadDataWithFatherModel, EditDataWithFatherModel} from '../Models/LoadD
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal, 
          ServiceModelStammdatenID, ServiceModelStammdatenEditID,
          ServiceModelLoadDataDelete, ServiceModelAssign, ServiceModelAssignEdit } from './ServiceHelper'
-import { EntityManager, Entity, ValidationError, ValidationErrorsChangedEventArgs, PropertyChangedEventArgs } from 'breeze-client';
+import { EntityManager, ValidationError, ValidationErrorsChangedEventArgs, PropertyChangedEventArgs, EntityError } from 'breeze-client';
 
 export abstract class ViewModelGeneral {
   //Members
@@ -129,18 +130,18 @@ export abstract class ViewModelGeneralView extends ViewModelGeneral {
   protected abstract attachedChild(): void
 }
 
-export abstract class GridViewModelStammdaten extends ViewModelGeneralView {
+export abstract class GridViewModelStammdaten<T extends EntityBase> extends ViewModelGeneralView {
   //Member-Deklarationen
   protected router: AppRouter;
   protected routeForEdit: string;
-  protected entities: Array<any>;
+  protected entities: Array<T>;
   protected isItemSelected: boolean;
   public isAddEnabled: boolean;
   public isEditEnabled: boolean;
   public isDeleteEnabled: boolean;
   public isRefreshEnabled: boolean;
-  protected IDToSelect: any;
-  protected selectedID: any;
+  protected IDToSelect: number;
+  protected selectedID: number;
   protected haveToSelectID: boolean;
  
   //Members für das Grid
@@ -178,7 +179,7 @@ export abstract class GridViewModelStammdaten extends ViewModelGeneralView {
   protected abstract async load(info: any): Promise<void>; 
 }
 
-export abstract class GridViewModelStammdatenNormal extends GridViewModelStammdaten {
+export abstract class GridViewModelStammdatenNormal<T extends EntityBase> extends GridViewModelStammdaten<T> {
   //Members
   service: ServiceModelStammdatenNormal;
 
@@ -195,14 +196,14 @@ export abstract class GridViewModelStammdatenNormal extends GridViewModelStammda
   //Laden der Daten über den Service
   protected async load(info: any): Promise<void> {
     //Laden der Daten über Service anstoßen
-    this.entities = await this.service.getData();
+    this.entities = await this.service.getData() as Array<T>;
   }
 }
 
-export abstract class GridViewModelStammdatenID extends GridViewModelStammdaten {
+export abstract class GridViewModelStammdatenID<T extends EntityBase, F extends EntityBase> extends GridViewModelStammdaten<T> {
   //Members
   service: ServiceModelStammdatenID;
-  fatherItem: any;
+  fatherItem: F;
   routeFather: string;
   isBackEnabled: boolean;
 
@@ -223,18 +224,18 @@ export abstract class GridViewModelStammdatenID extends GridViewModelStammdaten 
     var ReturnValue: LoadDataWithFatherModel = await this.service.getData(info.idFather)
 
     //Übernehemen des Vaters
-    this.fatherItem = ReturnValue.fatherItem; 
+    this.fatherItem = ReturnValue.fatherItem as F; 
 
 		//Übernehmen des Kategorie-Werte
-		this.entities = ReturnValue.entities;
+		this.entities = ReturnValue.entities as Array<T>;
 	}
 }
 
-export abstract class ViewModelEdit extends ViewModelGeneralView {
+export abstract class ViewModelEdit<T extends EntityBase> extends ViewModelGeneralView {
     //Member-Deklarationen
     routeForList: string;
     router: AppRouter;
-    itemToEdit: Entity;
+    itemToEdit: T;
     hasValidationErrors: boolean;
     validationErrors: Array<ValidationError>;
     isSavingEnabled: boolean;
@@ -308,10 +309,10 @@ export abstract class ViewModelEdit extends ViewModelGeneralView {
     }
 
     //Laden der Daten über den Service (Ist abstract und muss überschrieben werden)
-    protected abstract async load(info: any): Promise<any>;
+    protected abstract async load(info: any): Promise<T>;
 
     //Ein neues Item erzeugen (Ist abstract und muss überschrieben werden
-    protected abstract async createNew(info: any): Promise<any>;
+    protected abstract async createNew(info: any): Promise<T>;
  
     //Wird von Aurelia aufgerufen um zu überprüfen ob durch den Router
     //diese View überhaupt verlassen werden darf. Hier muss entweder
@@ -375,7 +376,7 @@ export abstract class ViewModelEdit extends ViewModelGeneralView {
         var Errors: Array<ValidationError> = this.itemToEdit.entityAspect.getValidationErrors();
         for (var index in Errors) {
             if (Errors[index].propertyName == eventArgs.propertyName) {
-                var Error: any = Errors[index];
+                var Error: EntityError = Errors[index] as any;
                 if (Error.isServerError) {
                     this.itemToEdit.entityAspect.removeValidationError(Errors[index]);
                 }
@@ -421,7 +422,7 @@ export abstract class ViewModelEdit extends ViewModelGeneralView {
     protected abstract cancelChanges(): void;
 }
 
-export abstract class ViewModelEditNormal extends ViewModelEdit {
+export abstract class ViewModelEditNormal<T extends EntityBase> extends ViewModelEdit<T> {
     //Members
     service: ServiceModelStammdatenEditNormal;
 
@@ -453,15 +454,9 @@ export abstract class ViewModelEditNormal extends ViewModelEdit {
     }
 
     //Laden der Daten über den Service
-    protected async load(info: any): Promise<any> {
-        //Deklaration
-        var ResultSet: any;
-
+    protected async load(info: any): Promise<T> {
         //Über Promise das Laden des zu editierenden Items anstoßen
-        ResultSet = await this.service.getItem(info.id);
-
-        //Übernehmen der Entity
-        this.itemToEdit = ResultSet[0];
+        this.itemToEdit = await this.service.getItem(info.id) as T;
 
         //Verdrahten des Events für das Property-Changed Event
         this.subscribePropertyChanged();
@@ -474,9 +469,9 @@ export abstract class ViewModelEditNormal extends ViewModelEdit {
     }
 
     //Erstellt ein neues Item
-    protected async createNew(info: any): Promise<any> {
+    protected async createNew(info: any): Promise<T> {
         //Übernehmen der Entity
-        this.itemToEdit = await this.service.createNew();
+        this.itemToEdit = await this.service.createNew() as T;
 
         //Verdrahten des Events für das Property-Changed Event
         this.subscribePropertyChanged();
@@ -489,10 +484,10 @@ export abstract class ViewModelEditNormal extends ViewModelEdit {
     }
 }
 
-export abstract class ViewModelEditID extends ViewModelEdit {
+export abstract class ViewModelEditID<T extends EntityBase, F extends EntityBase> extends ViewModelEdit<T> {
     //Members
     service: ServiceModelStammdatenEditID;
-    fatherItem: any;
+    fatherItem: F;
 
     //C'tor
     constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, 
@@ -522,13 +517,13 @@ export abstract class ViewModelEditID extends ViewModelEdit {
     }
 
     //Laden der Daten über den Service
-    protected async load(info: any): Promise<any> {
+    protected async load(info: any): Promise<T> {
         //Über Promise das Laden des zu editierenden Items anstoßen
         var ResultSet: EditDataWithFatherModel = await this.service.getItem(info.id, info.idFather);
 
         //Übernehmen der Entity
-        this.itemToEdit = ResultSet.editItem;
-        this.fatherItem = ResultSet.fatherItem;
+        this.itemToEdit = ResultSet.editItem as T;
+        this.fatherItem = ResultSet.fatherItem as F;
 
         //Verdrahten des Events für das Property-Changed Event
         this.subscribePropertyChanged();
@@ -541,12 +536,12 @@ export abstract class ViewModelEditID extends ViewModelEdit {
     }
 
     //Erstellt ein neues Item
-    protected async createNew(info: any): Promise<any> {
+    protected async createNew(info: any): Promise<T> {
         //Erzeugen einer neuen Entity
-        this.itemToEdit = await this.service.createNew(info.idFather);
+        this.itemToEdit = await this.service.createNew(info.idFather) as T;
 
         //Ermitteln der Daten des Vaters
-        this.fatherItem = await this.service.getFather(info.idFather);
+        this.fatherItem = await this.service.getFather(info.idFather) as F;
         
         //Verdrahten des Events für das Property-Changed Event
         this.subscribePropertyChanged();
@@ -559,10 +554,10 @@ export abstract class ViewModelEditID extends ViewModelEdit {
     }
 }
 
-export abstract class ViewModelGeneralDataDelete extends ViewModelGeneralView {
+export abstract class ViewModelGeneralDataDelete<T extends EntityBase> extends ViewModelGeneralView {
     //Members
     router: AppRouter;
-    entities: Array<any>;
+    entities: Array<T>;
     service: ServiceModelLoadDataDelete;
 
     //C'tor
@@ -586,19 +581,19 @@ export abstract class ViewModelGeneralDataDelete extends ViewModelGeneralView {
     }
 
     //Laden der Daten über den Service
-    protected async load(info: any): Promise<any> {
+    protected async load(info: any): Promise<void> {
         //Aufrufen der Lade-Methode im Service
         //und übernehmen der Entitites
-        this.entities = await this.service.getData();
+        this.entities = await this.service.getData() as Array<T>;
     }
 }
 
-export abstract class AssignViewModelStammdaten extends ViewModelGeneralView {
+export abstract class AssignViewModelStammdaten<T extends EntityBase, F extends EntityBase> extends ViewModelGeneralView {
     //Member-Deklarationen
     routeForEdit: string;
     router: AppRouter;
-    selectedFatherItem: any;
-    entities: Array<any>;
+    selectedFatherItem: F;
+    entities: Array<T>;
     service: ServiceModelAssign;
 
     isChooseAlbumEnabled: boolean;
@@ -662,10 +657,10 @@ export abstract class AssignViewModelStammdaten extends ViewModelGeneralView {
     }
 }
 
-export abstract class ViewModelAssignEdit extends ViewModelEdit {
+export abstract class ViewModelAssignEdit<T extends EntityBase, F extends EntityBase> extends ViewModelEdit<T> {
     //Members
     service: ServiceModelAssignEdit;
-    fatherItem: any;
+    fatherItem: F;
 
     //C'tor
     constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, 
@@ -695,13 +690,13 @@ export abstract class ViewModelAssignEdit extends ViewModelEdit {
     }
 
     //Laden der Daten über den Service
-    protected async load(info: any): Promise<any> {
+    protected async load(info: any): Promise<T> {
         //Über Promise das Laden des zu editierenden Items anstoßen
         var ResultSet: EditDataWithFatherModel = await this.service.getItem(info.id);
 
         //Übernehmen der Entity
-        this.itemToEdit = ResultSet.editItem;
-        this.fatherItem = ResultSet.fatherItem;
+        this.itemToEdit = ResultSet.editItem as T;
+        this.fatherItem = ResultSet.fatherItem as F;
 
         //Verdrahten des Events für das Property-Changed Event
         this.subscribePropertyChanged();
@@ -714,12 +709,12 @@ export abstract class ViewModelAssignEdit extends ViewModelEdit {
     }
 
     //Erstellt ein neues Item
-    protected async createNew(info: any): Promise<any> {
+    protected async createNew(info: any): Promise<T> {
         //Erzeugen einer neuen Entity
-        this.itemToEdit = await this.service.createNew(info.idFather);
+        this.itemToEdit = await this.service.createNew(info.idFather) as T;
 
         //Ermitteln der Daten des Vaters
-        this.fatherItem = await this.service.getFather(info.idFather);
+        this.fatherItem = await this.service.getFather(info.idFather) as F;
         
         //Verdrahten des Events für das Property-Changed Event
         this.subscribePropertyChanged();
