@@ -1,3 +1,4 @@
+import { EntityBase } from './../Models/Entities/EntityBase';
 import { EntityManagerFactory } from './EntityManagerFactory';
 import { LoadDataWithFatherModel, EditDataWithFatherModel } from '../Models/LoadDataWithFatherModel'
 import {EntityManager, SaveResult} from 'breeze-client';
@@ -42,7 +43,7 @@ export abstract class ServiceModelLoadData extends ServiceModel {
     }
 
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
-    public abstract async getData(): Promise<Array<any>>;
+    public abstract async getData(): Promise<Array<EntityBase>>;
 }
 
 export abstract class ServiceModelLoadDataDelete extends ServiceModelLoadData {
@@ -75,10 +76,10 @@ export abstract class ServiceModelStammdatenNormal extends ServiceModelStammdate
     }
 
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
-    public abstract async getData(): Promise<Array<any>>;
+    public abstract async getData(): Promise<Array<EntityBase>>;
 
     //Refresh Data from Server (Ist abstract und muss überschrieben werden)
-    public abstract async refreshData(): Promise<Array<any>>;
+    public abstract async refreshData(): Promise<Array<EntityBase>>;
 }
 
 export abstract class ServiceModelStammdatenID extends ServiceModelStammdaten {
@@ -114,10 +115,10 @@ export abstract class ServiceModelStammdatenEditNormal extends ServiceModelStamm
     }
 
     //Ermittelt die Daten zu einem bestimmten Item (Ist abstract und muss überschrieben werden)
-    public abstract async getItem(ID: number): Promise<any>;
+    public abstract async getItem(ID: number): Promise<EntityBase>;
 
     //Ein neues Item (Ist abstract und muss überschrieben werden)
-    public abstract async createNew(): Promise<any>;
+    public abstract async createNew(): Promise<EntityBase>;
 }
 
 export abstract class ServiceModelStammdatenEditID extends ServiceModelStammdatenEdit {
@@ -130,10 +131,10 @@ export abstract class ServiceModelStammdatenEditID extends ServiceModelStammdate
     public abstract async getItem(ID: number, idFather: number): Promise<EditDataWithFatherModel>;
 
     //Ein neues Item (Ist abstract und muss überschrieben werden)
-    public abstract async createNew(idFather: number): Promise<any>;
+    public abstract async createNew(idFather: number): Promise<EntityBase>;
 
     //Ermittelt das Vater-Item (Ist abstract und muss überschrieben werden)
-    public abstract async getFather(idFather: number): Promise<any>;
+    public abstract async getFather(idFather: number): Promise<EntityBase>;
 }
 
 export abstract class ServiceModelAssign extends ServiceModel {
@@ -143,10 +144,10 @@ export abstract class ServiceModelAssign extends ServiceModel {
     }
 
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
-    public abstract async getData(ID: number): Promise<Array<any>>;
+    public abstract async getData(ID: number): Promise<Array<EntityBase>>;
 
     //Lädt die Alben (Ist abstract und muss überschrieben werden)
-    public abstract async loadAlben(): Promise<Array<any>>;
+    public abstract async loadAlben(): Promise<Array<EntityBase>>;
 
     //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
     public abstract async deleteItem(ID: number): Promise<SaveResult>;
@@ -162,19 +163,19 @@ export abstract class ServiceModelAssignEdit extends ServiceModelStammdatenEdit 
     public abstract async getItem(ID: number): Promise<EditDataWithFatherModel>;
 
     //Ermittelt alle Upload-Items die noch nicht zugeordnet wurden
-    public abstract async getUploadItems(): Promise<Array<any>>;
+    public abstract async getUploadItems(): Promise<Array<EntityBase>>;
 
     //Ermittelt alle Kategorien die zugeordnet werden können
-    public abstract async getCategories(): Promise<Array<any>>;
+    public abstract async getCategories(): Promise<Array<EntityBase>>;
 
     //Ermittelt das Vater-Item
-    public abstract async getFather(ID: number):Promise<any>;
+    public abstract async getFather(ID: number):Promise<EntityBase>;
 
     //Erzeugt ein neues Item
-    public abstract async createNew(idFather: number): Promise<any>;
+    public abstract async createNew(idFather: number): Promise<EntityBase>;
 
     //Erzeugt eine neue Zuweisung für einen Kategoriewert
-    public abstract async createNewAssignedCategory(item: any, idCategory: number): Promise<any>;
+    public abstract async createNewAssignedCategory(item: any, idCategory: number): Promise<EntityBase>;
 
     //Entfernt einen zugewießenen Kategoriewert
     public abstract async removeAssignedCategory(assignedCategoryItem: any): Promise<void>;

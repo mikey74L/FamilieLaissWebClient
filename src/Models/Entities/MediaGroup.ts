@@ -1,6 +1,8 @@
+import { EntityBase } from './EntityBase';
+import { MediaItem } from './MediaItem';
 import {Entity, EntityAspect, EntityType} from 'breeze-client';
 
-export class MediaGroupModel implements Entity {
+export class MediaGroup extends EntityBase {
   public ID: number;
   public Type: number;
   public NameGerman: string;
@@ -9,6 +11,5 @@ export class MediaGroupModel implements Entity {
   public DescriptionEnglish: string;
   public DDL_Create: Date;
 
-  public entityAspect: EntityAspect;
-  public entityType: EntityType;
+  public MediaItems: Array<MediaItem>;
 }
