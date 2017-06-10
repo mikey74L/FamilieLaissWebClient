@@ -1,3 +1,5 @@
+import { FacetValue } from './../../../Models/Entities/FacetValue';
+import { FacetGroup } from './../../../Models/Entities/FacetGroup';
 /// <reference path="../../../../typings/globals/syncfusion/ej.web.all.d.ts" />
 import {GridViewModelStammdatenID} from '../../../Helper/ViewModelHelper';
 import {CategoryValueService} from './categoryvalue-service';
@@ -14,7 +16,7 @@ import swal from 'sweetalert2';
 import {LoadDataWithFatherModel} from '../../../Models/LoadDataWithFatherModel'
 
 @autoinject()
-export class CategoryValueList extends GridViewModelStammdatenID {
+export class CategoryValueList extends GridViewModelStammdatenID<FacetValue, FacetGroup> {
     //Objekt für i18n Namespace-Definition
     locConfig: any = { ns: ['StammCategoryValue', 'translation'] };
     
@@ -223,7 +225,7 @@ export class CategoryValueList extends GridViewModelStammdatenID {
 
                  //Aktualisieren der Daten
                  var Result:LoadDataWithFatherModel = await this.service.getData(this.fatherItem.ID);
-                 this.entities = Result.entities;
+                 this.entities = Result.entities as Array<FacetValue>;
 
                  //Selektion im Grid bestimmen
                  this.selectItem();
@@ -268,7 +270,7 @@ export class CategoryValueList extends GridViewModelStammdatenID {
 
         //Aktualisieren der Daten
         var Result: LoadDataWithFatherModel = await this.service.refreshData(this.fatherItem.ID);
-        this.entities = Result.entities;
+        this.entities = Result.entities as Array<FacetValue>;
 
         //Das selektierte Item zurücksetzen
         this.isItemSelected = false;

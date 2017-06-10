@@ -1,3 +1,4 @@
+import { EntityBase } from './../../../Models/Entities/EntityBase';
 import {ServiceModelStammdatenID, ServiceModelStammdatenEditID} from '../../../Helper/ServiceHelper';
 import {LoadDataWithFatherModel, EditDataWithFatherModel} from '../../../Models/LoadDataWithFatherModel';
 import {EntityManagerFactory} from '../../../Helper/EntityManagerFactory';
@@ -101,7 +102,7 @@ export class CategoryValueServiceEdit extends ServiceModelStammdatenEditID {
     }
 
     //Ermittelt das Vater-Item
-    public async getFather(idFather: number): Promise<any> {
+    public async getFather(idFather: number): Promise<EntityBase> {
         //Query zusammenbauen
         var queryCategory = new EntityQuery()
             .from('FacetGroups')
@@ -112,7 +113,7 @@ export class CategoryValueServiceEdit extends ServiceModelStammdatenEditID {
     }
 
     //Erstellt einen neuen Kategorie-Wert im Entity-Manager
-    public async createNew(idFather: number): Promise<any> {
+    public async createNew(idFather: number): Promise<EntityBase> {
         //Ermitteln des Entity-Manager
         await this.getEntityManager();
 

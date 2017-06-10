@@ -1,3 +1,5 @@
+import { EntityBase } from './../../../Models/Entities/EntityBase';
+import { enMediaType, enFacetType } from '../../../Enum/FamilieLaissEnum';
 import { EntityManagerFactory } from '../../../Helper/EntityManagerFactory';
 import {ServiceModel, ServiceModelAssign, ServiceModelAssignEdit} from '../../../Helper/ServiceHelper'
 import {EditDataWithFatherModel, LoadDataWithFatherModel} from '../../../Models/LoadDataWithFatherModel';
@@ -13,11 +15,11 @@ export class PictureAdminService extends ServiceModelAssign {
 
     //Lädt die Photos für das Album mit der angegebenen ID
     //vom Server
-    public async getData(ID: number): Promise<Array<any>> {
+    public async getData(ID: number): Promise<Array<EntityBase>> {
         //Predicate zusammenbauen
         var PredicateValues: Predicate = Predicate
             .create('ID_Group', '==', ID)
-            .and('Type', '==', 0);
+            .and('Type', '==', enMediaType.Picture);
 
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
@@ -36,11 +38,11 @@ export class PictureAdminService extends ServiceModelAssign {
     }
 
     //Lädt alle Photo-Alben vom Server
-    public async loadAlben(): Promise<Array<any>> {
+    public async loadAlben(): Promise<Array<EntityBase>> {
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
             .from('MediaGroups')
-            .where('Type', '==', 0);
+            .where('Type', '==', enMediaType.Picture);
 
         //Ermitteln des Entity-Manager
         await this.getEntityManager();
@@ -95,7 +97,7 @@ export class PictureAdminServiceEdit extends ServiceModelAssignEdit {
     }
 
     //Ermittelt die Upload-Photos vom Server
-    public async getUploadItems(): Promise<Array<any>> {
+    public async getUploadItems(): Promise<Array<EntityBase>> {
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
             .from('UploadPictures')
@@ -113,11 +115,11 @@ export class PictureAdminServiceEdit extends ServiceModelAssignEdit {
     }
 
     //Ermittelt die Kategorien
-    public async getCategories(): Promise<Array<any>> {
+    public async getCategories(): Promise<Array<EntityBase>> {
         //Predicate zusammenbauen
         var PredicateCategories: Predicate = Predicate
-            .create('Type', '==', 0)
-            .or('Type', '==', 2);
+            .create('Type', '==', enFacetType.Both)
+            .or('Type', '==', enFacetType.Picture);
 
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
@@ -136,7 +138,7 @@ export class PictureAdminServiceEdit extends ServiceModelAssignEdit {
     }
 
     //Ermittelt das Vater-Item
-    public async getFather(ID: number):Promise<any> {
+    public async getFather(ID: number):Promise<EntityBase> {
         //Query zusammenbauen
         var queryAlbum: EntityQuery = new EntityQuery()
             .from('MediaGroups')
@@ -153,14 +155,14 @@ export class PictureAdminServiceEdit extends ServiceModelAssignEdit {
     }
   
     //Erstellt eine neues Media-Item im Entity-Manager
-    public async createNew(idFather: number): Promise<any> {
+    public async createNew(idFather: number): Promise<EntityBase> {
         //Ermitteln des Entity-Manager
         await this.getEntityManager();
 
         //Return-Value zusammenbauen
         var RetVal: any = this.manager.createEntity('MediaItem');
         RetVal.ID_Group = idFather;
-        RetVal.Type = 0;
+        RetVal.Type = enMediaType.Picture;
         RetVal.NameGerman = 'Nicht benoetigt';
         RetVal.NameEnglish = 'Not needed';
 
@@ -169,7 +171,7 @@ export class PictureAdminServiceEdit extends ServiceModelAssignEdit {
     }
 
     //Erstellt eine neue Zuweisung für einen Kategorie-Wert
-    public async createNewAssignedCategory(item: any, idCategory: number): Promise<any> {
+    public async createNewAssignedCategory(item: any, idCategory: number): Promise<EntityBase> {
         //Ermitteln des Entity-Manager
         await this.getEntityManager();
 
@@ -208,7 +210,7 @@ export class PictureAdminServiceEditExtend extends ServiceModel {
     }
 
     //Erstellt eine neue Image-Property
-    public async createImageProperty(uploadPicture: any, rotate: number): Promise<any> {
+    public async createImageProperty(uploadPicture: any, rotate: number): Promise<EntityBase> {
         //Ermitteln des Entity-Manager
         await this.getEntityManager();
 

@@ -1,3 +1,4 @@
+import { UploadPictureItem } from './../../../Models/Entities/UploadPictureItem';
 import { SortCriteria } from './../../../Models/SortCriteria';
 import {ViewModelGeneralDataDelete} from '../../../Helper/ViewModelHelper';
 import {I18N} from 'aurelia-i18n';
@@ -14,7 +15,7 @@ import 'syncfusion-javascript/content/ej/web/ej.widgets.core.material.less';
 import 'syncfusion-javascript/content/ej/web/material/ej.theme.less';
 
 @autoinject()
-export class PictureUploadList extends ViewModelGeneralDataDelete {
+export class PictureUploadList extends ViewModelGeneralDataDelete<UploadPictureItem> {
     //Config für i18N
     locConfig: any = { ns: 'StammPictureUpload' };
   
@@ -102,19 +103,19 @@ export class PictureUploadList extends ViewModelGeneralDataDelete {
         this.setBusyState(true);
 
         //Laden der Bilder über ein Promise
-        this.entities = await this.service.getData();
+        this.entities = await this.service.getData() as Array<UploadPictureItem>;
 
         //Ausblenden der Busy-Box
         this.setBusyState(false);
     }
 
     //Löscht ein Upload-Picture. Wird über das Event vom Aggregator aufgerufen
-    private async deletePicture(itemToDelete: any): Promise<void> {
+    private async deletePicture(itemToDelete: UploadPictureItem): Promise<void> {
       try {
         //Ausgeben einer Sicherheitsabfrage
         await swal({
           title: this.loc.tr('Delete.UploadPicture.Header', { ns: 'Alerts' }),
-          text: this.loc.tr('Delete.UploadPicture.Body', { ns: 'Alerts', 'name': itemToDelete.Name_Original }),
+          text: this.loc.tr('Delete.UploadPicture.Body', { ns: 'Alerts', 'name': itemToDelete.NameOriginal }),
           type: "warning",
           width: 600,
           showCancelButton: true,

@@ -1,3 +1,5 @@
+import { UploadPictureItem } from './../Models/Entities/UploadPictureItem';
+import { MediaItem } from '../Models/Entities/MediaItem';
 import {bindable, customElement, containerless} from 'aurelia-framework';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {autoinject} from 'aurelia-framework'; 
@@ -23,11 +25,11 @@ export class PictureControl {
 
     //Control-Properties
     URLHelper: PictureURLHelper;
-    pictureItem: any;
-    uploadItem: any;
+    pictureItem: MediaItem;
+    uploadItem: UploadPictureItem;
 
     //Hier wird von außen das Objekt mit dem anzuzeigenden Bild übergeben
-    @bindable() item: any;
+    @bindable() item: MediaItem | UploadPictureItem;
 
     //Der Modus bestimmt aus welchem Kontext das Control angezeigt wird. Je nach Modus werden unterschiedliche
     //Controls und Informationen angezeigt
@@ -104,23 +106,23 @@ export class PictureControl {
         switch (this.modus) {
             case 1:
                 this.pictureItem = null;
-                this.uploadItem = this.item;
+                this.uploadItem = this.item as UploadPictureItem;
                 break;
             case 2:
                 this.pictureItem = null;
-                this.uploadItem = this.item;
+                this.uploadItem = this.item as UploadPictureItem;
                 break;
             case 3:
-                this.pictureItem = this.item;
-                this.uploadItem = this.item.UploadPicture;
+                this.pictureItem = this.item as MediaItem;
+                this.uploadItem = this.pictureItem.UploadPicture;
                 break;
             case 4:
                 this.pictureItem = null;
-                this.uploadItem = this.item;
+                this.uploadItem = this.item as UploadPictureItem;
                 break;
             case 5:
                 this.pictureItem = null;
-                this.uploadItem = this.item;
+                this.uploadItem = this.item as UploadPictureItem;
                 break;
         }
     }

@@ -1,3 +1,5 @@
+import { MediaItem } from './../../../Models/Entities/MediaItem';
+import { MediaGroup } from './../../../Models/Entities/MediaGroup';
 import { AssignViewModelStammdaten } from '../../../Helper/ViewModelHelper';
 import {EventAggregator, Subscription} from 'aurelia-event-aggregator';
 import { SortCriteria } from './../../../Models/SortCriteria';
@@ -12,7 +14,7 @@ import {PictureAdminService} from './picture-admin-service';
 import swal from 'sweetalert2';
 
 @autoinject()
-export class PictureAdminList extends AssignViewModelStammdaten {
+export class PictureAdminList extends AssignViewModelStammdaten<MediaItem, MediaGroup> {
   //Konfiguration für i18N
   locConfig: any = { ns: ['StammPictureAdmin', 'translation']};
  
@@ -24,7 +26,7 @@ export class PictureAdminList extends AssignViewModelStammdaten {
   //Members
   albumChoosed: boolean;
   albumContext: string;
-  albumList: Array<any> = [];
+  albumList: Array<MediaGroup> = [];
 
   subscribeDeleteEvent: Subscription;
   subscribeEditEvent: Subscription;
@@ -114,7 +116,7 @@ export class PictureAdminList extends AssignViewModelStammdaten {
   //aktiviert wird aber noch nicht angezeigt. 
   protected async activateChild(info: any): Promise<void> {
     //Laden der Alben beim Aufruf der View
-    this.albumList = await this.service.loadAlben();
+    this.albumList = await this.service.loadAlben() as Array<MediaGroup>;
 
     //Wenn eine ID für ein Album übergeben wurde,
     //dann wird das Album ausgewählt. Dieses ist dann der Fall
@@ -137,7 +139,7 @@ export class PictureAdminList extends AssignViewModelStammdaten {
       this.setBusyState(true);
 
       //Laden der neuen Daten mit einem Promise
-      this.entities = await this.service.getData(this.selectedFatherItem.ID);
+      this.entities = await this.service.getData(this.selectedFatherItem.ID) as Array<MediaItem>;
 
       //Zurücksetzen des Busy-State
       this.setBusyState(false);
@@ -186,7 +188,7 @@ export class PictureAdminList extends AssignViewModelStammdaten {
        this.setBusyState(true);
 
        //Laden der neuen Daten
-       this.entities = await this.service.getData(this.selectedFatherItem.ID);
+       this.entities = await this.service.getData(this.selectedFatherItem.ID) as Array<MediaItem>;
 
        //Startsortierung nach dem ersten Sortierkriterium
        this.sortBy(this.sortCriteriaList[0]);
@@ -207,7 +209,7 @@ export class PictureAdminList extends AssignViewModelStammdaten {
   
   //Wird über den Event-Agg aufgerufen wenn im Picture-Control auf den 
   //Delete-Button gedrückt wird
-  private async deletePicture(itemToDelete: any): Promise<void> {
+  private async deletePicture(itemToDelete: MediaItem): Promise<void> {
     try {
       //Ausgeben einer Sicherheitsabfrage
       await swal({
@@ -268,7 +270,7 @@ export class PictureAdminList extends AssignViewModelStammdaten {
 
   //Wird über den Event-Agg aufgerufen wenn im Picture-Control auf den
   //Edit-Button gedrückt wird
-  private editPicture(itemToEdit: any): void {
+  private editPicture(itemToEdit: MediaItem): void {
     //Es muss zur Seite zum Hinzufügen eines neuen Photos gesprungen werden
     this.router.navigate(this.routeForEdit + "/edit/" + this.selectedFatherItem.ID + "/" + itemToEdit.ID);
   }
@@ -279,7 +281,7 @@ export class PictureAdminList extends AssignViewModelStammdaten {
     this.setBusyState(true);
 
     //Laden der Bilder über ein Promise
-    this.entities = await this.service.getData(this.selectedFatherItem.ID);
+    this.entities = await this.service.getData(this.selectedFatherItem.ID) as Array<MediaItem>;
 
     //Ausblenden der Busy-Box
     this.setBusyState(false);

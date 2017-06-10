@@ -1,3 +1,5 @@
+import { FacetGroup } from './../../../Models/Entities/FacetGroup';
+import { FacetValue } from '../../../Models/Entities/FacetValue';
 import {CategoryValueServiceEdit} from './categoryvalue-service';
 import {ViewModelEditID} from '../../../Helper/ViewModelHelper';
 import {AppRouter} from 'aurelia-router';
@@ -10,7 +12,7 @@ import swal from 'sweetalert2';
 import {enViewModelEditMode} from '../../../Enum/FamilieLaissEnum';
 
 @autoinject()
-export class CategoryValueEdit extends ViewModelEditID {
+export class CategoryValueEdit extends ViewModelEditID<FacetValue, FacetGroup> {
     //Konfiguration für i18N
     locConfig = { ns: ['StammCategoryValue', 'translation'] };
 
@@ -53,8 +55,7 @@ export class CategoryValueEdit extends ViewModelEditID {
           this.unsubscribeEvents();
 
           //Zurück zur Liste der Kategorien springen
-          var MyEntity: any = this.itemToEdit;
-          this.router.navigate(this.routeForList + "/" + this.fatherItem.ID + "/" + MyEntity.ID);
+          this.router.navigate(this.routeForList + "/" + this.fatherItem.ID + "/" + this.itemToEdit.ID);
         }
         catch (ex) {
           //Ausblenden der Busy-Box
@@ -84,8 +85,7 @@ export class CategoryValueEdit extends ViewModelEditID {
 
         //Zurückkehren zur Liste der Kategorien
         if (this.editMode == enViewModelEditMode.Edit) {
-            var MyEntity: any = this.itemToEdit;
-            this.router.navigate(this.routeForList + "/" + this.fatherItem.ID + "/" + MyEntity.ID);
+            this.router.navigate(this.routeForList + "/" + this.fatherItem.ID + "/" + this.itemToEdit.ID);
         }
         else {
             this.router.navigate(this.routeForList + "/" + this.fatherItem.ID);

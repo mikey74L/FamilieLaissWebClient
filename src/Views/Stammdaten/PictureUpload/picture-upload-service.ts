@@ -1,3 +1,4 @@
+import { EntityBase } from './../../../Models/Entities/EntityBase';
 import {EntityManagerFactory} from '../../../Helper/EntityManagerFactory';
 import {ServiceModelLoadDataDelete} from '../../../Helper/ServiceHelper';
 import {EntityQuery, QueryResult, SaveResult, Entity} from 'breeze-client';
@@ -11,7 +12,7 @@ export class PictureUploadService extends ServiceModelLoadDataDelete {
     }
 
     //Ermittelt alle Upload-Picture vom Server
-    public async getData(): Promise<Array<any>> {
+    public async getData(): Promise<Array<EntityBase>> {
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
             .from('UploadPictures')

@@ -1,7 +1,8 @@
+import { UploadPictureItem } from './../Models/Entities/UploadPictureItem';
 import {GeneralConfig} from '../Config/GeneralConfig';
 
 export class PictureURLHelper {
-    private getBaseImageURL(item: any) : string {
+    private getBaseImageURL(item: UploadPictureItem) : string {
         //Deklarationen
         var URL: string;
         var FileExtension: string;
@@ -17,7 +18,7 @@ export class PictureURLHelper {
         return URL;
     }
 
-    private addRotationInfo(url: string, item: any, additionalRotation?: number): string {
+    private addRotationInfo(url: string, item: UploadPictureItem, additionalRotation?: number): string {
         //Deklarationen
         var URL: string;
 
@@ -60,7 +61,7 @@ export class PictureURLHelper {
       return URL;
     }
 
-    public getImageURLUpload(uploadItem: any, additionalRotation?: number): string {
+    public getImageURLUpload(uploadItem: UploadPictureItem, additionalRotation?: number): string {
         //Deklarationen
         var URL: string;
 
@@ -76,7 +77,7 @@ export class PictureURLHelper {
         return URL;
     }
 
-    public getImageURLBigPicture(pictureItem: any, additionalRotation?: number): string {
+    public getImageURLBigPicture(pictureItem: UploadPictureItem, additionalRotation?: number): string {
         //Deklarationen
         var URL: string;
 

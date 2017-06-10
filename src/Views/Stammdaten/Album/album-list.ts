@@ -1,3 +1,4 @@
+import { MediaGroup } from './../../../Models/Entities/MediaGroup';
 /// <reference path="../../../../typings/globals/syncfusion/ej.web.all.d.ts" />
 import {GridViewModelStammdatenNormal} from '../../../Helper/ViewModelHelper';
 import {AlbumService} from './album-service';
@@ -13,7 +14,7 @@ import { ForeignKeyData } from './../../../Models/ForeignKeyData';
 import swal from 'sweetalert2';
 
 @autoinject()
-export class AlbumList extends GridViewModelStammdatenNormal {
+export class AlbumList extends GridViewModelStammdatenNormal<MediaGroup> {
     //Objekt für i18n Namespace-Definition
     locConfig: any = { ns: ['StammAlbum', 'translation'] };
     
@@ -47,8 +48,8 @@ export class AlbumList extends GridViewModelStammdatenNormal {
         
         //Zusammenstellen der Foreign-Data für die Typen
         this.LookupData = [];
-        this.LookupData.push(new ForeignKeyData(0, this.loc.tr('Media_Group.Type.0', { ns: 'Datamappings' })));
         this.LookupData.push(new ForeignKeyData(1, this.loc.tr('Media_Group.Type.1', { ns: 'Datamappings' })));
+        this.LookupData.push(new ForeignKeyData(2, this.loc.tr('Media_Group.Type.2', { ns: 'Datamappings' })));
 
         //Zusammenstellen der Daten für den ForeignKeyAdaptor
         this.ForeignKeyAdaptorData = [
@@ -240,7 +241,7 @@ export class AlbumList extends GridViewModelStammdatenNormal {
                  this.isItemSelected = false;
 
                  //Aktualisieren der Daten
-                 this.entities = await this.service.getData()
+                 this.entities = await this.service.getData() as Array<MediaGroup>;
 
                  //Aktualisieren des Grids nach dem die Daten neu ermittelt wurden
                  this.gridData = new ej.DataManager(
@@ -291,7 +292,7 @@ export class AlbumList extends GridViewModelStammdatenNormal {
         }
 
         //Aktualisieren der Daten
-        this.entities = await this.service.refreshData();
+        this.entities = await this.service.refreshData() as Array<MediaGroup>;
 
         //Aktualisieren des Grids nach dem die Daten neu ermittelt wurden
         this.gridData = new ej.DataManager(

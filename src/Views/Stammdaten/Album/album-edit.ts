@@ -1,3 +1,4 @@
+import { MediaGroup } from './../../../Models/Entities/MediaGroup';
 import { ViewModelEditNormal} from '../../../Helper/ViewModelHelper';
 import { AlbumServiceEdit } from './album-service';
 import {I18N} from 'aurelia-i18n';
@@ -9,7 +10,7 @@ import swal from 'sweetalert2';
 import {enViewModelEditMode} from '../../../Enum/FamilieLaissEnum';
 
 @autoinject()
-export class AlbumEdit extends ViewModelEditNormal {
+export class AlbumEdit extends ViewModelEditNormal<MediaGroup> {
     //Objekt für i18n Namespace-Definition
     locConfig: any = { ns: ['StammAlbum', 'translation'] };
 
@@ -53,8 +54,7 @@ export class AlbumEdit extends ViewModelEditNormal {
           this.unsubscribeEvents();
 
           //Zurück zur Liste der Alben springen
-          var MyEntity: any = this.itemToEdit;
-          this.router.navigate(this.routeForList + "/" + MyEntity.ID);
+          this.router.navigate(this.routeForList + "/" + this.itemToEdit.ID);
         }
         catch (ex) {
           //Ausblenden der Busy-Box
@@ -84,8 +84,7 @@ export class AlbumEdit extends ViewModelEditNormal {
 
         //Zurückkehren zur Liste der Alben
         if (this.editMode == enViewModelEditMode.Edit) {
-            var MyEntity: any = this.itemToEdit;
-            this.router.navigate(this.routeForList + "/" + MyEntity.ID);
+            this.router.navigate(this.routeForList + "/" + this.itemToEdit.ID);
         }
         else {
             this.router.navigate(this.routeForList);

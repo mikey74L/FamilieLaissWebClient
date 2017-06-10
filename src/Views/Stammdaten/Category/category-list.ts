@@ -1,3 +1,4 @@
+import { FacetGroup } from './../../../Models/Entities/FacetGroup';
 /// <reference path="../../../../typings/globals/syncfusion/ej.web.all.d.ts" />
 import {GridViewModelStammdatenNormal} from '../../../Helper/ViewModelHelper';
 import {CategoryService} from './category-service';
@@ -13,7 +14,7 @@ import { ForeignKeyData } from './../../../Models/ForeignKeyData';
 import swal from 'sweetalert2';
 
 @autoinject()
-export class CategoryList extends GridViewModelStammdatenNormal {
+export class CategoryList extends GridViewModelStammdatenNormal<FacetGroup> {
     //Objekt für i18n Namespace-Definition
     locConfig: any = { ns: ['StammCategory', 'translation'] };
     
@@ -254,7 +255,7 @@ export class CategoryList extends GridViewModelStammdatenNormal {
                  this.isItemSelected = false;
 
                  //Aktualisieren der Daten
-                 this.entities = await this.service.getData()
+                 this.entities = await this.service.getData() as Array<FacetGroup>;
 
                  //Aktualisieren des Grids nach dem die Daten neu ermittelt wurden
                  this.gridData = new ej.DataManager(
@@ -305,7 +306,7 @@ export class CategoryList extends GridViewModelStammdatenNormal {
         }
 
         //Aktualisieren der Daten
-        this.entities = await this.service.refreshData();
+        this.entities = await this.service.refreshData() as Array<FacetGroup>;
 
         //Aktualisieren des Grids nach dem die Daten neu ermittelt wurden
         this.gridData = new ej.DataManager(

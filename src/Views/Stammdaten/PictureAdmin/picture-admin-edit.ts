@@ -1,3 +1,9 @@
+import { FacetGroup } from './../../../Models/Entities/FacetGroup';
+import { FacetValue } from './../../../Models/Entities/FacetValue';
+import { MediaItemFacet } from './../../../Models/Entities/MediaItemFacet';
+import { UploadPictureItem } from './../../../Models/Entities/UploadPictureItem';
+import { MediaItem } from './../../../Models/Entities/MediaItem';
+import { MediaGroup } from './../../../Models/Entities/MediaGroup';
 import {ChangeImagePropertyStartArgs} from '../../../Models/ChangeImagePropertyStartArgs';
 import {ViewModelAssignEdit} from '../../../Helper/ViewModelHelper';
 import {AppRouter} from 'aurelia-router';
@@ -16,12 +22,12 @@ import swal from 'sweetalert2';
 import {DropdownListData, DropdownListGroupItem, DropdownListValueItem} from '../../../Helper/DropDownListHelper';
 
 @autoinject()
-export class PictureAdminEdit extends ViewModelAssignEdit {
+export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup> {
     //Konfiguration für i18N
     locConfig: any = { ns: ['StammPictureAdmin', 'translation']};
 
     //Members
-    uploadItem: any;
+    uploadItem: UploadPictureItem;
     photoChoosed: boolean;
 
     categoryList: DropdownListData;
@@ -76,7 +82,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
         this.photoChoosed = true;
 
         //Setzen der ID für das Bild im Media-Item
-        (<any>this.itemToEdit).ID_UploadPicture = this.uploadItem.ID;
+        this.itemToEdit.ID_UploadPicture = this.uploadItem.ID;
 
         //Setzen der URL
         this.setCurrentPhotoURL();
@@ -96,13 +102,12 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
     //aufgerufen wird
     protected async activateChild(info: any): Promise<void> {
       //Deklarationen
-      var CategoryResult: Array<any>;
+      var CategoryResult: Array<FacetGroup>;
       var NewCategoryGroup: DropdownListGroupItem;
       var Assigned: boolean;
-      var itemToEditTypeless: any = this.itemToEdit;
 
       //Laden der Kategorien über ein Promise
-      CategoryResult = await this.service.getCategories();
+      CategoryResult = await this.service.getCategories() as Array<FacetGroup>;
 
       //In einer Schleife durch alle Kategorien durchgehen
       for (var Item of CategoryResult) {
@@ -115,7 +120,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
           //Photo schon zugeordnet ist
           Assigned = false;
           if (this.editMode == enViewModelEditMode.Edit) {
-            for (var FacetValue of itemToEditTypeless.MediaItemFacets) {
+            for (var FacetValue of this.itemToEdit.MediaItemFacets) {
               if (FacetValue.ID_FacetValue == Item2.ID) {
                 Assigned = true;
                 break;
@@ -131,7 +136,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
       //Im Editiermodus müssen die Properties für das Photo noch richtig gesetzt werden
       if (this.editMode == enViewModelEditMode.Edit) {
         //Auswählen des Photos
-        this.uploadItem = (<any>this.itemToEdit).UploadPicture;
+        this.uploadItem = this.itemToEdit.UploadPicture;
         this.photoChoosed = true;
 
         //Setzen der URL für das Photo
@@ -165,7 +170,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
         }
         else {
           //Eine neue Image-Property-Erstellen
-          var Dummy: any = await this.serviceExtended.createImageProperty(this.uploadItem, Result.output);
+          await this.serviceExtended.createImageProperty(this.uploadItem, Result.output);
         }
       }
       catch (ex) {
@@ -282,8 +287,8 @@ export class PictureAdminEdit extends ViewModelAssignEdit {
 
         //Den Name des Medien-Elements auf die ID des Upload-Items setzen,
         //da es sonst zu einer PK-Veretzung kommt
-        (<any>this.itemToEdit).NameGerman = this.uploadItem.ID;
-        (<any>this.itemToEdit).NameEnglish = this.uploadItem.ID;
+        this.itemToEdit.NameGerman = this.uploadItem.ID.toString();
+        this.itemToEdit.NameEnglish = this.uploadItem.ID.toString();
         
         //Speichern des Medien-Items
         try {

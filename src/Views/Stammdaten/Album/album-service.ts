@@ -1,3 +1,4 @@
+import { EntityBase } from './../../../Models/Entities/EntityBase';
 import { EntityManagerFactory } from '../../../Helper/EntityManagerFactory';
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal } from '../../../Helper/ServiceHelper'
 import { EntityQuery, Entity, QueryResult, SaveResult } from 'breeze-client';
@@ -11,7 +12,7 @@ export class AlbumService extends ServiceModelStammdatenNormal {
     }
 
     //Ermittelt alle Alben vom Server oder wenn schon mal geladen aus dem EntityManager lokal
-    public async getData(): Promise<Array<any>> {
+    public async getData(): Promise<Array<EntityBase>> {
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
             .from('MediaGroups');
@@ -34,7 +35,7 @@ export class AlbumService extends ServiceModelStammdatenNormal {
     }
 
     //Holt die Daten neu vom Server
-    public async refreshData(): Promise<Array<any>> {
+    public async refreshData(): Promise<Array<EntityBase>> {
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
             .from('MediaGroups');
@@ -68,7 +69,7 @@ export class AlbumServiceEdit extends ServiceModelStammdatenEditNormal {
 
     //Ermittelt die Daten für ein einzelnes Album
     //um dieses zu editieren
-    public async getItem(ID: number): Promise<any> {
+    public async getItem(ID: number): Promise<EntityBase> {
         //Query zusammenbauen
         var query: EntityQuery = new EntityQuery()
             .from('MediaGroups')
@@ -78,14 +79,14 @@ export class AlbumServiceEdit extends ServiceModelStammdatenEditNormal {
         await this.getEntityManager();
 
         //Query ausführen
-        var Result: Array<Entity> = this.manager.executeQueryLocally(query);
+        var Result: Array<any> = this.manager.executeQueryLocally(query);
         
         //Promise zurückliefern
-        return Promise.resolve(Result);
+        return Promise.resolve(Result[0]);
     }
 
     //Erstellt ein neues Album im Entity-Manager
-    public async createNew(): Promise<any> {
+    public async createNew(): Promise<EntityBase> {
         //Ermitteln des Entity-Manager
         await this.getEntityManager();
 

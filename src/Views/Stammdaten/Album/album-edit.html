@@ -29,12 +29,12 @@
                     <small t="Edit.Card.Body.Form.Labels.AlbumType" t-params.bind="locOptions"></small>
                     <div style="margin-top:20px; margin-bottom:45px;">
                         <label class="radio radio-inline m-r-20">
-                            <input id="rb_Photo" type="radio" disabled.bind="isBusy" name="AlbumType" value="0" checked.bind="itemToEdit.Type | numberToString">
+                            <input id="rb_Photo" type="radio" disabled.bind="isBusy" name="AlbumType" value="1" checked.bind="itemToEdit.Type | numberToString">
                             <i class="input-helper"></i>
                             ${ 'Edit.Card.Body.Form.Radiobuttons.Photo' | t: {ns: 'StammAlbum'} }
                         </label>
                         <label class="radio radio-inline m-r-20">
-                            <input id="rb_Video" type="radio" disabled.bind="isBusy" name="AlbumType" value="1" checked.bind="itemToEdit.Type | numberToString">
+                            <input id="rb_Video" type="radio" disabled.bind="isBusy" name="AlbumType" value="2" checked.bind="itemToEdit.Type | numberToString">
                             <i class="input-helper"></i>
                             ${ 'Edit.Card.Body.Form.Radiobuttons.Video' | t: {ns: 'StammAlbum'} }
                         </label>
