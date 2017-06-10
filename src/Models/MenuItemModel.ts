@@ -7,6 +7,8 @@ export class MenuItemModel {
     realRoute: boolean;
     includeInMenu: boolean;
 
+    iconCssClass: string;
+
     route: string | Array<string>;
     name?: string;
     moduleId?: string;
@@ -20,7 +22,7 @@ export class MenuItemModel {
     childItems: Array<MenuItemModel>;
 
     //C'tor
-    constructor(displayName: string | undefined, route: string | Array<string>, name: string | undefined, 
+    constructor(displayName: string | undefined, iconCssClass: string, route: string | Array<string>, name: string | undefined, 
                 moduleId: string | undefined, nav: boolean, title: string | undefined, 
                 href: string | undefined, settings: Object, userGroups: Array<string>, includeInMenu: boolean) {
         //Initialisieren
@@ -28,6 +30,7 @@ export class MenuItemModel {
         this.childItems = [];
 
         //Übernehmen der Parameter
+        this.iconCssClass = iconCssClass;
         this.displayName = displayName;
         this.route = route;
         this.name = name;
@@ -68,11 +71,11 @@ export class MenuItemModel {
     }
 
     //Fügt ein Child-Menu-Item hinzu
-    public addChildItem(displayName: string | undefined, route: string | Array<string>, name: string | undefined, 
+    public addChildItem(displayName: string | undefined, iconCssClass: string, route: string | Array<string>, name: string | undefined, 
                         moduleId: string | undefined, nav: boolean, title: string | undefined, 
                         href: string | undefined, settings: Object, userGroups: Array<string>, includeInMenu: boolean): void {
         //Hinzufügen eines neuen Child-Items
-        this.childItems.push(new MenuItemModel(displayName, route, name, moduleId, nav, title, href, settings, userGroups, includeInMenu));
+        this.childItems.push(new MenuItemModel(displayName, iconCssClass, route, name, moduleId, nav, title, href, settings, userGroups, includeInMenu));
 
         //Setzen der benötigten Properties
         this.hasChildItems = true;
@@ -132,14 +135,14 @@ export class MenuItemList {
     }
 
     //Hiermit kann ein Menüpunkt auf oberster Ebene hinzugefügt werden
-    public addItem(displayName: string | undefined, route: string | Array<string>, name: string | undefined, 
+    public addItem(displayName: string | undefined, iconCssClass: string, route: string | Array<string>, name: string | undefined, 
                    moduleId: string | undefined, nav: boolean, title: string | undefined, 
                    href: string | undefined, settings: Object, userGroups: Array<string>, includeInMenu: boolean): MenuItemModel {
         //Deklaration
         var Item: MenuItemModel;
 
         //Erzeugen des Menu-Items
-        Item = new MenuItemModel(displayName, route, name, moduleId, nav, title, href, settings, userGroups, includeInMenu);
+        Item = new MenuItemModel(displayName, iconCssClass, route, name, moduleId, nav, title, href, settings, userGroups, includeInMenu);
 
         //Hinzufügen des Items zur Liste
         this.menuItems.push(Item);

@@ -203,131 +203,128 @@ export class FamilieLaissApp {
         //Deklaration
         var Item: MenuItemModel;
 
-        //Route für "Dashboard"
-        this.menuItemList.addItem(undefined, ['', 'dashboard'], 'dashboard', PLATFORM.moduleName('./Views/Dashboard'), true, 
+        //Route für "Home"
+        this.menuItemList.addItem(undefined, 'zmdi zmdi-home', ['', 'home'], 'home', PLATFORM.moduleName('./Views/Home'), true, 
                                   this.loc.tr('Home', {ns: 'Router'}), undefined, 
                                   {showNavigation: true, needAuthentication: false}, [], true );
 
         //Route für "Picture-Show"        
-        this.menuItemList.addItem(undefined, 'pictureshow', 'pictureshow', PLATFORM.moduleName('./Views/PictureShow'), true, 
+        this.menuItemList.addItem(undefined, 'zmdi zmdi-image-alt', 'pictureshow', 'pictureshow', PLATFORM.moduleName('./Views/PictureShow'), true, 
                                   this.loc.tr('Picture', {ns: 'Router'}), undefined, 
                                   {showNavigation: true, needAuthentication: false}, [], true );
 
         //Route für "Video-Show"        
-        this.menuItemList.addItem(undefined, 'videoshow', 'videoshow', PLATFORM.moduleName('./Views/VideoShow'), true, 
+        this.menuItemList.addItem(undefined, 'zmdi zmdi-movie-alt', 'videoshow', 'videoshow', PLATFORM.moduleName('./Views/VideoShow'), true, 
                                   this.loc.tr('Video', {ns: 'Router'}), undefined, 
                                   {showNavigation: true, needAuthentication: false}, [], true );
 
         //Route für "Blog"        
-        this.menuItemList.addItem(undefined, 'blogshow', 'blogshow', PLATFORM.moduleName('./Views/BlogShow'), true, 
+        this.menuItemList.addItem(undefined, 'zmdi zmdi-blogger', 'blogshow', 'blogshow', PLATFORM.moduleName('./Views/BlogShow'), true, 
                                   this.loc.tr('Blog', {ns: 'Router'}), undefined, 
                                   {showNavigation: true, needAuthentication: false}, [], true );
 
         //Überschrift "Stammdaten"
-        Item = this.menuItemList.addItem(this.loc.tr('Stammdaten.Text', {ns: 'Router'}), '', undefined, undefined, false, 
+        Item = this.menuItemList.addItem(this.loc.tr('Stammdaten.Text', {ns: 'Router'}), 'zmdi zmdi-view-list', '', undefined, undefined, false, 
                                          undefined, undefined, {showNavigation: true, needAuthentication: true}, ["Admin"], true );
         
         //Routes für "Stammdaten - Album"      
-        Item.addChildItem(undefined, 'album', 'album', PLATFORM.moduleName('./Views/Stammdaten/Album/album-list'), true, 
+        Item.addChildItem(undefined, '', 'album', 'album', PLATFORM.moduleName('./Views/Stammdaten/Album/album-list'), true, 
                           this.loc.tr('Stammdaten.Album', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'album/:id', 'albumwithid', PLATFORM.moduleName('./Views/Stammdaten/Album/album-list'), true, 
+        Item.addChildItem(undefined, '', 'album/:id', 'albumwithid', PLATFORM.moduleName('./Views/Stammdaten/Album/album-list'), true, 
                           this.loc.tr('Stammdaten.Album', {ns: 'Router'}), 'albumwithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'albumedit/:operation/:id', 'albumedit', PLATFORM.moduleName('./Views/Stammdaten/Album/album-edit'), true, 
+        Item.addChildItem(undefined, '', 'albumedit/:operation/:id', 'albumedit', PLATFORM.moduleName('./Views/Stammdaten/Album/album-edit'), true, 
                           this.loc.tr('Stammdaten.AlbumEdit', {ns: 'Router'}), 'albumedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
    
         //Routes für "Stammdaten - Blog"
-        Item.addChildItem(undefined, 'blog', 'blog', PLATFORM.moduleName('./Views/Stammdaten/Blog/blog-list'), true, 
+        Item.addChildItem(undefined, '', 'blog', 'blog', PLATFORM.moduleName('./Views/Stammdaten/Blog/blog-list'), true, 
                           this.loc.tr('Stammdaten.Blog', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'blog/:id', 'blogwithid', PLATFORM.moduleName('./Views/Stammdaten/Blog/blog-list'), true, 
+        Item.addChildItem(undefined, '', 'blog/:id', 'blogwithid', PLATFORM.moduleName('./Views/Stammdaten/Blog/blog-list'), true, 
                           this.loc.tr('Stammdaten.Blog', {ns: 'Router'}), 'blogwithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'blogedit/:operation/:id', 'blogedit', PLATFORM.moduleName('./Views/Stammdaten/Blog/blog-edit'), true, 
+        Item.addChildItem(undefined, '', 'blogedit/:operation/:id', 'blogedit', PLATFORM.moduleName('./Views/Stammdaten/Blog/blog-edit'), true, 
                           this.loc.tr('Stammdaten.BlogEdit', {ns: 'Router'}), 'blogedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
 
         //Routes für "Stammdaten - Kategorie"
-        Item.addChildItem(undefined, 'category', 'category', PLATFORM.moduleName('./Views/Stammdaten/Category/category-list'), true, 
+        Item.addChildItem(undefined, '', 'category', 'category', PLATFORM.moduleName('./Views/Stammdaten/Category/category-list'), true, 
                           this.loc.tr('Stammdaten.Category', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'category/:id', 'categorywithid', PLATFORM.moduleName('./Views/Stammdaten/Category/category-list'), true, 
+        Item.addChildItem(undefined, '', 'category/:id', 'categorywithid', PLATFORM.moduleName('./Views/Stammdaten/Category/category-list'), true, 
                           this.loc.tr('Stammdaten.Category', {ns: 'Router'}), 'categorywithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'categoryedit/:operation/:id', 'categoryedit', PLATFORM.moduleName('./Views/Stammdaten/Category/category-edit'), true, 
+        Item.addChildItem(undefined, '', 'categoryedit/:operation/:id', 'categoryedit', PLATFORM.moduleName('./Views/Stammdaten/Category/category-edit'), true, 
                           this.loc.tr('Stammdaten.CategoryEdit', {ns: 'Router'}), 'categoryedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
 
         //Routes für "Stammdaten - Kategoriewert"
-        Item.addChildItem(undefined, 'categoryvalue/:idFather', 'categoryvalue', PLATFORM.moduleName('./Views/Stammdaten/CategoryValue/categoryvalue-list'), true, 
+        Item.addChildItem(undefined, '', 'categoryvalue/:idFather', 'categoryvalue', PLATFORM.moduleName('./Views/Stammdaten/CategoryValue/categoryvalue-list'), true, 
                           this.loc.tr('Stammdaten.CategoryValue', {ns: 'Router'}), 'categoryvalue', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'categoryvalue/:idFather/:id', 'categoryvaluewithid', PLATFORM.moduleName('./Views/Stammdaten/CategoryValue/categoryvalue-list'), true, 
+        Item.addChildItem(undefined, '', 'categoryvalue/:idFather/:id', 'categoryvaluewithid', PLATFORM.moduleName('./Views/Stammdaten/CategoryValue/categoryvalue-list'), true, 
                           this.loc.tr('Stammdaten.CategoryValue', {ns: 'Router'}), 'categoryvaluewithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'categoryvalueedit/:operation/:idFather/:id', 'categoryvalueedit', PLATFORM.moduleName('./Views/Stammdaten/CategoryValue/categoryvalue-edit'), true, 
+        Item.addChildItem(undefined, '', 'categoryvalueedit/:operation/:idFather/:id', 'categoryvalueedit', PLATFORM.moduleName('./Views/Stammdaten/CategoryValue/categoryvalue-edit'), true, 
                           this.loc.tr('Stammdaten.CategoryValueEdit', {ns: 'Router'}), 'categoryvalueedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
         
         //Routes für "Stammdaten - Picture Upload"
-        Item.addChildItem(undefined, 'pictureuploadlist', 'pictureuploadlist', PLATFORM.moduleName('./Views/Stammdaten/PictureUpload/picture-upload-list'), true, 
+        Item.addChildItem(undefined, '', 'pictureuploadlist', 'pictureuploadlist', PLATFORM.moduleName('./Views/Stammdaten/PictureUpload/picture-upload-list'), true, 
                           this.loc.tr('Stammdaten.PictureUploadList', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
         
         //Routes für "Stammdaten Bilder zuweisen"
-        Item.addChildItem(undefined, 'pictureadmin', 'pictureadmin', PLATFORM.moduleName('./Views/Stammdaten/PictureAdmin/picture-admin-list'), true, 
+        Item.addChildItem(undefined, '', 'pictureadmin', 'pictureadmin', PLATFORM.moduleName('./Views/Stammdaten/PictureAdmin/picture-admin-list'), true, 
                           this.loc.tr('Stammdaten.PictureAdminList', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'pictureadmin/:idFather', 'pictureadminwithid', PLATFORM.moduleName('./Views/Stammdaten/PictureAdmin/picture-admin-list'), true, 
+        Item.addChildItem(undefined, '', 'pictureadmin/:idFather', 'pictureadminwithid', PLATFORM.moduleName('./Views/Stammdaten/PictureAdmin/picture-admin-list'), true, 
                           this.loc.tr('Stammdaten.PictureAdminList', {ns: 'Router'}), 'pictureadminwithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'pictureadminedit/:operation/:idFather/:id', 'pictureadminedit', PLATFORM.moduleName('./Views/Stammdaten/PictureAdmin/picture-admin-edit'), true, 
+        Item.addChildItem(undefined, '', 'pictureadminedit/:operation/:idFather/:id', 'pictureadminedit', PLATFORM.moduleName('./Views/Stammdaten/PictureAdmin/picture-admin-edit'), true, 
                           this.loc.tr('Stammdaten.PictureAdminEdit', {ns: 'Router'}), 'pictureadminedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
         
-        Item.addChildItem(undefined, 'videouploadlist', 'videouploadlist', './stammdaten/videoupload/video-upload-list', true, 
+        Item.addChildItem(undefined, '', 'videouploadlist', 'videouploadlist', './stammdaten/videoupload/video-upload-list', true, 
                           this.loc.tr('Stammdaten.VideoUploadList', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
         
-        Item.addChildItem(undefined, 'videoadmin', 'videoadmin', './stammdaten/videoadmin/video-admin-list', true, 
+        Item.addChildItem(undefined, '', 'videoadmin', 'videoadmin', './stammdaten/videoadmin/video-admin-list', true, 
                           this.loc.tr('Stammdaten.VideoAdminList', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'videoadmin/:idFather', 'videoadminwithid', './stammdaten/videoadmin/video-admin-list', true, 
+        Item.addChildItem(undefined, '', 'videoadmin/:idFather', 'videoadminwithid', './stammdaten/videoadmin/video-admin-list', true, 
                           this.loc.tr('Stammdaten.VideoAdminList', {ns: 'Router'}), 'videoadminwithid', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
-        Item.addChildItem(undefined, 'videoadminedit/:operation/:idFather/:id', 'videoadminedit', './stammdaten/videoadmin/video-admin-edit', true, 
+        Item.addChildItem(undefined, '', 'videoadminedit/:operation/:idFather/:id', 'videoadminedit', './stammdaten/videoadmin/video-admin-edit', true, 
                           this.loc.tr('Stammdaten.VideoAdminEdit', {ns: 'Router'}), 'videoadminedit', 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], false );
         
-        Item.addChildItem(undefined, 'blog', 'blog', './stammdaten/blog/blog-list', true, 
-                          this.loc.tr('Stammdaten.Blog', {ns: 'Router'}), undefined, 
-                          {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item = this.menuItemList.addItem(this.loc.tr('Services.Text', {ns: 'Router'}), '', undefined, undefined, false, 
+        Item = this.menuItemList.addItem(this.loc.tr('Services.Text', {ns: 'Router'}), '', '', undefined, undefined, false, 
                                          undefined, undefined, {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item.addChildItem(undefined, 'videoconverter', 'videoconverter', './services/videoconverter/video-converter-list', true, 
+        Item.addChildItem(undefined, '', 'videoconverter', 'videoconverter', './services/videoconverter/video-converter-list', true, 
                           this.loc.tr('Services.VideoConverter', {ns: 'Router'}), undefined, 
                           {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item = this.menuItemList.addItem(undefined, 'useradministration', 'useradministration', './auth/useradministration', true, 
+        Item = this.menuItemList.addItem(undefined, 'zmdi zmdi-accounts', 'useradministration', 'useradministration', './auth/useradministration', true, 
                                          this.loc.tr('Authorization.UserAdministration', {ns: 'Router'}), undefined, 
                                          {showNavigation: true, needAuthentication: true}, ["Admin"], true );
-        Item = this.menuItemList.addItem(undefined, 'loginuser', 'loginuser', './auth/login', true, 
+        Item = this.menuItemList.addItem(undefined, '', 'loginuser', 'loginuser', './auth/login', true, 
                                          this.loc.tr('Authorization.Login', {ns: 'Router'}), undefined, 
                                          {showNavigation: false, needAuthentication: false}, [], false);
-        Item = this.menuItemList.addItem(undefined, 'registeruser', 'registeruser', './auth/register', true, 
+        Item = this.menuItemList.addItem(undefined, '', 'registeruser', 'registeruser', './auth/register', true, 
                                          this.loc.tr('Authorization.Register', {ns: 'Router'}), undefined, 
                                          {showNavigation: false, needAuthentication: false}, [], false);
-        Item = this.menuItemList.addItem(undefined, 'forgotpassword', 'forgotpassword', './auth/forgotpassword', true, 
+        Item = this.menuItemList.addItem(undefined, '', 'forgotpassword', 'forgotpassword', './auth/forgotpassword', true, 
                                          this.loc.tr('Authorization.ForgotPassword', {ns: 'Router'}), undefined, 
                                          {showNavigation: false, needAuthentication: false}, [], false);
-        Item = this.menuItemList.addItem(undefined, 'newpassword/:userName/:token', 'newpassword', './auth/newpassword', true,  
+        Item = this.menuItemList.addItem(undefined, '', 'newpassword/:userName/:token', 'newpassword', './auth/newpassword', true,  
                                          this.loc.tr('Authorization.NewPassword', {ns: 'Router'}), 'newpassword', 
                                          {showNavigation: false, needAuthentication: true}, [], false);
-        Item = this.menuItemList.addItem(undefined, 'confirmaccount/:userID/:code', 'confirmaccount', './auth/confirmaccount', true, 
+        Item = this.menuItemList.addItem(undefined, '', 'confirmaccount/:userID/:code', 'confirmaccount', './auth/confirmaccount', true, 
                                          this.loc.tr('Authorization.ConfirmAccount', {ns: 'Router'}), 'confirmaccount', 
                                          {showNavigation: false, needAuthentication: false}, [], false);
-        this.menuItemList.addItem(undefined, 'messages', 'messages', './messages/messagesoverview', true, 
+        this.menuItemList.addItem(undefined, '', 'messages', 'messages', './messages/messagesoverview', true, 
                                   this.loc.tr('Messages.Overview', {ns: 'Router'}), undefined, 
                                   {showNavigation: true, needAuthentication: true}, [], false );
 

@@ -1,11 +1,11 @@
+import { MenuItemModel } from './../Models/MenuItemModel';
 import {bindable, customElement, containerless} from 'aurelia-framework';
 import * as $ from 'jquery';
 
 @customElement('side-menu')
 @containerless()
 export class SideMenu {
-    @bindable 
-    menuItems = [];
+    @bindable() menuItems: Array<MenuItemModel> = [];
 
     //Wird aufgerufen wenn auf ein Untermenu geklickt wird.
     //Hiermit wird das Untermenu ein bzw. aufgeklappt

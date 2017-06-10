@@ -2,7 +2,7 @@
     <li repeat.for="menuItem of menuItems" class="${menuItem.hasChildItems ? 'sub-menu' : ''}">
         <!-- Wird gerendert wenn es sich um einen Main-Eintrag für Submenüeinträge handelt -->
         <a if.bind="menuItem.hasChildItems && menuItem.includeInMenu" href="" click.trigger="subMenuClicked($event)">
-            <i></i> ${menuItem.displayName}
+            <i class.bind="menuItem.iconCssClass"></i> ${menuItem.displayName}
         </a>
         <ul if.bind="menuItem.hasChildItems && menuItem.includeInMenu">
             <li repeat.for="subItem of menuItem.childItems">
@@ -12,7 +12,7 @@
 
         <!-- Wird gerendert wenn es sich um einen echten Main-Eintrag handelt -->
         <a if.bind="!menuItem.hasChildItems && menuItem.includeInMenu" href.bind="menuItem.link">
-            <i class="zmdi zmdi-view-compact"></i> ${menuItem.displayName}
+            <i class.bind="menuItem.iconCssClass"></i> ${menuItem.displayName}
         </a>
     </li>
 </template>
