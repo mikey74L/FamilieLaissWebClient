@@ -179,7 +179,8 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
     }
 
     //Wird aufgerufen wenn auf den Cancel-Button geklickt wird
-    public async cancelChanges(): Promise<void> {
+    public async cancelChanges(fromRouter: boolean): Promise<void> {
+      if (!fromRouter) {
         //Nur wenn sich auch etwas geändert hat oder es sich um einen neuen Eintrag handelt, dann wird auch eine
         //Sicherheitsabfrage ausgegeben
         if (this.editMode == enViewModelEditMode.New || (this.editMode == enViewModelEditMode.Edit && this.service.hasChanges())) {
@@ -201,21 +202,25 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
               );
 
               //Ausführen der eigentlichen Cancel-Prozedur
-              this.cancelChangesExecute();
+              this.cancelChangesExecute(fromRouter);
             }
             catch (ex) {
             }
         }
         else {
             //Ausführen der eigentlichen Cancel-Prozedur
-            this.cancelChangesExecute();
+            this.cancelChangesExecute(fromRouter);
         }
+      }
+      else {
+        this.cancelChangesExecute(fromRouter);
+      }
     }
  
     //Führt den tatsächlichen Cancel aus
-    private cancelChangesExecute(): void {
+    private cancelChangesExecute(fromRouter: boolean): void {
         //Verwerfen der Änderungen
-        this.service.rejectChanges();
+        if (!fromRouter) this.service.rejectChanges();
                 
         //Benachrichtigung ausgeben
         this.showNotifyInfo(this.loc.tr('PictureAdmin.Cancel.Success', { ns: 'Toasts', context: this.editMode }));
@@ -224,7 +229,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
         this.unsubscribeEvents();
 
         //Zurückkehren zur Liste der Kategorien
-        this.router.navigate(this.routeForList + "/" + this.fatherItem.ID);
+        if (!fromRouter) this.router.navigate(this.routeForList + "/" + this.fatherItem.ID);
     }
 
     //Überprüft den Status der Buttons

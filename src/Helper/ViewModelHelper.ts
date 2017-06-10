@@ -339,7 +339,7 @@ export abstract class ViewModelEdit<T extends EntityBase> extends ViewModelGener
               );
 
             //Die Änderungen sollen verworfen werden
-            this.rejectChanges();
+            this.rejectChanges(true);
 
             //Verlassen der View erlaubt
             return Promise.resolve(true);
@@ -360,7 +360,7 @@ export abstract class ViewModelEdit<T extends EntityBase> extends ViewModelGener
     protected abstract hasChanges(): boolean;
 
     //Verwerfen der Änderungen im Service (Ist abstract und muss überschrieben werden)
-    protected abstract rejectChanges(): void;
+    protected abstract rejectChanges(fromRouter: boolean): void;
 
     //Registriert sich für das Property-Changed Event von Breeze
     protected subscribePropertyChanged(): void {
@@ -419,7 +419,7 @@ export abstract class ViewModelEdit<T extends EntityBase> extends ViewModelGener
     //Muss von der Kind-Klasse überschrieben werden um
     //die Aktionen zum Abbrechen des Editiermodus auszuführen
     //(Ist abstract und muss überschrieben werden)
-    protected abstract cancelChanges(): void;
+    protected abstract cancelChanges(fromRouter: boolean): void;
 }
 
 export abstract class ViewModelEditNormal<T extends EntityBase> extends ViewModelEdit<T> {
@@ -442,7 +442,7 @@ export abstract class ViewModelEditNormal<T extends EntityBase> extends ViewMode
     }
 
     //Verwerfen der Änderungen im Service
-    protected rejectChanges(): void {
+    protected rejectChanges(fromRouter: boolean): void {
         //Verwerfen der Änderungen
         this.service.rejectChanges();
 
@@ -450,7 +450,7 @@ export abstract class ViewModelEditNormal<T extends EntityBase> extends ViewMode
         this.unsubscribeEvents();
 
         //Benachrichtigung, dass die Änderungen zurückgenommen wurden
-        this.cancelChanges();
+        this.cancelChanges(fromRouter);
     }
 
     //Laden der Daten über den Service
@@ -505,7 +505,7 @@ export abstract class ViewModelEditID<T extends EntityBase, F extends EntityBase
     }
 
     //Verwerfen der Änderungen im Service
-    protected rejectChanges(): void {
+    protected rejectChanges(fromRouter: boolean): void {
         //Verwerfen der Änderungen
         this.service.rejectChanges();
 
@@ -513,7 +513,7 @@ export abstract class ViewModelEditID<T extends EntityBase, F extends EntityBase
         this.unsubscribeEvents();
 
         //Benachrichtigung, dass die Änderungen zurückgenommen wurden
-        this.cancelChanges();
+        this.cancelChanges(fromRouter);
     }
 
     //Laden der Daten über den Service
@@ -678,7 +678,7 @@ export abstract class ViewModelAssignEdit<T extends EntityBase, F extends Entity
     }
 
     //Verwerfen der Änderungen im Service
-    protected rejectChanges(): void {
+    protected rejectChanges(fromRouter: boolean): void {
         //Verwerfen der Änderungen
         this.service.rejectChanges();
 
@@ -686,7 +686,7 @@ export abstract class ViewModelAssignEdit<T extends EntityBase, F extends Entity
         this.unsubscribeEvents();
 
         //Benachrichtigung, dass die Änderungen zurückgenommen wurden
-        this.cancelChanges();
+        this.cancelChanges(fromRouter);
     }
 
     //Laden der Daten über den Service

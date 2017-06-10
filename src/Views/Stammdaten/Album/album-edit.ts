@@ -72,9 +72,9 @@ export class AlbumEdit extends ViewModelEditNormal<MediaGroup> {
     }
 
     //Führt den tatsächlichen Cancel aus
-    private cancelChangesExecute(): void {
+    private cancelChangesExecute(fromRouter: boolean): void {
         //Verwerfen der Änderungen
-        this.service.rejectChanges();
+        if (!fromRouter) this.service.rejectChanges();
                 
         //Benachrichtigung ausgeben
         this.showNotifyInfo(this.loc.tr('Album.Cancel.Success', { ns: 'Toasts', context: this.editMode }));
@@ -83,16 +83,19 @@ export class AlbumEdit extends ViewModelEditNormal<MediaGroup> {
         this.unsubscribeEvents();
 
         //Zurückkehren zur Liste der Alben
-        if (this.editMode == enViewModelEditMode.Edit) {
+        if (!fromRouter) {
+          if (this.editMode == enViewModelEditMode.Edit) {
             this.router.navigate(this.routeForList + "/" + this.itemToEdit.ID);
-        }
-        else {
+          }
+          else {
             this.router.navigate(this.routeForList);
+          }
         }
     }
 
     //Wird aufgerufen wenn auf den Cancel-Button geklickt wird
-    public async cancelChanges(): Promise<void> {
+    public async cancelChanges(fromRouter: boolean): Promise<void> {
+      if (!fromRouter) {
         //Nur wenn sich auch etwas geändert hat oder es sich um einen neuen Eintrag handelt, dann wird auch eine
         //Sicherheitsabfrage ausgegeben
         if (this.editMode == enViewModelEditMode.New || (this.editMode == enViewModelEditMode.Edit && this.hasChanges())) {
@@ -114,15 +117,19 @@ export class AlbumEdit extends ViewModelEditNormal<MediaGroup> {
               );
 
               //Ausführen der eigentlichen Cancel-Prozedur
-              this.cancelChangesExecute();
+              this.cancelChangesExecute(fromRouter);
             }
             catch(ex) {
             }
         }
         else {
             //Ausführen der eigentlichen Cancel-Prozedur
-            this.cancelChangesExecute();
+            this.cancelChangesExecute(fromRouter);
         }
+      }
+      else {
+        this.cancelChangesExecute(fromRouter);
+      }
     }
 
     //Wird hier nicht benötigt
