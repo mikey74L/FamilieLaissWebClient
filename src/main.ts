@@ -56,6 +56,14 @@ export async function configure(aurelia: Aurelia) {
         syncfusion.ejSlider();
         syncfusion.ejDropDownList();
     })
+    .plugin(PLATFORM.moduleName('aurelia-api'), config => {
+      config
+        .registerEndpoint('api', 'http://localhost:51956/api/')
+        .setDefaultEndpoint('api');
+    })
+    .plugin(PLATFORM.moduleName('aurelia-orm'), builder => {
+      builder.registerEntities(entities);
+    })
     .plugin(PLATFORM.moduleName('aurelia-breeze'))
     .plugin(PLATFORM.moduleName('aurelia-animator-css'))
     .plugin(PLATFORM.moduleName('aurelia-dialog'), (config) => {

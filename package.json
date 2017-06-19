@@ -101,6 +101,7 @@
   "dependencies": {
     "aurelia-animator-css": "^1.0.2",
     "aurelia-api": "^3.1.1",
+    "aurelia-orm": "^6.1.2",
     "aurelia-bootstrapper": "2.1.1",
     "aurelia-breeze": "^2.2.0",
     "aurelia-dialog": "^1.0.0-rc.1.0.3",
