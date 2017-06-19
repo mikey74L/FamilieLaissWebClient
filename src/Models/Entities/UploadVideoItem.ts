@@ -1,7 +1,7 @@
 import { MediaItem } from './MediaItem';
-import { EntityBase } from './EntityBase';
+import { Entity } from '../../Helper/EntityHelper/Entity';
 
-export class UploadVideoItem extends EntityBase {
+export class UploadVideoItem extends Entity {
   public ID: number;
   public OriginalName: string;
   public Status: number;

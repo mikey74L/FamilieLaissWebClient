@@ -1,7 +1,7 @@
-import { EntityBase } from './EntityBase';
+import { Entity } from '../../Helper/EntityHelper/Entity';
 import { UploadPictureItem } from './UploadPictureItem';
 
-export class UploadPictureImageProperty extends EntityBase {
+export class UploadPictureImageProperty extends Entity {
   public ID: number;
   public Rotate: number;
 

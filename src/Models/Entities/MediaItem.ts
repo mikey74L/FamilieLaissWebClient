@@ -1,11 +1,11 @@
-import { EntityBase } from './EntityBase';
+import { Entity } from '../../Helper/EntityHelper/Entity';
 import { UploadVideoItem } from './UploadVideoItem';
 import { UploadPictureItem } from './UploadPictureItem';
 import { MediaItemFacet } from './MediaItemFacet';
 import { MediaGroup } from './MediaGroup';
 import { enMediaType } from "Enum/FamilieLaissEnum";
 
-export class MediaItem extends EntityBase {
+export class MediaItem extends Entity {
   public ID: number;
   public ID_Group: number;
   public Type: enMediaType;

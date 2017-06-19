@@ -1,8 +1,8 @@
-import { EntityBase } from './EntityBase';
+import { Entity } from '../../Helper/EntityHelper/Entity';
 import { MediaItem } from './MediaItem';
 import { UploadPictureImageProperty } from "Models/Entities/UploadPictureImageProperty";
 
-export class UploadPictureItem extends EntityBase {
+export class UploadPictureItem extends Entity {
   public ID: number;
   public NameOriginal: string;
   public UploadDate: Date;

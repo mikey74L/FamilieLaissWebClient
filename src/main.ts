@@ -4,6 +4,9 @@ import { PLATFORM } from 'aurelia-pal';
 import XHR from 'i18next-xhr-backend';
 import LngDetector from 'i18next-browser-languagedetector';
 
+import * as entities from './Models/Entities/Entities';
+
+
 //Styles von Drittanbietern
 import 'sweetalert2/dist/sweetalert2.css';
 import 'material-design-iconic-font/dist/css/material-design-iconic-font.css';
@@ -116,7 +119,7 @@ export async function configure(aurelia: Aurelia) {
               defaultNS: 'translation'
           });
       });
-  
+
   //Aurelia starten
   await aurelia.start();
 

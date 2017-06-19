@@ -100,6 +100,7 @@
   },
   "dependencies": {
     "aurelia-animator-css": "^1.0.2",
+    "aurelia-api": "^3.1.1",
     "aurelia-bootstrapper": "2.1.1",
     "aurelia-breeze": "^2.2.0",
     "aurelia-dialog": "^1.0.0-rc.1.0.3",
@@ -133,6 +134,7 @@
     "node-waves": "^0.7.5",
     "nprogress": "^0.2.0",
     "preload-js": "^0.6.3",
+    "summernote": "^0.8.4",
     "sweetalert2": "^6.6.2",
     "syncfusion-javascript": "^15.1.41",
     "toastr": "^2.1.2"
