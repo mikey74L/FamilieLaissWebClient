@@ -51,7 +51,7 @@ export class Home {
 
     NewEntity.Type = 0;
     NewEntity.NameEnglish = "labefjkshfkshfksd";
-    NewEntity.NameGerman = "Testkategorier";
+    NewEntity.NameGerman = "Testkategorie";
 
     let Result: Array<ValidateResult> = await NewEntity.validate();
 

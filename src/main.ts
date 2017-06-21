@@ -3,9 +3,10 @@ import { Aurelia } from 'aurelia-framework';
 import { PLATFORM } from 'aurelia-pal';
 import XHR from 'i18next-xhr-backend';
 import LngDetector from 'i18next-browser-languagedetector';
-
 import * as entities from './Models/Entities/Entities';
-
+import { APISettings } from './Config/APISettings';
+import { I18N } from 'aurelia-i18n';
+import { ValidationMessageProvider} from 'aurelia-validation';
 
 //Styles von Drittanbietern
 import 'sweetalert2/dist/sweetalert2.css';
@@ -58,7 +59,7 @@ export async function configure(aurelia: Aurelia) {
     })
     .plugin(PLATFORM.moduleName('aurelia-api'), config => {
       config
-        .registerEndpoint('api', 'http://localhost:51956/api/')
+        .registerEndpoint('api', APISettings.BaseURL)
         .setDefaultEndpoint('api');
     })
     .plugin(PLATFORM.moduleName('aurelia-orm'), builder => {
@@ -127,6 +128,13 @@ export async function configure(aurelia: Aurelia) {
               defaultNS: 'translation'
           });
       });
+
+  //Für die Standard-Validation-Messages die Lokalisierung einbinden
+  const i18n: I18N = aurelia.container.get(I18N);
+  ValidationMessageProvider.prototype.getMessage = function (key) {
+    const translation = i18n.tr(key, { ns: ['Validation'] });
+    return this.parser.parseMessage(translation);
+  }
 
   //Aurelia starten
   await aurelia.start();

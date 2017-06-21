@@ -1,9 +1,14 @@
 ﻿{
-  "Required": "${$displayName} muss eingegeben werden",
-  "NoMailAdress": "${$displayName} ist keine korrekte Mail-Adresse",
-  "MinLength": "${$displayName} muss mindestens ${$config.length} Zeichen lang sein",
-  "MaxLength": "${$displayName} darf nich mehr als ${$config.length} Zeichen lang sein",
-  "PasswordConfirmation": "${$displayName} und das Passwort sind nicht identisch",
-  "UserNameAlreadyExists": "${$displayName} existiert bereits",
-  "eMailAlreadyExists": "${$displayName} wurde schon für eine Registrierung verwendet"
+  "default": "${$displayName} ist invalide",
+  "required": "${$displayName} muss eingegeben werden",
+  "matches": "${$displayName} ist nicht im korrekten Format",
+  "email": "${$displayName} ist keine korrekte Mail-Adresse",
+  "minLength": "${$displayName} muss mindestens ${$config.length} Zeichen lang sein",
+  "maxLength": "${$displayName} darf nich mehr als ${$config.length} Zeichen lang sein",
+  "minItems": "${$displayName} muss mindestens ${$config.count} enthalten item${$config.count === 1 ? '' : 's'}.",
+  "maxItems": "${$displayName} darf nicht mehr als ${$config.count} enthalten item${$config.count === 1 ? '' : 's'}.",
+  "equals": "${$displayName} muss ${$config.expectedValue} entsprechen",
+  "matchesProperty": "",
+  "valueAlreadyExists": "${$displayName} existiert bereits",
+  "PasswordConfirmation": "${$displayName} und das Passwort sind nicht identisch"
 }
