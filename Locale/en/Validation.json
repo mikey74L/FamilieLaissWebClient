@@ -1,5 +1,5 @@
 ﻿{
-  "CouldNotBeNull": "${$displayName} muss eingegeben werden",
+  "Required": "${$displayName} muss eingegeben werden",
   "NoMailAdress": "${$displayName} ist keine korrekte Mail-Adresse",
   "MinLength": "${$displayName} muss mindestens ${$config.length} Zeichen lang sein",
   "MaxLength": "${$displayName} darf nich mehr als ${$config.length} Zeichen lang sein",
