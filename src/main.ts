@@ -42,14 +42,14 @@ export async function configure(aurelia: Aurelia) {
     .globalResources([PLATFORM.moduleName('CustomControls/loading-indicator'), 
                       PLATFORM.moduleName('CustomControls/input-text'), 
                       PLATFORM.moduleName('CustomControls/input-text-validation'),
-                      PLATFORM.moduleName('CustomControls/input-textarea'),
+                      PLATFORM.moduleName('CustomControls/input-textarea-validation'),
+                      PLATFORM.moduleName('CustomControls/upload-control'),
+                      PLATFORM.moduleName('CustomControls/picture-control'),
+                      PLATFORM.moduleName('CustomControls/drop-down-control'),
                       PLATFORM.moduleName('CustomAttributes/bootstrap-tooltip'), 
                       PLATFORM.moduleName('CustomAttributes/button-waves'), 
                       PLATFORM.moduleName('CustomAttributes/autosize-textarea'), 
-                      PLATFORM.moduleName('CustomControls/upload-control'),
-                      PLATFORM.moduleName('CustomAttributes/bootstrap-dropdown'), 
-                      PLATFORM.moduleName('CustomControls/picture-control'),
-                      PLATFORM.moduleName('CustomControls/drop-down-control')])
+                      PLATFORM.moduleName('CustomAttributes/bootstrap-dropdown')])
     .plugin(PLATFORM.moduleName('aurelia-syncfusion-bridge'), syncfusion => {
         syncfusion.ejGrid();
         syncfusion.ejTab();

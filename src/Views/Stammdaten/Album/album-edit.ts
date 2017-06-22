@@ -5,34 +5,28 @@ import {I18N} from 'aurelia-i18n';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {DialogService} from 'aurelia-dialog';
 import {AppRouter} from 'aurelia-router';
-import {autoinject} from 'aurelia-dependency-injection';
+import {inject, NewInstance} from 'aurelia-dependency-injection';
+import { ValidationController } from 'aurelia-validation';
 import swal from 'sweetalert2';
 import {enViewModelEditMode} from '../../../Enum/FamilieLaissEnum';
 
-@autoinject()
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogService, AppRouter, AlbumServiceEdit)
 export class AlbumEdit extends ViewModelEditNormal<MediaGroup> {
     //Objekt für i18n Namespace-Definition
     locConfig: any = { ns: ['StammAlbum', 'translation'] };
 
     //C'tor
-    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, router: AppRouter, service: AlbumServiceEdit) {
+    constructor(localize: I18N, aggregator: EventAggregator, validationController: ValidationController,
+                dialog: DialogService, router: AppRouter, service: AlbumServiceEdit) {
         //Aufrufen des Vaters
-        super(localize, aggregator, dialog, "album", router, service);
+        super(localize, aggregator, validationController, dialog, "album", router, service);
+
+        //Setzen des Identifiers für das Cancel-Alert
+        this.cancelAlertIdentifier = 'Album.Cancel.Success';
     }
 
     //Überprüft den Enabled State
     protected checkEnabledState(): void {
-        if (this.isBusy) {
-            this.isSavingEnabled = false;
-        }
-        else {
-            if (this.itemToEdit.entityAspect.hasValidationErrors) {
-                this.isSavingEnabled = false;
-            }
-            else {
-                this.isSavingEnabled = true;
-            }
-        }
     }
 
     //Wird aufgerufen wenn auf den Save-Button geklickt wird
@@ -41,20 +35,23 @@ export class AlbumEdit extends ViewModelEditNormal<MediaGroup> {
         this.setBusyState(true);
 
         try {
-          //Aufrufen der Speicherroutine
-          await this.service.saveChanges();
+          //Vor dem Speichern noch mal eine Validierung starten
+          await this.validationController.validate();
 
-          //Ausblenden der Busy-Box
-          this.setBusyState(false);
+          //Wenn keine Validierungsfehler anstehen, dann wird gespeichert
+          if (!this.hasValidationError) {
+             //Aufrufen der Speicherroutine
+             await this.itemToEdit.save();
 
-          //Ausgeben einer Erfolgsmeldung
-          this.showNotifySuccess(this.loc.tr('Album.Save.Success', { ns: 'Toasts' }));
+             //Ausblenden der Busy-Box
+             this.setBusyState(false);
 
-          //Die Event-Handler deregistrieren
-          this.unsubscribeEvents();
+             //Ausgeben einer Erfolgsmeldung
+             this.showNotifySuccess(this.loc.tr('Album.Save.Success', { ns: 'Toasts' }));
 
-          //Zurück zur Liste der Alben springen
-          this.router.navigate(this.routeForList + "/" + this.itemToEdit.ID);
+             //Zurück zur Liste der Alben springen
+             this.router.navigate(this.routeForList + "/" + this.itemToEdit.ID);
+          }
         }
         catch (ex) {
           //Ausblenden der Busy-Box
@@ -65,71 +62,20 @@ export class AlbumEdit extends ViewModelEditNormal<MediaGroup> {
           //weiter gemacht werden.
           //Wenn nicht muss eine entsprechende Fehlermeldung angezeigt werden,
           //dass das Speichern nicht funktioniert hat
-          if (!this.itemToEdit.entityAspect.hasValidationErrors) {
+          if (!this.hasValidationError) {
             this.showNotifyError(this.loc.tr('Album.Save.Error', { ns: 'Toasts' }));
           }
         }
     }
 
-    //Führt den tatsächlichen Cancel aus
-    private cancelChangesExecute(fromRouter: boolean): void {
-        //Verwerfen der Änderungen
-        if (!fromRouter) this.service.rejectChanges();
-                
-        //Benachrichtigung ausgeben
-        this.showNotifyInfo(this.loc.tr('Album.Cancel.Success', { ns: 'Toasts', context: this.editMode }));
-
-        //Die Event-Handler deregistrieren
-        this.unsubscribeEvents();
-
-        //Zurückkehren zur Liste der Alben
-        if (!fromRouter) {
-          if (this.editMode == enViewModelEditMode.Edit) {
-            this.router.navigate(this.routeForList + "/" + this.itemToEdit.ID);
-          }
-          else {
-            this.router.navigate(this.routeForList);
-          }
-        }
-    }
-
     //Wird aufgerufen wenn auf den Cancel-Button geklickt wird
-    public async cancelChanges(fromRouter: boolean): Promise<void> {
-      if (!fromRouter) {
-        //Nur wenn sich auch etwas geändert hat oder es sich um einen neuen Eintrag handelt, dann wird auch eine
-        //Sicherheitsabfrage ausgegeben
-        if (this.editMode == enViewModelEditMode.New || (this.editMode == enViewModelEditMode.Edit && this.hasChanges())) {
-            //Anzeigen einer Sicherheitsabfrage ob wirklich abgebrochen werden soll
-            try {
-              await swal(
-                {
-                    titleText: this.loc.tr('Cancel_Edit.Question.Header', { ns: 'Alerts' }),
-                    text: this.loc.tr('Cancel_Edit.Question.Body', { ns: 'Alerts' }),
-                    type: 'warning',
-                    width: 600,
-                    showCancelButton: true,
-                    confirmButtonColor: '#DD6B55',
-                    confirmButtonText: this.loc.tr('Cancel_Edit.Question.Confirm_Button', { ns: 'Alerts' }),
-                    cancelButtonText: this.loc.tr('Cancel_Edit.Question.Cancel_Button', { ns: 'Alerts' }),
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                }
-              );
-
-              //Ausführen der eigentlichen Cancel-Prozedur
-              this.cancelChangesExecute(fromRouter);
-            }
-            catch(ex) {
-            }
-        }
-        else {
-            //Ausführen der eigentlichen Cancel-Prozedur
-            this.cancelChangesExecute(fromRouter);
-        }
-      }
-      else {
-        this.cancelChangesExecute(fromRouter);
-      }
+    public cancelChanges(): void {
+       if (this.editMode == enViewModelEditMode.Edit) {
+         this.router.navigate(this.routeForList + "/" + this.itemToEdit.ID);
+       }
+       else {
+         this.router.navigate(this.routeForList);
+       }
     }
 
     //Wird hier nicht benötigt

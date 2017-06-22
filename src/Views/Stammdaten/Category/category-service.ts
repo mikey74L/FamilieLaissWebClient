@@ -16,19 +16,10 @@ export class CategoryService extends ServiceModelStammdatenNormal<FacetGroup> {
       this.getRepository(enEntityType.FacetGroup);
     }
 
-    //Ermittelt alle Kategorien vom Server oder wenn schon mal geladen aus dem EntityManager lokal
+    //Ermittelt alle Kategorien vom Server 
     public async getData(): Promise<Array<FacetGroup>> {
         //Ermitteln der Daten
         return this.repository.find();
-    }
-
-    //Löscht ein Item 
-    public async deleteItem(ID: number): Promise<Response> {
-        //Ermitteln der Entity
-        var entityDelete: Entity = await this.repository.findOne(ID);
-            
-        //Speichern der Änderungen
-        return entityDelete.destroy();
     }
 }
 
@@ -41,13 +32,6 @@ export class CategoryServiceEdit extends ServiceModelStammdatenEditNormal<FacetG
 
       //Repository erstellen
       this.getRepository(enEntityType.FacetGroup);
-    }
-
-    //Ermittelt die Daten für eine einzelne Kategorie
-    //um dieses zu editieren
-    public async getItem(ID: number): Promise<FacetGroup> {
-        //Promise zurückliefern
-        return this.repository.findOne(ID);
     }
 
     //Erstellt eine neue Kategorie im Entity-Manager

@@ -1,14 +1,13 @@
-import {bindable, customElement, containerless, DOM, inject} from 'aurelia-framework';
+import {bindable, customElement, containerless, inject} from 'aurelia-framework';
 import {I18N} from 'aurelia-i18n';
 
-@customElement('input-text-validation')
+@customElement('input-textarea-validation')
 @inject(I18N)
-export class InputTextValidation {
+export class InputTextareaValidation {
     //Members
     @bindable labelIdentifier: string;
     @bindable value: any;
     @bindable isBusy: boolean;
-    @bindable inputType: string;
 
     private loc: I18N;
     
@@ -27,12 +26,12 @@ export class InputTextValidation {
     }
 
     //Wird aufgerufen wenn die Input-Box den Focus bekommt
-    elementGotFocus(): void {
+    public elementGotFocus(): void {
         this.toggled = true;
     }
 
     //Wird aufgerufen wenn die Input-Box den Focus verliert
-    elementLostFocus(eventData: any): void {
+    public elementLostFocus(eventData: any): void {
         //Wenn sich ein Text im Eingabefeld befindet
         //dann darf nicht mehr getoggled werden
         if (eventData.srcElement.value.length == 0) {
@@ -40,7 +39,7 @@ export class InputTextValidation {
         }
     }
 
-    attached() {
+    public attached(): void {
         //Wenn das Element zum Dom hinzugefügt wird, dann
         //wird überprüft ob schon ein Text vorhanden ist.
         //Wenn ja dann wird die toggled Eigenschaft gesetzt

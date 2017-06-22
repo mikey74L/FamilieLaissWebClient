@@ -1,106 +1,48 @@
-import { EntityBase } from './../../../Models/Entities/EntityBase';
-import { EntityManagerFactory } from '../../../Helper/EntityManagerFactory';
+import { EntityManager, Entity, Repository } from 'aurelia-orm';
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal } from '../../../Helper/ServiceHelper'
-import { EntityQuery, Entity, QueryResult, SaveResult } from 'breeze-client';
-import {autoinject} from 'aurelia-dependency-injection';
+import { autoinject } from 'aurelia-dependency-injection';
+import { enEntityType } from '../../../Enum/FamilieLaissEnum';
+import { MediaGroup } from '../../../Models/Entities/MediaGroup';
+import { enMediaType } from '../../../Enum/FamilieLaissEnum';
 
 @autoinject()
-export class AlbumService extends ServiceModelStammdatenNormal {
+export class AlbumService extends ServiceModelStammdatenNormal<MediaGroup> {
     //C'tor
-    constructor (emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor (manager: EntityManager) {
+      //Aufrufen des Vater Constructor
+      super(manager);
+
+      //Repository erstellen
+      this.getRepository(enEntityType.MediaGroup);
     }
 
-    //Ermittelt alle Alben vom Server oder wenn schon mal geladen aus dem EntityManager lokal
-    public async getData(): Promise<Array<EntityBase>> {
-        //Query zusammenbauen
-        var query: EntityQuery = new EntityQuery()
-            .from('MediaGroups');
-
-        //Query in einem Promise ausführen 
-        if (!this.loadedFromServer) {
-            //Ermitteln des Entity-Manager
-            await this.getEntityManager();
-
-            //Ausführen der Query
-            var Result: QueryResult = await this.manager.executeQuery(query);
-
-            //Setzen des Flags und Funktionsergebnis
-            this.loadedFromServer = true;
-            return Promise.resolve(Result.results);
-        }
-        else {
-            return Promise.resolve(this.manager.executeQueryLocally(query));
-        }
-    }
-
-    //Holt die Daten neu vom Server
-    public async refreshData(): Promise<Array<EntityBase>> {
-        //Query zusammenbauen
-        var query: EntityQuery = new EntityQuery()
-            .from('MediaGroups');
-
-        //Ausführen der Query
-        var Result: QueryResult = await this.manager.executeQuery(query);
-
-        //Funktionsergebnis
-        return Promise.resolve(Result.results);
-    }
-
-    //Löscht ein Item 
-    public async deleteItem(ID: number): Promise<SaveResult> {
-        //Ermitteln der Entity
-        var entityDelete: Entity = this.manager.getEntityByKey('MediaGroup', ID);
-            
-        //Entfernen des Items aus dem Manager
-        entityDelete.entityAspect.setDeleted();
-
-        //Speichern der Änderungen
-        return this.manager.saveChanges();
+    //Ermittelt alle Alben vom Server 
+    public async getData(): Promise<Array<MediaGroup>> {
+        //Ermitteln der Daten
+        return this.repository.find();
     }
 }
 
 @autoinject()
-export class AlbumServiceEdit extends ServiceModelStammdatenEditNormal {
+export class AlbumServiceEdit extends ServiceModelStammdatenEditNormal<MediaGroup> {
     //C'tor
-    constructor (emFactory: EntityManagerFactory) {
-      super(emFactory);
-    }
+    constructor (manager: EntityManager) {
+      //Aufrufen des Vater Constructor
+      super(manager);
 
-    //Ermittelt die Daten für ein einzelnes Album
-    //um dieses zu editieren
-    public async getItem(ID: number): Promise<EntityBase> {
-        //Query zusammenbauen
-        var query: EntityQuery = new EntityQuery()
-            .from('MediaGroups')
-            .where('ID', '==', ID);
-        
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
-
-        //Query ausführen
-        var Result: Array<any> = this.manager.executeQueryLocally(query);
-        
-        //Promise zurückliefern
-        return Promise.resolve(Result[0]);
+      //Repository erstellen
+      this.getRepository(enEntityType.MediaGroup);
     }
 
     //Erstellt ein neues Album im Entity-Manager
-    public async createNew(): Promise<EntityBase> {
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
+    public createNew(): MediaGroup {
+        //Ermitteln der Entity
+        let ReturnValue: MediaGroup = this.repository.getNewEntity();
 
-        //Return-Value
-        var RetVal: any = this.manager.createEntity('MediaGroup');
-        RetVal.Type = 0;
+        //Setzen des Standard-Wertes für den Typ
+        ReturnValue.Type = enMediaType.Picture;
 
-        //Promise zurückliefern 
-        return Promise.resolve(RetVal);
-    }
-
-    //Speichert die Änderungen auf dem Server
-    public async saveChanges(): Promise<SaveResult> {
-        //Speichern der Änderungen mit einem Promise
-        return this.manager.saveChanges();
+        //Wert zurückliefern
+        return ReturnValue;
     }
 }

@@ -55,7 +55,13 @@ export abstract class ServiceModelStammdaten<T extends Entity> extends ServiceMo
     }
 
     //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
-    public abstract async deleteItem(ID: number): Promise<Response>;
+    public async deleteItem(ID: number): Promise<Response> {
+        //Ermitteln der Entity
+        var entityDelete: Entity = await this.repository.findOne(ID);
+            
+        //Speichern der Änderungen
+        return entityDelete.destroy();
+    }
 }
 
 export abstract class ServiceModelStammdatenNormal<T extends Entity> extends ServiceModelStammdaten<T> {
@@ -95,7 +101,10 @@ export abstract class ServiceModelStammdatenEditNormal<T extends Entity> extends
     }
 
     //Ermittelt die Daten zu einem bestimmten Item (Ist abstract und muss überschrieben werden)
-    public abstract async getItem(ID: number): Promise<T>;
+    public async getItem(ID: number): Promise<T> {
+        //Promise zurückliefern
+        return this.repository.findOne(ID);
+    }
 
     //Ein neues Item (Ist abstract und muss überschrieben werden)
     public abstract createNew(): T;

@@ -26,7 +26,7 @@
 
                 <!-- Das Formular ausgeben -->
                 <form class="card-form" submit.trigger="saveChanges()">
-                    <small t="Edit.Card.Body.Form.Labels.AlbumType" t-params.bind="locOptions"></small>
+                    <small t="Edit.Card.Body.Form.Labels.AlbumType" t-params.bind="locConfig"></small>
                     <div style="margin-top:20px; margin-bottom:45px;">
                         <label class="radio radio-inline m-r-20">
                             <input id="rb_Photo" type="radio" disabled.bind="isBusy" name="AlbumType" value="1" checked.bind="itemToEdit.Type | numberToString">
@@ -41,10 +41,10 @@
                     </div>
 
                     <!-- Input für Name (Deutsch) -->
-                    <input-text is-busy.bind="isBusy"
-                                entity.bind="itemToEdit"
-                                entity-property.bind="itemToEdit.entityType.getDataProperty('NameGerman')"
-                                value.two-way="itemToEdit.NameGerman"></input-text>
+                    <input-text-validation is-busy.bind="isBusy"
+                                           input-type.bind="'text'"
+                                           label-identifier.bind="'Media_Group.Name_German.DisplayName'"
+                                           value.two-way="itemToEdit.NameGerman & validate"></input-text-validation>
 
                     <!-- Line Break muss ausgeführt werden, da sonst die Eingabefelder
                          zu dicht aufeinander hängen und der Floating-Effect für die
@@ -53,10 +53,10 @@
                     <br />
 
                     <!-- Input für Name (Englisch) -->
-                    <input-text is-busy.bind="isBusy"
-                                entity.bind="itemToEdit"
-                                entity-property.bind="itemToEdit.entityType.getDataProperty('NameEnglish')"
-                                value.two-way="itemToEdit.NameEnglish"></input-text>
+                    <input-text-validation is-busy.bind="isBusy"
+                                           input-type.bind="'text'"
+                                           label-identifier.bind="'Media_Group.Name_English.DisplayName'"
+                                           value.two-way="itemToEdit.NameGerman & validate"></input-text-validation>
 
                     <!-- Line Break muss ausgeführt werden, da sonst die Eingabefelder
                          zu dicht aufeinander hängen und der Floating-Effect für die
@@ -65,10 +65,9 @@
                     <br />
 
                     <!-- Input für Beschreibung (Deutsch) -->
-                    <input-textarea is-busy.bind="isBusy"
-                                entity.bind="itemToEdit"
-                                entity-property.bind="itemToEdit.entityType.getDataProperty('DescriptionGerman')"
-                                value.two-way="itemToEdit.DescriptionGerman"></input-textarea>
+                    <input-textarea-validation is-busy.bind="isBusy"
+                                           label-identifier.bind="'Media_Group.Description_German.DisplayName'"
+                                           value.two-way="itemToEdit.DescriptionGerman & validate"></input-textarea-validation>
 
                     <!-- Line Break muss ausgeführt werden, da sonst die Eingabefelder
                          zu dicht aufeinander hängen und der Floating-Effect für die
@@ -77,10 +76,9 @@
                     <br />
 
                     <!-- Input für Beschreibung (Englisch) -->
-                    <input-textarea is-busy.bind="isBusy"
-                                entity.bind="itemToEdit"
-                                entity-property.bind="itemToEdit.entityType.getDataProperty('DescriptionEnglish')"
-                                value.two-way="itemToEdit.DescriptionEnglish"></input-textarea>
+                    <input-textarea-validation is-busy.bind="isBusy"
+                                           label-identifier.bind="'Media_Group.Description_English.DisplayName'"
+                                           value.two-way="itemToEdit.DescriptionEnglish & validate"></input-textarea-validation>
 
                     <!-- Buttons ausgeben -->
                     <button id="btnSubmit"
@@ -88,7 +86,7 @@
                             bootstrap-tooltip
                             button-waves
                             class="btn btn-primary btn-icon-text waves-effect"
-                            disabled.bind="!isSavingEnabled"
+                            disabled.bind="isBusy"
                             data-toggle="tooltip"
                             title=""
                             data-original-title=""
@@ -103,7 +101,7 @@
                             button-waves
                             class="btn btn-danger btn-icon-text waves-effect"
                             disabled.bind="isBusy"
-                            click.trigger="cancelChanges(false)"
+                            click.trigger="cancelChanges()"
                             style="margin-left: 10px;"
                             data-toggle="tooltip"
                             title=""

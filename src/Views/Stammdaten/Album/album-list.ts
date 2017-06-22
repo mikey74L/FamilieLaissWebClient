@@ -3,7 +3,8 @@ import { MediaGroup } from './../../../Models/Entities/MediaGroup';
 import {GridViewModelStammdatenNormal} from '../../../Helper/ViewModelHelper';
 import {AlbumService} from './album-service';
 import {I18N} from 'aurelia-i18n';
-import {autoinject} from 'aurelia-dependency-injection';
+import {inject, NewInstance} from 'aurelia-dependency-injection';
+import { ValidationController } from 'aurelia-validation';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {DialogService} from 'aurelia-dialog';
 import {AppRouter} from 'aurelia-router';
@@ -13,7 +14,7 @@ import * as $ from 'jquery';
 import { ForeignKeyData } from './../../../Models/ForeignKeyData';
 import swal from 'sweetalert2';
 
-@autoinject()
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogService, AppRouter, AlbumService)
 export class AlbumList extends GridViewModelStammdatenNormal<MediaGroup> {
     //Objekt für i18n Namespace-Definition
     locConfig: any = { ns: ['StammAlbum', 'translation'] };
@@ -23,9 +24,10 @@ export class AlbumList extends GridViewModelStammdatenNormal<MediaGroup> {
     private ForeignKeyAdaptorData: Array<any>;
 
     //C'tor
-    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, router: AppRouter, service: AlbumService) {
+    constructor(localize: I18N, aggregator: EventAggregator, validationController: ValidationController, 
+                dialog: DialogService, router: AppRouter, service: AlbumService) {
         //Aufrufen des C'tor des Vaters
-        super(localize, aggregator, dialog, 'albumedit', router, service)
+        super(localize, aggregator, validationController, dialog, 'albumedit', router, service)
         
         //Setzen der Filteroptionen für das Grid
         this.gridFilterSettings = { filterType : "excel"};
@@ -264,11 +266,11 @@ export class AlbumList extends GridViewModelStammdatenNormal<MediaGroup> {
              }
              catch (ex)
              {
+                 //Protokollieren des Fehlers
+                 console.log(ex);
+
                  //Ausblenden der Busy-Box
                  this.setBusyState(false);
-
-                 //Zurücknehmen der Änderungen (Delete-State)
-                 this.service.rejectChanges();
 
                  //Ausgeben einer Fehlermeldung
                  this.showNotifyError(this.loc.tr('Album.Delete.Error', { ns: 'Toasts' }));
@@ -292,7 +294,7 @@ export class AlbumList extends GridViewModelStammdatenNormal<MediaGroup> {
         }
 
         //Aktualisieren der Daten
-        this.entities = await this.service.refreshData() as Array<MediaGroup>;
+        this.entities = await this.service.getData() as Array<MediaGroup>;
 
         //Aktualisieren des Grids nach dem die Daten neu ermittelt wurden
         this.gridData = new ej.DataManager(
