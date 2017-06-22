@@ -1,181 +1,161 @@
-import { EntityBase } from './../Models/Entities/EntityBase';
-import { EntityManagerFactory } from './EntityManagerFactory';
+import { QueryBuilder } from './ODataQueryBuilder/query_builder';
+import { Entity, EntityManager, Repository } from 'aurelia-orm';
 import { LoadDataWithFatherModel, EditDataWithFatherModel } from '../Models/LoadDataWithFatherModel'
-import {EntityManager, SaveResult} from 'breeze-client';
+import { enEntityType } from '../Enum/FamilieLaissEnum';
 
 export abstract class ServiceModel {
     //Members
-    protected emFactory: EntityManagerFactory;
-    protected manager: EntityManager;
+    protected entityManager: EntityManager;
+    protected repository: Repository;
 
     //C'tor
-    constructor(emFactory: EntityManagerFactory) {
+    constructor(manager: EntityManager) {
         //Übernehmen der Parameter
-        this.emFactory = emFactory;
+        this.entityManager = manager;
     }
     
-    //Ermitteln des Entity-Managers
-    public async getEntityManager(): Promise<EntityManager>
+    //Ermitteln des richtigen Repositories
+    public getRepository(identifier: enEntityType): void
     {
-        // //Entity-Manager aus der Factory generieren
-        this.manager = await this.emFactory.getEntityManager(false);
-
-        //Funktionsergebnis
-        return Promise.resolve(this.manager);
-    }
-
-    //Ist der Entity-Manager in einem Dirty-State
-    public hasChanges(): boolean {
-        return this.manager.hasChanges();
-    }
-
-    //Die Änderungen im Entity-Manager verwerfen
-    public rejectChanges(): void {
-        //Die Änderungen des Edit-Managers verwerfen
-        this.manager.rejectChanges();
+        this.repository = this.entityManager.getRepository(identifier);
     }
 }
 
 export abstract class ServiceModelLoadData extends ServiceModel {
     //C'tor
-    constructor(emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor(manager: EntityManager) {
+      super(manager);
     }
 
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
-    public abstract async getData(): Promise<Array<EntityBase>>;
+    public abstract async getData(): Promise<Array<Entity>>;
 }
 
 export abstract class ServiceModelLoadDataDelete extends ServiceModelLoadData {
     //C'tor
-    constructor(emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor(manager: EntityManager) {
+      super(manager);
     }
 
     //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
-    public abstract async deleteItem(ID: number): Promise<SaveResult>;
+    public abstract async deleteItem(ID: number): Promise<Response>;
 }
 
-export abstract class ServiceModelStammdaten extends ServiceModel {
+export abstract class ServiceModelStammdaten<T extends Entity> extends ServiceModel {
     //Members
-    protected loadedFromServer: boolean = false;
+    protected queryBuilder: QueryBuilder<T>;
 
     //C'tor
-    constructor(emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor(manager: EntityManager) {
+      //Aufrufen der Vater-Constructor
+      super(manager);
+
+      //Initialisieren des Query-Builder
+      this.queryBuilder = new QueryBuilder<T>();
     }
 
     //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
-    public abstract async deleteItem(ID: number): Promise<SaveResult>;
+    public abstract async deleteItem(ID: number): Promise<Response>;
 }
 
-export abstract class ServiceModelStammdatenNormal extends ServiceModelStammdaten {
+export abstract class ServiceModelStammdatenNormal<T extends Entity> extends ServiceModelStammdaten<T> {
     //C'tor
-    constructor(emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor(manager: EntityManager) {
+      super(manager);
     }
 
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
-    public abstract async getData(): Promise<Array<EntityBase>>;
-
-    //Refresh Data from Server (Ist abstract und muss überschrieben werden)
-    public abstract async refreshData(): Promise<Array<EntityBase>>;
+    public abstract async getData(): Promise<Array<T>>;
 }
 
-export abstract class ServiceModelStammdatenID extends ServiceModelStammdaten {
+export abstract class ServiceModelStammdatenID<T extends Entity> extends ServiceModelStammdaten<T> {
     //C'tor
-    constructor(emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor(manager: EntityManager) {
+      super(manager);
     }
 
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
     public abstract async getData(ID: number): Promise<LoadDataWithFatherModel>;
 
     //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
-    public abstract async deleteItem(ID: number): Promise<SaveResult>;
-
-    //Refresh Data from Server (Ist abstract und muss überschrieben werden)
-    public abstract async refreshData(ID: number): Promise<LoadDataWithFatherModel>;
+    public abstract async deleteItem(ID: number): Promise<Response>;
 }
 
-export abstract class ServiceModelStammdatenEdit extends ServiceModel {
+export abstract class ServiceModelStammdatenEdit<T extends Entity> extends ServiceModel {
     //C'tor
-    constructor(emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor(manager: EntityManager) {
+      super(manager);
     }
-
-    //Speichern der Änderungen auf dem Server (Ist abstract und muss überschrieben werden)
-    public abstract async saveChanges(): Promise<SaveResult>;
 }
 
-export abstract class ServiceModelStammdatenEditNormal extends ServiceModelStammdatenEdit {
+export abstract class ServiceModelStammdatenEditNormal<T extends Entity> extends ServiceModelStammdatenEdit<T> {
     //C'tor
-    constructor(emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor(manager: EntityManager) {
+      super(manager);
     }
 
     //Ermittelt die Daten zu einem bestimmten Item (Ist abstract und muss überschrieben werden)
-    public abstract async getItem(ID: number): Promise<EntityBase>;
+    public abstract async getItem(ID: number): Promise<T>;
 
     //Ein neues Item (Ist abstract und muss überschrieben werden)
-    public abstract async createNew(): Promise<EntityBase>;
+    public abstract createNew(): T;
 }
 
-export abstract class ServiceModelStammdatenEditID extends ServiceModelStammdatenEdit {
+export abstract class ServiceModelStammdatenEditID<T extends Entity> extends ServiceModelStammdatenEdit<T> {
     //C'tor
-    constructor(emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor(manager: EntityManager) {
+      super(manager);
     }
 
     //Ermittelt die Daten zu einem bestimmten Item (Ist abstract und muss überschrieben werden)
     public abstract async getItem(ID: number, idFather: number): Promise<EditDataWithFatherModel>;
 
     //Ein neues Item (Ist abstract und muss überschrieben werden)
-    public abstract async createNew(idFather: number): Promise<EntityBase>;
+    public abstract createNew(idFather: number): T;
 
     //Ermittelt das Vater-Item (Ist abstract und muss überschrieben werden)
-    public abstract async getFather(idFather: number): Promise<EntityBase>;
+    public abstract async getFather(idFather: number): Promise<Entity>;
 }
 
 export abstract class ServiceModelAssign extends ServiceModel {
     //C'tor
-    constructor(emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor(manager: EntityManager) {
+      super(manager);
     }
 
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
-    public abstract async getData(ID: number): Promise<Array<EntityBase>>;
+    public abstract async getData(ID: number): Promise<Array<Entity>>;
 
     //Lädt die Alben (Ist abstract und muss überschrieben werden)
-    public abstract async loadAlben(): Promise<Array<EntityBase>>;
+    public abstract async loadAlben(): Promise<Array<Entity>>;
 
     //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
-    public abstract async deleteItem(ID: number): Promise<SaveResult>;
+    public abstract async deleteItem(ID: number): Promise<Response>;
 }
 
-export abstract class ServiceModelAssignEdit extends ServiceModelStammdatenEdit {
+export abstract class ServiceModelAssignEdit<T extends Entity> extends ServiceModelStammdatenEdit<T> {
     //C'tor
-    constructor(emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor(manager: EntityManager) {
+      super(manager);
     }
 
     //Ermittelt das Item
     public abstract async getItem(ID: number): Promise<EditDataWithFatherModel>;
 
     //Ermittelt alle Upload-Items die noch nicht zugeordnet wurden
-    public abstract async getUploadItems(): Promise<Array<EntityBase>>;
+    public abstract async getUploadItems(): Promise<Array<Entity>>;
 
     //Ermittelt alle Kategorien die zugeordnet werden können
-    public abstract async getCategories(): Promise<Array<EntityBase>>;
+    public abstract async getCategories(): Promise<Array<Entity>>;
 
     //Ermittelt das Vater-Item
-    public abstract async getFather(ID: number):Promise<EntityBase>;
+    public abstract async getFather(ID: number):Promise<Entity>;
 
     //Erzeugt ein neues Item
-    public abstract async createNew(idFather: number): Promise<EntityBase>;
+    public abstract createNew(idFather: number): Entity;
 
     //Erzeugt eine neue Zuweisung für einen Kategoriewert
-    public abstract async createNewAssignedCategory(item: any, idCategory: number): Promise<EntityBase>;
+    public abstract async createNewAssignedCategory(item: any, idCategory: number): Promise<Entity>;
 
     //Entfernt einen zugewießenen Kategoriewert
     public abstract async removeAssignedCategory(assignedCategoryItem: any): Promise<void>;

@@ -1,0 +1,14 @@
+<template>
+    <div class="form-group fg-float">
+        <div class.bind="toggled == true ? 'fg-line fg-toggled' : 'fg-line'">
+            <input type.bind="inputType"
+                   class="form-control fg-input"
+                   disabled.bind="isBusy"
+                   focus.trigger="elementGotFocus($event)"
+                   blur.trigger="elementLostFocus($event)"
+                   value.two-way="value" />
+            <label class="fg-label">${labelText}</label>
+        </div>
+    </div>
+</template>
+

@@ -1,107 +1,64 @@
-import { EntityBase } from './../../../Models/Entities/EntityBase';
-import { EntityManagerFactory } from '../../../Helper/EntityManagerFactory';
+import { enFacetType } from 'Enum/FamilieLaissEnum';
+import { FacetGroup } from './../../../Models/Entities/FacetGroup';
+import { EntityManager, Entity, Repository } from 'aurelia-orm';
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal } from '../../../Helper/ServiceHelper'
-import { EntityQuery, Entity, QueryResult, SaveResult } from 'breeze-client';
-import {autoinject} from 'aurelia-dependency-injection';
+import { autoinject } from 'aurelia-dependency-injection';
+import { enEntityType } from '../../../Enum/FamilieLaissEnum';
 
 @autoinject()
-export class CategoryService extends ServiceModelStammdatenNormal {
+export class CategoryService extends ServiceModelStammdatenNormal<FacetGroup> {
     //C'tor
-    constructor (emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor (manager: EntityManager) {
+      //Aufrufen des Vater Constructor
+      super(manager);
+
+      //Repository erstellen
+      this.getRepository(enEntityType.FacetGroup);
     }
 
     //Ermittelt alle Kategorien vom Server oder wenn schon mal geladen aus dem EntityManager lokal
-    public async getData(): Promise<Array<EntityBase>> {
-        //Query zusammenbauen
-        var query: EntityQuery = new EntityQuery()
-            .from('FacetGroups');
-
-        //Query in einem Promise ausführen 
-        if (!this.loadedFromServer) {
-            //Ermitteln des Entity-Manager
-            await this.getEntityManager();
-
-            //Ausführen der Query
-            var Result: QueryResult = await this.manager.executeQuery(query);
-
-            //Setzen des Flags und Funktionsergebnis
-            this.loadedFromServer = true;
-            return Promise.resolve(Result.results);
-        }
-        else {
-            return Promise.resolve(this.manager.executeQueryLocally(query));
-        }
-    }
-
-    //Holt die Daten neu vom Server
-    public async refreshData(): Promise<Array<EntityBase>> {
-        //Query zusammenbauen
-        var query: EntityQuery = new EntityQuery()
-            .from('MediaGroups')
-            .where("FacetValueType", "==", 1);
-
-        //Ausführen der Query
-        var Result: QueryResult = await this.manager.executeQuery(query);
-
-        //Funktionsergebnis
-        return Promise.resolve(Result.results);
+    public async getData(): Promise<Array<FacetGroup>> {
+        //Ermitteln der Daten
+        return this.repository.find();
     }
 
     //Löscht ein Item 
-    public async deleteItem(ID: number): Promise<SaveResult> {
+    public async deleteItem(ID: number): Promise<Response> {
         //Ermitteln der Entity
-        var entityDelete: Entity = this.manager.getEntityByKey('FacetGroup', ID);
+        var entityDelete: Entity = await this.repository.findOne(ID);
             
-        //Entfernen des Items aus dem Manager
-        entityDelete.entityAspect.setDeleted();
-
         //Speichern der Änderungen
-        return this.manager.saveChanges();
+        return entityDelete.destroy();
     }
 }
 
 @autoinject()
-export class CategoryServiceEdit extends ServiceModelStammdatenEditNormal {
+export class CategoryServiceEdit extends ServiceModelStammdatenEditNormal<FacetGroup> {
     //C'tor
-    constructor (emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor (manager: EntityManager) {
+      //Aufrufen des Vater Constructor
+      super(manager);
+
+      //Repository erstellen
+      this.getRepository(enEntityType.FacetGroup);
     }
 
     //Ermittelt die Daten für eine einzelne Kategorie
     //um dieses zu editieren
-    public async getItem(ID: number): Promise<EntityBase> {
-        //Query zusammenbauen
-        var query: EntityQuery = new EntityQuery()
-            .from('FacetGroups')
-            .where('ID', '==', ID);
-        
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
-
-        //Query ausführen
-        var Result: Array<any> = this.manager.executeQueryLocally(query);
-        
+    public async getItem(ID: number): Promise<FacetGroup> {
         //Promise zurückliefern
-        return Promise.resolve(Result[0]);
+        return this.repository.findOne(ID);
     }
 
     //Erstellt eine neue Kategorie im Entity-Manager
-    public async createNew(): Promise<EntityBase> {
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
+    public createNew(): FacetGroup {
+        //Ermitteln der Entity
+        let ReturnValue: FacetGroup = this.repository.getNewEntity();
 
-        //Return-Value
-        var RetVal: any = this.manager.createEntity('FacetGroup');
-        RetVal.Type = 0;
+        //Setzen des Standard-Wertes für den Typ
+        ReturnValue.Type = enFacetType.Both;
 
-        //Promise zurückliefern 
-        return Promise.resolve(RetVal);
-    }
-
-    //Speichert die Änderungen auf dem Server
-    public async saveChanges(): Promise<SaveResult> {
-        //Speichern der Änderungen mit einem Promise
-        return this.manager.saveChanges();
+        //Wert zurückliefern
+        return ReturnValue;
     }
 }

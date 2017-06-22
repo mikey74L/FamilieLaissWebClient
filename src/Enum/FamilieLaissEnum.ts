@@ -23,3 +23,7 @@ export enum enViewModelEditMode {
   New = <any>"new",
   Edit = <any>"edit"
 }
+
+export enum enEntityType {
+  FacetGroup = <any>"FacetGroup"
+}

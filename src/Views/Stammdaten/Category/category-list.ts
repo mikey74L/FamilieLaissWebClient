@@ -3,7 +3,8 @@ import { FacetGroup } from './../../../Models/Entities/FacetGroup';
 import {GridViewModelStammdatenNormal} from '../../../Helper/ViewModelHelper';
 import {CategoryService} from './category-service';
 import {I18N} from 'aurelia-i18n';
-import {autoinject} from 'aurelia-dependency-injection';
+import {inject, NewInstance} from 'aurelia-dependency-injection';
+import { ValidationController } from 'aurelia-validation';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {DialogService} from 'aurelia-dialog';
 import {AppRouter} from 'aurelia-router';
@@ -13,7 +14,7 @@ import * as $ from 'jquery';
 import { ForeignKeyData } from './../../../Models/ForeignKeyData';
 import swal from 'sweetalert2';
 
-@autoinject()
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogService, AppRouter, CategoryService)
 export class CategoryList extends GridViewModelStammdatenNormal<FacetGroup> {
     //Objekt für i18n Namespace-Definition
     locConfig: any = { ns: ['StammCategory', 'translation'] };
@@ -26,9 +27,10 @@ export class CategoryList extends GridViewModelStammdatenNormal<FacetGroup> {
     private ForeignKeyAdaptorData: Array<any>;
 
     //C'tor
-    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, router: AppRouter, service: CategoryService) {
+    constructor(localize: I18N, aggregator: EventAggregator, validationController: ValidationController, 
+                dialog: DialogService, router: AppRouter, service: CategoryService) {
         //Aufrufen des C'tor des Vaters
-        super(localize, aggregator, dialog, 'categoryedit', router, service)
+        super(localize, aggregator, validationController, dialog, 'categoryedit', router, service)
         
         //Setzen der Filteroptionen für das Grid
         this.gridFilterSettings = { filterType : "excel"};
@@ -278,14 +280,14 @@ export class CategoryList extends GridViewModelStammdatenNormal<FacetGroup> {
              }
              catch (ex)
              {
+                 //Protokollieren des Fehlers
+                 console.log(ex);
+
                  //Ausblenden der Busy-Box
                  this.setBusyState(false);
 
-                 //Zurücknehmen der Änderungen (Delete-State)
-                 this.service.rejectChanges();
-
                  //Ausgeben einer Fehlermeldung
-                 this.showNotifyError(this.loc.tr('Category.Delete.Success', { ns: 'Toasts' }));
+                 this.showNotifyError(this.loc.tr('Category.Delete.Error', { ns: 'Toasts' }));
              }
         }
         catch (ex)
@@ -306,7 +308,7 @@ export class CategoryList extends GridViewModelStammdatenNormal<FacetGroup> {
         }
 
         //Aktualisieren der Daten
-        this.entities = await this.service.refreshData() as Array<FacetGroup>;
+        this.entities = await this.service.getData() as Array<FacetGroup>;
 
         //Aktualisieren des Grids nach dem die Daten neu ermittelt wurden
         this.gridData = new ej.DataManager(

@@ -1,7 +1,9 @@
-import { EntityBase } from './../Models/Entities/EntityBase';
+import { Entity } from 'aurelia-orm';
 /// <reference path="../../typings/globals/syncfusion/ej.web.all.d.ts" />
 import { ToastrHelper } from './ToastrHelper';
 import { DialogService } from 'aurelia-dialog';
+import { ValidationController, validateTrigger } from 'aurelia-validation';
+import { BSInputFieldErrorRenderer } from '../Renderer/BSInputFieldErrorRenderer';
 import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { ShowBusyBoxEvent } from '../Events/ShowBusyBoxEvent';
@@ -13,7 +15,6 @@ import { LoadDataWithFatherModel, EditDataWithFatherModel} from '../Models/LoadD
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal, 
          ServiceModelStammdatenID, ServiceModelStammdatenEditID,
          ServiceModelLoadDataDelete, ServiceModelAssign, ServiceModelAssignEdit } from './ServiceHelper'
-import { EntityManager, ValidationError, ValidationErrorsChangedEventArgs, PropertyChangedEventArgs, EntityError } from 'breeze-client';
 
 export abstract class ViewModelGeneral {
   //Members
@@ -21,16 +22,24 @@ export abstract class ViewModelGeneral {
   protected eventAggregator: EventAggregator;
   public isBusy: boolean;
   private toastrHelper: ToastrHelper;
+  protected validationController : ValidationController;
 
   //C'tor
-  constructor(loc: I18N, eventAggregator: EventAggregator) {
+  constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController) {
     //Übernehmen der Parameter
     this.loc = loc;
     this.eventAggregator = eventAggregator;
+    this.validationController = validationController;
     this.isBusy = false;
 
     //Erzeugen des Toastr-Helper
     this.toastrHelper = new ToastrHelper();
+
+    //Festlegen des Validation-Renderer
+    this.validationController.addRenderer(new BSInputFieldErrorRenderer());
+
+    //Setzen des Validierungsmodus
+    this.validationController.validateTrigger = validateTrigger.change;
   }
 
   //Muss von der Kind-Klasse überschrieben werden um spezifische
@@ -85,6 +94,11 @@ export abstract class ViewModelGeneral {
   //Wird aufgerufen wenn sich der Busy-State geändert hat
   //(Ist abstract und muss überschrieben werden)
   protected abstract busyStateChanged(): void
+
+  //Sind aktuell Validierungsfehler vorhanden
+  protected get hasValidationError(): boolean {
+    return this.validationController.errors.length > 0;
+  }
 }
 
 export abstract class ViewModelGeneralDialog extends ViewModelGeneral {
@@ -92,9 +106,9 @@ export abstract class ViewModelGeneralDialog extends ViewModelGeneral {
     controller: DialogController;
 
     //C'tor
-    constructor (localize: I18N, eventAggregator: EventAggregator, dialogController: DialogController) {
+    constructor (localize: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogController: DialogController) {
         //Aufrufen des Constructors der Vater-Klasse
-        super(localize, eventAggregator);
+        super(localize, eventAggregator, validationController);
 
         //Übernehmen der restlichen Parameter
         this.controller = dialogController;
@@ -110,9 +124,9 @@ export abstract class ViewModelGeneralView extends ViewModelGeneral {
   dialogService: DialogService;
 
   //C'tor
-  constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService) {
+  constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController,  dialogService: DialogService) {
     //Aufrufen des Constructors der Vater-Klasse
-    super(loc, eventAggregator);
+    super(loc, eventAggregator, validationController);
 
     //Übernehmen der restlichen Parameter
     this.dialogService = dialogService;
@@ -130,7 +144,7 @@ export abstract class ViewModelGeneralView extends ViewModelGeneral {
   protected abstract attachedChild(): void
 }
 
-export abstract class GridViewModelStammdaten<T extends EntityBase> extends ViewModelGeneralView {
+export abstract class GridViewModelStammdaten<T extends Entity> extends ViewModelGeneralView {
   //Member-Deklarationen
   protected router: AppRouter;
   protected routeForEdit: string;
@@ -155,9 +169,9 @@ export abstract class GridViewModelStammdaten<T extends EntityBase> extends View
   protected gridScrollSettings: ej.Grid.ScrollSettings;
 
   //C'tor
-  constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, routeForEdit: string, router: AppRouter) {
+  constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, routeForEdit: string, router: AppRouter) {
     //Aufrufen des Konstruktors für die Vater Klasse
-    super(loc, eventAggregator, dialogService);
+    super(loc, eventAggregator, validationController, dialogService);
 
     //Übernehmen der Parameter
     this.routeForEdit = routeForEdit;
@@ -179,15 +193,15 @@ export abstract class GridViewModelStammdaten<T extends EntityBase> extends View
   protected abstract async load(info: any): Promise<void>; 
 }
 
-export abstract class GridViewModelStammdatenNormal<T extends EntityBase> extends GridViewModelStammdaten<T> {
+export abstract class GridViewModelStammdatenNormal<T extends Entity> extends GridViewModelStammdaten<T> {
   //Members
-  service: ServiceModelStammdatenNormal;
+  service: ServiceModelStammdatenNormal<T>;
 
   //C'tor
-  constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, routeForEdit: string, 
-              router: AppRouter, service: ServiceModelStammdatenNormal) {
+  constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, routeForEdit: string, 
+              router: AppRouter, service: ServiceModelStammdatenNormal<T>) {
     //Aufrufen des Konstruktors für die Vater Klasse
-    super(loc, eventAggregator, dialogService, routeForEdit, router);
+    super(loc, eventAggregator, validationController, dialogService, routeForEdit, router);
 
     //Übernehmen der Parameter
     this.service = service;
@@ -200,18 +214,18 @@ export abstract class GridViewModelStammdatenNormal<T extends EntityBase> extend
   }
 }
 
-export abstract class GridViewModelStammdatenID<T extends EntityBase, F extends EntityBase> extends GridViewModelStammdaten<T> {
+export abstract class GridViewModelStammdatenID<T extends Entity, F extends Entity> extends GridViewModelStammdaten<T> {
   //Members
-  service: ServiceModelStammdatenID;
+  service: ServiceModelStammdatenID<T>;
   fatherItem: F;
   routeFather: string;
   isBackEnabled: boolean;
 
   //C'tor
-  constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, 
-              routeForEdit: string, routeForFather: string, router: AppRouter, service: ServiceModelStammdatenID) {
+  constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, 
+              routeForEdit: string, routeForFather: string, router: AppRouter, service: ServiceModelStammdatenID<T>) {
     //Aufrufen des Konstruktors für die Vater Klasse
-    super(loc, eventAggregator, dialogService, routeForEdit, router);
+    super(loc, eventAggregator, validationController, dialogService, routeForEdit, router);
 
 		//Übernehmen der Parameter
     this.service = service;
@@ -226,35 +240,28 @@ export abstract class GridViewModelStammdatenID<T extends EntityBase, F extends 
     //Übernehemen des Vaters
     this.fatherItem = ReturnValue.fatherItem as F; 
 
-		//Übernehmen des Kategorie-Werte
+		//Übernehmen der Entities
 		this.entities = ReturnValue.entities as Array<T>;
 	}
 }
 
-export abstract class ViewModelEdit<T extends EntityBase> extends ViewModelGeneralView {
+export abstract class ViewModelEdit<T extends Entity> extends ViewModelGeneralView {
     //Member-Deklarationen
     routeForList: string;
     router: AppRouter;
     itemToEdit: T;
-    hasValidationErrors: boolean;
-    validationErrors: Array<ValidationError>;
-    isSavingEnabled: boolean;
     editMode: enViewModelEditMode;
-    keySubscribePropertyChanged: number;
-    keySubscribeErrorsChanged: number;
+    cancelAlertIdentifier: string
 
     //C'tor
-    constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, routeForList: string, 
+    constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, routeForList: string, 
                 router: AppRouter) {
         //Aufrufen des Konstruktors für die Vater Klasse
-        super(loc, eventAggregator, dialogService);
+        super(loc, eventAggregator, validationController, dialogService);
 
         //Übernehmen der Parameter
         this.routeForList = routeForList;
         this.router = router;
-
-        //Initialisieren der Member
-        this.hasValidationErrors = false;
     }
 
     //Wird aufgerufen wenn der Aurelia-Router Aurelia die View anzeigen möchte.
@@ -269,18 +276,12 @@ export abstract class ViewModelEdit<T extends EntityBase> extends ViewModelGener
                 //Aufrufen der Methode zum Erzeugen eines neuen Elementes
                 await this.createNew(info);
 
-                //Löschen aller etwaiger Validierungsfehler bei einem neuen Item
-                this.itemToEdit.entityAspect.clearValidationErrors();
-
                 //Aufrufen der Child-Routine
                 return this.activateChild(info);
             }
             else {
                 //Aufrufen der Methode zum Erzeugen eines neuen Elementes
                 await this.createNew(info);
-
-                //Löschen aller etwaiger Validierungsfehler bei einem neuen Item
-                this.itemToEdit.entityAspect.clearValidationErrors();
 
                 //Aufrufen der Child-Routine
                 return this.activateChild(info);
@@ -322,8 +323,8 @@ export abstract class ViewModelEdit<T extends EntityBase> extends ViewModelGener
          //Änderungen vorhanden, dann ausgeben einer Sicherheitsabfrage
          try
          {
-              //Ausgeben der Warnmeldung
-              await swal(
+             //Ausgeben der Warnmeldung
+             await swal(
                 {
                     titleText: this.loc.tr('Leave_Page.Question.Header', { ns: 'Alerts' }),
                     text: this.loc.tr('Leave_Page.Question.Body', { ns: 'Alerts' }),
@@ -338,8 +339,8 @@ export abstract class ViewModelEdit<T extends EntityBase> extends ViewModelGener
                 }
               );
 
-            //Die Änderungen sollen verworfen werden
-            this.rejectChanges(true);
+            //Benachrichtigung ausgeben
+            this.showNotifyInfo(this.loc.tr(this.cancelAlertIdentifier, { ns: 'Toasts', context: this.editMode }));
 
             //Verlassen der View erlaubt
             return Promise.resolve(true);
@@ -359,78 +360,21 @@ export abstract class ViewModelEdit<T extends EntityBase> extends ViewModelGener
     //Liefert zurück ob der Service aktuell ausstehende Änderungen hat (Ist abstract und muss überschrieben werden)
     protected abstract hasChanges(): boolean;
 
-    //Verwerfen der Änderungen im Service (Ist abstract und muss überschrieben werden)
-    protected abstract rejectChanges(fromRouter: boolean): void;
-
-    //Registriert sich für das Property-Changed Event von Breeze
-    protected subscribePropertyChanged(): void {
-        this.keySubscribePropertyChanged = this.itemToEdit.entityAspect.propertyChanged.subscribe(
-          (eventArgs: PropertyChangedEventArgs) => {
-            this.propertyChanged(eventArgs);
-        });
-    }
-
-    //Wird aufgerufen wenn sich eine Property der Entität geändert hat. Hier müssen die Server-Validation-Errors
-    //für die entsprechende Property gelöscht werden
-    private propertyChanged(eventArgs: PropertyChangedEventArgs): void {
-        var Errors: Array<ValidationError> = this.itemToEdit.entityAspect.getValidationErrors();
-        for (var index in Errors) {
-            if (Errors[index].propertyName == eventArgs.propertyName) {
-                var Error: EntityError = Errors[index] as any;
-                if (Error.isServerError) {
-                    this.itemToEdit.entityAspect.removeValidationError(Errors[index]);
-                }
-            }
-        }
-    }
-
-    //Registriert sich für das Validation Errors Changed Event von Breeze
-    protected subscribeToValidationChanged(): void {
-        //Für das Validation-Changed-Ereignis registrieren
-        this.keySubscribeErrorsChanged = this.itemToEdit.entityAspect.validationErrorsChanged.subscribe(
-          (eventArgs: ValidationErrorsChangedEventArgs) => {
-            this.validationErrorsChanged(eventArgs);
-        });
-
-        //Initiales auslesen des Validierungszustandes
-        this.hasValidationErrors = this.itemToEdit.entityAspect.hasValidationErrors;
-        this.validationErrors = this.itemToEdit.entityAspect.getValidationErrors();
-        this.checkEnabledState();
-    }
-  
-    //Wird aufgerufen wenn sich die Validierungsfehler geändert haben
-    private validationErrorsChanged(eventArgs: ValidationErrorsChangedEventArgs): void {
-        this.hasValidationErrors = eventArgs.entity.entityAspect.hasValidationErrors;
-        this.validationErrors = eventArgs.entity.entityAspect.getValidationErrors();
-        this.checkEnabledState();
-    }
-
-    //Deregistrieren der Event-Handler
-    protected unsubscribeEvents(): void {
-        this.itemToEdit.entityAspect.propertyChanged.unsubscribe(this.keySubscribePropertyChanged);
-        this.itemToEdit.entityAspect.validationErrorsChanged.unsubscribe(this.keySubscribeErrorsChanged);
-    }
-
     //Muss von der Kind-Klasse überschrieben werden um
     //die Aktionen zum Speichern der Daten auszuführen
     //(Ist abstract und muss überschrieben werden)
     protected abstract async saveChanges(): Promise<void>;
-
-    //Muss von der Kind-Klasse überschrieben werden um
-    //die Aktionen zum Abbrechen des Editiermodus auszuführen
-    //(Ist abstract und muss überschrieben werden)
-    protected abstract cancelChanges(fromRouter: boolean): void;
 }
 
-export abstract class ViewModelEditNormal<T extends EntityBase> extends ViewModelEdit<T> {
+export abstract class ViewModelEditNormal<T extends Entity> extends ViewModelEdit<T> {
     //Members
-    service: ServiceModelStammdatenEditNormal;
+    service: ServiceModelStammdatenEditNormal<T>;
 
     //C'tor
-    constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, routeForList: string, 
-                router: AppRouter, service: ServiceModelStammdatenEditNormal) {
+    constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, routeForList: string, 
+                router: AppRouter, service: ServiceModelStammdatenEditNormal<T>) {
         //Aufrufen des Konstruktors für die Vater Klasse
-        super(loc, eventAggregator, dialogService, routeForList, router);
+        super(loc, eventAggregator, validationController, dialogService, routeForList, router);
 
         //Übernehmen der Parameter
         this.service = service;
@@ -438,31 +382,13 @@ export abstract class ViewModelEditNormal<T extends EntityBase> extends ViewMode
 
     //Liefert zurück ob der Service aktuell ausstehende Änderungen hat
     protected hasChanges(): boolean {
-        return this.service.hasChanges();
-    }
-
-    //Verwerfen der Änderungen im Service
-    protected rejectChanges(fromRouter: boolean): void {
-        //Verwerfen der Änderungen
-        this.service.rejectChanges();
-
-        //Die-Events deregistrieren
-        this.unsubscribeEvents();
-
-        //Benachrichtigung, dass die Änderungen zurückgenommen wurden
-        this.cancelChanges(fromRouter);
+        return this.itemToEdit.isDirty() || this.itemToEdit.isNew();
     }
 
     //Laden der Daten über den Service
     protected async load(info: any): Promise<T> {
         //Über Promise das Laden des zu editierenden Items anstoßen
         this.itemToEdit = await this.service.getItem(info.id) as T;
-
-        //Verdrahten des Events für das Property-Changed Event
-        this.subscribePropertyChanged();
-
-        //Subscribe to Validation changed
-        this.subscribeToValidationChanged();
 
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);
@@ -471,29 +397,23 @@ export abstract class ViewModelEditNormal<T extends EntityBase> extends ViewMode
     //Erstellt ein neues Item
     protected async createNew(info: any): Promise<T> {
         //Übernehmen der Entity
-        this.itemToEdit = await this.service.createNew() as T;
-
-        //Verdrahten des Events für das Property-Changed Event
-        this.subscribePropertyChanged();
-
-        //Subscribe to Validation changed
-        this.subscribeToValidationChanged();
+        this.itemToEdit = this.service.createNew() as T;
 
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);
     }
 }
 
-export abstract class ViewModelEditID<T extends EntityBase, F extends EntityBase> extends ViewModelEdit<T> {
+export abstract class ViewModelEditID<T extends Entity, F extends Entity> extends ViewModelEdit<T> {
     //Members
-    service: ServiceModelStammdatenEditID;
+    service: ServiceModelStammdatenEditID<T>;
     fatherItem: F;
 
     //C'tor
-    constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, 
-                routeForList: string, router: AppRouter, service: ServiceModelStammdatenEditID) {
+    constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, 
+                routeForList: string, router: AppRouter, service: ServiceModelStammdatenEditID<T>) {
         //Aufrufen des Konstruktors für die Vater Klasse
-        super(loc, eventAggregator, dialogService, routeForList, router);
+        super(loc, eventAggregator, validationController, dialogService, routeForList, router);
 
         //Übernehmen der Parameter
         this.service = service;
@@ -501,19 +421,7 @@ export abstract class ViewModelEditID<T extends EntityBase, F extends EntityBase
 
     //Liefert zurück ob der Service aktuell ausstehende Änderungen hat
     protected hasChanges(): boolean {
-        return this.service.hasChanges();
-    }
-
-    //Verwerfen der Änderungen im Service
-    protected rejectChanges(fromRouter: boolean): void {
-        //Verwerfen der Änderungen
-        this.service.rejectChanges();
-
-        //Die-Events deregistrieren
-        this.unsubscribeEvents();
-
-        //Benachrichtigung, dass die Änderungen zurückgenommen wurden
-        this.cancelChanges(fromRouter);
+        return this.itemToEdit.isDirty() || this.itemToEdit.isNew();
     }
 
     //Laden der Daten über den Service
@@ -525,12 +433,6 @@ export abstract class ViewModelEditID<T extends EntityBase, F extends EntityBase
         this.itemToEdit = ResultSet.editItem as T;
         this.fatherItem = ResultSet.fatherItem as F;
 
-        //Verdrahten des Events für das Property-Changed Event
-        this.subscribePropertyChanged();
-
-        //Subscribe to Validation changed
-        this.subscribeToValidationChanged();
-
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);
     }
@@ -538,32 +440,26 @@ export abstract class ViewModelEditID<T extends EntityBase, F extends EntityBase
     //Erstellt ein neues Item
     protected async createNew(info: any): Promise<T> {
         //Erzeugen einer neuen Entity
-        this.itemToEdit = await this.service.createNew(info.idFather) as T;
+        this.itemToEdit = this.service.createNew(info.idFather) as T;
 
         //Ermitteln der Daten des Vaters
         this.fatherItem = await this.service.getFather(info.idFather) as F;
         
-        //Verdrahten des Events für das Property-Changed Event
-        this.subscribePropertyChanged();
-
-        //Subscribe to Validation changed
-        this.subscribeToValidationChanged();
-
         //Promise zurückmelden
-        return Promise.resolve(this.itemToEdit);
+        return this.itemToEdit;
     }
 }
 
-export abstract class ViewModelGeneralDataDelete<T extends EntityBase> extends ViewModelGeneralView {
+export abstract class ViewModelGeneralDataDelete<T extends Entity> extends ViewModelGeneralView {
     //Members
     router: AppRouter;
     entities: Array<T>;
     service: ServiceModelLoadDataDelete;
 
     //C'tor
-    constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, router: AppRouter, service: ServiceModelLoadDataDelete) {
+    constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, router: AppRouter, service: ServiceModelLoadDataDelete) {
         //Aufrufen des Konstruktors für die Vater Klasse
-        super(loc, eventAggregator, dialogService);
+        super(loc, eventAggregator, validationController, dialogService);
 
         //Übernehmen der Parameter
         this.service = service;
@@ -588,7 +484,7 @@ export abstract class ViewModelGeneralDataDelete<T extends EntityBase> extends V
     }
 }
 
-export abstract class AssignViewModelStammdaten<T extends EntityBase, F extends EntityBase> extends ViewModelGeneralView {
+export abstract class AssignViewModelStammdaten<T extends Entity, F extends Entity> extends ViewModelGeneralView {
     //Member-Deklarationen
     routeForEdit: string;
     router: AppRouter;
@@ -602,10 +498,10 @@ export abstract class AssignViewModelStammdaten<T extends EntityBase, F extends 
     isChangeSortEnabled: boolean;
 
     //C'tor
-    constructor (loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, router: AppRouter, 
+    constructor (loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, router: AppRouter, 
                  service: ServiceModelAssign, routeForEdit: string) {
         //Aufrufen des Konstruktors für die Vater-Klasse
-        super(loc, eventAggregator, dialogService);
+        super(loc, eventAggregator, validationController, dialogService);
 
         //Übernehmen der restlichen Parameter
         this.router = router;
@@ -657,16 +553,16 @@ export abstract class AssignViewModelStammdaten<T extends EntityBase, F extends 
     }
 }
 
-export abstract class ViewModelAssignEdit<T extends EntityBase, F extends EntityBase> extends ViewModelEdit<T> {
+export abstract class ViewModelAssignEdit<T extends Entity, F extends Entity> extends ViewModelEdit<T> {
     //Members
-    service: ServiceModelAssignEdit;
+    service: ServiceModelAssignEdit<T>;
     fatherItem: F;
 
     //C'tor
-    constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, 
-                routeForList: string, router: AppRouter, service: ServiceModelAssignEdit) {
+    constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, 
+                routeForList: string, router: AppRouter, service: ServiceModelAssignEdit<T>) {
         //Aufrufen des Konstruktors für die Vater Klasse
-        super(loc, eventAggregator, dialogService, routeForList, router);
+        super(loc, eventAggregator, validationController, dialogService, routeForList, router);
 
         //Übernehmen der Parameter
         this.service = service;
@@ -674,19 +570,7 @@ export abstract class ViewModelAssignEdit<T extends EntityBase, F extends Entity
 
     //Liefert zurück ob der Service aktuell ausstehende Änderungen hat
     protected hasChanges(): boolean {
-        return this.service.hasChanges();
-    }
-
-    //Verwerfen der Änderungen im Service
-    protected rejectChanges(fromRouter: boolean): void {
-        //Verwerfen der Änderungen
-        this.service.rejectChanges();
-
-        //Die-Events deregistrieren
-        this.unsubscribeEvents();
-
-        //Benachrichtigung, dass die Änderungen zurückgenommen wurden
-        this.cancelChanges(fromRouter);
+        return this.itemToEdit.isDirty() || this.itemToEdit.isNew();
     }
 
     //Laden der Daten über den Service
@@ -698,12 +582,6 @@ export abstract class ViewModelAssignEdit<T extends EntityBase, F extends Entity
         this.itemToEdit = ResultSet.editItem as T;
         this.fatherItem = ResultSet.fatherItem as F;
 
-        //Verdrahten des Events für das Property-Changed Event
-        this.subscribePropertyChanged();
-
-        //Subscribe to Validation changed
-        this.subscribeToValidationChanged();
-
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);
     }
@@ -711,17 +589,11 @@ export abstract class ViewModelAssignEdit<T extends EntityBase, F extends Entity
     //Erstellt ein neues Item
     protected async createNew(info: any): Promise<T> {
         //Erzeugen einer neuen Entity
-        this.itemToEdit = await this.service.createNew(info.idFather) as T;
+        this.itemToEdit = this.service.createNew(info.idFather) as T;
 
         //Ermitteln der Daten des Vaters
         this.fatherItem = await this.service.getFather(info.idFather) as F;
         
-        //Verdrahten des Events für das Property-Changed Event
-        this.subscribePropertyChanged();
-
-        //Subscribe to Validation changed
-        this.subscribeToValidationChanged();
-
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);
     }
