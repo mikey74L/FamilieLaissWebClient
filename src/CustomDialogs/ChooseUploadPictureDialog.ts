@@ -2,11 +2,12 @@ import {ViewModelGeneralDialog} from '../Helper/ViewModelHelper';
 import {ServiceModelAssignEdit} from '../Helper/ServiceHelper';
 import {ChoosePictureEvent} from '../Events/PictureEvents';
 import {DialogController} from 'aurelia-dialog';
-import {autoinject} from 'aurelia-dependency-injection';
+import {inject, NewInstance } from 'aurelia-dependency-injection';
 import {I18N} from 'aurelia-i18n';
 import {EventAggregator, Subscription} from 'aurelia-event-aggregator';
+import { ValidationController } from 'aurelia-validation';
 
-@autoinject()
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogController)
 export class ChooseUploadPictureDialog extends ViewModelGeneralDialog {
     //Localize Options für i18N
     locOptions: any = {ns: ['Dialogs', 'translation']};
@@ -18,9 +19,9 @@ export class ChooseUploadPictureDialog extends ViewModelGeneralDialog {
     subscribeChoosePicture: Subscription;
 
     //C'tor
-    constructor (localize: I18N, eventAggregator: EventAggregator, dialogController: DialogController) {
+    constructor (localize: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogController: DialogController) {
         //Aufrufen des Constructors der Vater-Klasse
-        super(localize, eventAggregator, dialogController);
+        super(localize, eventAggregator, validationController, dialogController);
 
         //Registrieren für das "Choose-Picture-Dialog"
         this.subscribeChoosePicture = this.eventAggregator.subscribe(ChoosePictureEvent, (message: ChoosePictureEvent) => {

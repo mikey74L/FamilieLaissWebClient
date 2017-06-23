@@ -27,10 +27,10 @@
                 <!-- Das Formular ausgeben -->
                 <form class="card-form" submit.trigger="saveChanges()">
                     <!-- Input für Name_German -->
-                    <input-text is-busy.bind="isBusy"
-                                entity.bind="itemToEdit"
-                                entity-property.bind="itemToEdit.entityType.getDataProperty('NameGerman')"
-                                value.two-way="itemToEdit.NameGerman"></input-text>
+                    <input-text-validation is-busy.bind="isBusy"
+                                           input-type.bind="'text'"
+                                           label-identifier.bind="'Facet_Value.Name_German.DisplayName'"
+                                           value.two-way="itemToEdit.NameGerman & validate"></input-text-validation>
 
                     <!-- Line Break muss ausgeführt werden, da sonst die Eingabefelder
                          zu dicht aufeinander hängen und der Floating-Effect für die
@@ -39,10 +39,10 @@
                     <br />
 
                     <!-- Input für Name_English -->
-                    <input-text is-busy.bind="isBusy"
-                                entity.bind="itemToEdit"
-                                entity-property.bind="itemToEdit.entityType.getDataProperty('NameEnglish')"
-                                value.two-way="itemToEdit.NameEnglish"></input-text>
+                    <input-text-validation is-busy.bind="isBusy"
+                                           input-type.bind="'text'"
+                                           label-identifier.bind="'Facet_Value.Name_English.DisplayName'"
+                                           value.two-way="itemToEdit.NameEnglish & validate"></input-text-validation>
 
                     <!-- Buttons ausgeben -->
                     <button id="btnSubmit"
@@ -50,7 +50,7 @@
                             bootstrap-tooltip
                             button-waves
                             class="btn btn-primary btn-icon-text waves-effect"
-                            disabled.bind="!isSavingEnabled"
+                            disabled.bind="isBusy"
                             data-toggle="tooltip"
                             title=""
                             data-original-title=""
@@ -65,7 +65,7 @@
                             button-waves
                             class="btn btn-danger btn-icon-text waves-effect"
                             disabled.bind="isBusy"
-                            click.trigger="cancelChanges(false)"
+                            click.trigger="cancelChanges()"
                             style="margin-left: 10px;"
                             data-toggle="tooltip"
                             title=""

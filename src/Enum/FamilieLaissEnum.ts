@@ -26,5 +26,7 @@ export enum enViewModelEditMode {
 
 export enum enEntityType {
   FacetGroup = <any>"FacetGroup",
+  FacetValue = <any>"FacetValue",
   MediaGroup = <any>"MediaGroup"
+
 }

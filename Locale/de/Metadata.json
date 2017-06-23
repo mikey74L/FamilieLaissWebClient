@@ -31,6 +31,9 @@
     }
   },
   "Facet_Value": {
+    "Group": {
+      "DisplayName": "Kategorie"
+    },
     "Name_German": {
       "DisplayName": "Name (Deutsch)"
     },

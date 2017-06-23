@@ -1,14 +1,15 @@
 /// <reference path="../../typings/globals/syncfusion/ej.web.all.d.ts" />
-import { autoinject } from 'aurelia-dependency-injection';
+import { inject, NewInstance } from 'aurelia-dependency-injection';
 import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { ViewModelGeneralDialog } from '../Helper/ViewModelHelper';
 import { DialogController } from 'aurelia-dialog';
 import { ServiceModelAssign } from '../Helper/ServiceHelper';
+import { ValidationController } from 'aurelia-validation';
 import 'syncfusion-javascript/content/ej/web/ej.widgets.core.material.less';
 import 'syncfusion-javascript/content/ej/web/material/ej.theme.less';
 
-@autoinject()
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogController)
 export class ChooseAlbumDialog extends ViewModelGeneralDialog {
     //Optionen für i18N
     locOptions = { ns: 'Dialogs' };
@@ -29,9 +30,9 @@ export class ChooseAlbumDialog extends ViewModelGeneralDialog {
     isItemSelected: boolean;
 
     //C'tor
-    constructor (loc: I18N, eventAggregator: EventAggregator, dialogController: DialogController) {
+    constructor (loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogController: DialogController) {
       //Aufrufen des Constructors der Vater-Klasse
-      super(loc, eventAggregator, dialogController);
+      super(loc, eventAggregator, validationController, dialogController);
 
       //Setzen der Filteroptionen für das Grid
       this.gridFilterSettings = { filterType : "excel"};

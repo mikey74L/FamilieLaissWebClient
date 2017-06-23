@@ -2,7 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const { AureliaPlugin } = require('aurelia-webpack-plugin');
+const { AureliaPlugin, ModuleDependenciesPlugin } = require('aurelia-webpack-plugin');
 const { optimize: { CommonsChunkPlugin }, ProvidePlugin } = require('webpack')
 const { TsConfigPathsPlugin, CheckerPlugin } = require('awesome-typescript-loader');
 
@@ -130,6 +130,13 @@ module.exports = ({production, server, extractCss, coverage} = {}) => ({
         // available in index.ejs //
         title, server, baseUrl
       },
+    }),
+    new ModuleDependenciesPlugin({
+      "aurelia-orm": [
+        "./component/association-select",
+        "./component/view/bootstrap/association-select.html",
+        "./component/view/bootstrap/paged.html",
+        "./component/paged"]
     }),
     new CopyWebpackPlugin([
       { from: 'static/favicon.ico', to: 'favicon.ico' }

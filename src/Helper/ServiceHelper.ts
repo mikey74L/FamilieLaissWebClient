@@ -3,15 +3,15 @@ import { Entity, EntityManager, Repository } from 'aurelia-orm';
 import { LoadDataWithFatherModel, EditDataWithFatherModel } from '../Models/LoadDataWithFatherModel'
 import { enEntityType } from '../Enum/FamilieLaissEnum';
 
-export abstract class ServiceModel {
+export abstract class ServiceModel<T> {
     //Members
     protected entityManager: EntityManager;
     protected repository: Repository;
 
     //C'tor
     constructor(manager: EntityManager) {
-        //Übernehmen der Parameter
-        this.entityManager = manager;
+       //Übernehmen der Parameter
+       this.entityManager = manager;
     }
     
     //Ermitteln des richtigen Repositories
@@ -19,9 +19,19 @@ export abstract class ServiceModel {
     {
         this.repository = this.entityManager.getRepository(identifier);
     }
+
+    //Ermitteln eines neuen Query-Builders
+    public getQueryBuilder<Q>(): QueryBuilder<Q> {
+       return new QueryBuilder<Q>();
+    }
+
+    //Ermittelt den Filter-String für eine OData-Abfrage aus einer Query
+    public getQueryStringFromQuery<Q>(query: QueryBuilder<Q>): string {
+       return '?$filter=' + query.toQuery().$filter;
+    }
 }
 
-export abstract class ServiceModelLoadData extends ServiceModel {
+export abstract class ServiceModelLoadData<T> extends ServiceModel<T> {
     //C'tor
     constructor(manager: EntityManager) {
       super(manager);
@@ -31,7 +41,7 @@ export abstract class ServiceModelLoadData extends ServiceModel {
     public abstract async getData(): Promise<Array<Entity>>;
 }
 
-export abstract class ServiceModelLoadDataDelete extends ServiceModelLoadData {
+export abstract class ServiceModelLoadDataDelete<T> extends ServiceModelLoadData<T> {
     //C'tor
     constructor(manager: EntityManager) {
       super(manager);
@@ -41,17 +51,12 @@ export abstract class ServiceModelLoadDataDelete extends ServiceModelLoadData {
     public abstract async deleteItem(ID: number): Promise<Response>;
 }
 
-export abstract class ServiceModelStammdaten<T extends Entity> extends ServiceModel {
-    //Members
-    protected queryBuilder: QueryBuilder<T>;
+export abstract class ServiceModelStammdaten<T extends Entity> extends ServiceModel<T> {
 
     //C'tor
     constructor(manager: EntityManager) {
       //Aufrufen der Vater-Constructor
       super(manager);
-
-      //Initialisieren des Query-Builder
-      this.queryBuilder = new QueryBuilder<T>();
     }
 
     //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
@@ -74,20 +79,32 @@ export abstract class ServiceModelStammdatenNormal<T extends Entity> extends Ser
     public abstract async getData(): Promise<Array<T>>;
 }
 
-export abstract class ServiceModelStammdatenID<T extends Entity> extends ServiceModelStammdaten<T> {
+export abstract class ServiceModelStammdatenID<T extends Entity, F extends Entity> extends ServiceModelStammdaten<T> {
+    //Members
+    protected repositoryFather: Repository;
+
     //C'tor
     constructor(manager: EntityManager) {
       super(manager);
     }
 
-    //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
-    public abstract async getData(ID: number): Promise<LoadDataWithFatherModel>;
+    //Ermitteln des richtigen Repositories
+    public getRepositoryFather(identifier: enEntityType): void
+    {
+        this.repository = this.entityManager.getRepository(identifier);
+    }
 
-    //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
-    public abstract async deleteItem(ID: number): Promise<Response>;
+    //Ermittelt alle Items für den gegebenen Vater (Ist abstract und muss überschrieben werden)
+    public abstract async getData(idFather: number): Promise<Array<T>>;
+
+    //Ermittelt die Daten des Vaters
+    public async getDataFather(idFather: number): Promise<F> {
+      //Ermitteln der Daten des Vaters
+      return this.repositoryFather.findOne(idFather);
+    }
 }
 
-export abstract class ServiceModelStammdatenEdit<T extends Entity> extends ServiceModel {
+export abstract class ServiceModelStammdatenEdit<T extends Entity> extends ServiceModel<T> {
     //C'tor
     constructor(manager: EntityManager) {
       super(manager);
@@ -110,23 +127,38 @@ export abstract class ServiceModelStammdatenEditNormal<T extends Entity> extends
     public abstract createNew(): T;
 }
 
-export abstract class ServiceModelStammdatenEditID<T extends Entity> extends ServiceModelStammdatenEdit<T> {
+export abstract class ServiceModelStammdatenEditID<T extends Entity, F extends Entity> extends ServiceModelStammdatenEdit<T> {
+    //Members
+    protected repositoryFather: Repository;
+
     //C'tor
     constructor(manager: EntityManager) {
       super(manager);
     }
 
+    //Ermitteln des richtigen Repositories
+    public getRepositoryFather(identifier: enEntityType): void
+    {
+        this.repository = this.entityManager.getRepository(identifier);
+    }
+
     //Ermittelt die Daten zu einem bestimmten Item (Ist abstract und muss überschrieben werden)
-    public abstract async getItem(ID: number, idFather: number): Promise<EditDataWithFatherModel>;
+    public async getItem(ID: number): Promise<T> {
+      //Daten für das Item ermitteln
+      return this.repository.findOne(ID);
+    }
 
     //Ein neues Item (Ist abstract und muss überschrieben werden)
     public abstract createNew(idFather: number): T;
 
     //Ermittelt das Vater-Item (Ist abstract und muss überschrieben werden)
-    public abstract async getFather(idFather: number): Promise<Entity>;
+    public async getFather(idFather: number): Promise<F> {
+        //Daten für den Vater ermitteln
+        return this.repositoryFather.findOne(idFather);
+    }
 }
 
-export abstract class ServiceModelAssign extends ServiceModel {
+export abstract class ServiceModelAssign<T> extends ServiceModel<T> {
     //C'tor
     constructor(manager: EntityManager) {
       super(manager);

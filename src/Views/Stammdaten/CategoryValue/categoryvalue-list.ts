@@ -4,7 +4,7 @@ import { FacetGroup } from './../../../Models/Entities/FacetGroup';
 import {GridViewModelStammdatenID} from '../../../Helper/ViewModelHelper';
 import {CategoryValueService} from './categoryvalue-service';
 import {I18N} from 'aurelia-i18n';
-import {autoinject} from 'aurelia-dependency-injection';
+import {inject, NewInstance} from 'aurelia-dependency-injection';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {DialogService} from 'aurelia-dialog';
 import {AppRouter} from 'aurelia-router';
@@ -14,16 +14,18 @@ import * as $ from 'jquery';
 import { ForeignKeyData } from './../../../Models/ForeignKeyData';
 import swal from 'sweetalert2';
 import {LoadDataWithFatherModel} from '../../../Models/LoadDataWithFatherModel'
+import { ValidationController } from 'aurelia-validation';
 
-@autoinject()
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogService, AppRouter, CategoryValueService)
 export class CategoryValueList extends GridViewModelStammdatenID<FacetValue, FacetGroup> {
     //Objekt für i18n Namespace-Definition
     locConfig: any = { ns: ['StammCategoryValue', 'translation'] };
     
     //C'tor
-    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, router: AppRouter, service: CategoryValueService) {
+    constructor(localize: I18N, aggregator: EventAggregator, validationController: ValidationController, dialog: DialogService, 
+                router: AppRouter, service: CategoryValueService) {
         //Aufrufen des C'tor des Vaters
-        super(localize, aggregator, dialog, 'categoryvalueedit', 'category', router, service)
+        super(localize, aggregator, validationController, dialog, 'categoryvalueedit', 'category', router, service)
         
         //Setzen der Filteroptionen für das Grid
         this.gridFilterSettings = { filterType : "excel"};
@@ -224,8 +226,7 @@ export class CategoryValueList extends GridViewModelStammdatenID<FacetValue, Fac
                  this.isItemSelected = false;
 
                  //Aktualisieren der Daten
-                 var Result:LoadDataWithFatherModel = await this.service.getData(this.fatherItem.ID);
-                 this.entities = Result.entities as Array<FacetValue>;
+                 this.entities = await this.service.getData(this.fatherItem.ID);
 
                  //Selektion im Grid bestimmen
                  this.selectItem();
@@ -241,11 +242,11 @@ export class CategoryValueList extends GridViewModelStammdatenID<FacetValue, Fac
              }
              catch (ex)
              {
+                 //Protokollieren des Fehlers
+                 console.log(ex);
+
                  //Ausblenden der Busy-Box
                  this.setBusyState(false);
-
-                 //Zurücknehmen der Änderungen (Delete-State)
-                 this.service.rejectChanges();
 
                  //Ausgeben einer Fehlermeldung
                  this.showNotifyError(this.loc.tr('CategoryValue.Delete.Success', { ns: 'Toasts' }));
@@ -269,8 +270,7 @@ export class CategoryValueList extends GridViewModelStammdatenID<FacetValue, Fac
         }
 
         //Aktualisieren der Daten
-        var Result: LoadDataWithFatherModel = await this.service.refreshData(this.fatherItem.ID);
-        this.entities = Result.entities as Array<FacetValue>;
+        this.entities = await this.service.getData(this.fatherItem.ID);
 
         //Das selektierte Item zurücksetzen
         this.isItemSelected = false;

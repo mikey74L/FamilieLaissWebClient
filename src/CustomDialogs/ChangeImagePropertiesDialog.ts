@@ -1,11 +1,12 @@
 import {ViewModelGeneralDialog} from '../Helper/ViewModelHelper';
-import {autoinject} from 'aurelia-dependency-injection';
+import {inject, NewInstance } from 'aurelia-dependency-injection';
 import {I18N} from 'aurelia-i18n';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {DialogController} from 'aurelia-dialog';
 import {PictureURLHelper} from '../Helper/PictureURLHelper';
+import { ValidationController } from 'aurelia-validation';
 
-@autoinject()
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), PictureURLHelper, DialogController)
 export class ChangeImagePropertiesDialog extends ViewModelGeneralDialog {
     //Config für i18N
     locConfig: any = { ns: ['Dialogs'] };
@@ -26,9 +27,9 @@ export class ChangeImagePropertiesDialog extends ViewModelGeneralDialog {
     sliderEnabled: boolean = false;
 
     //C'tor
-    constructor (localize: I18N, eventAggregator: EventAggregator, urlHelper:PictureURLHelper, dialogController: DialogController) {
+    constructor (localize: I18N, eventAggregator: EventAggregator, validationController: ValidationController, urlHelper:PictureURLHelper, dialogController: DialogController) {
         //Aufrufen des Constructors der Vater-Klasse
-        super(localize, eventAggregator, dialogController);
+        super(localize, eventAggregator, validationController, dialogController);
 
         //Übernehmen der Parameter
         this.URLHelper = urlHelper;

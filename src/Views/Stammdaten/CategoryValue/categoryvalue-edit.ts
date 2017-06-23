@@ -3,37 +3,32 @@ import { FacetValue } from '../../../Models/Entities/FacetValue';
 import {CategoryValueServiceEdit} from './categoryvalue-service';
 import {ViewModelEditID} from '../../../Helper/ViewModelHelper';
 import {AppRouter} from 'aurelia-router';
-import {autoinject} from 'aurelia-dependency-injection';
+import {inject, NewInstance} from 'aurelia-dependency-injection';
 import {ValidationErrorsChangedEventArgs, Validator, ValidationError} from 'breeze-client';
 import {I18N} from 'aurelia-i18n';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {DialogService} from 'aurelia-dialog';
 import swal from 'sweetalert2';
 import {enViewModelEditMode} from '../../../Enum/FamilieLaissEnum';
+import { ValidationController } from 'aurelia-validation';
 
-@autoinject()
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogService, AppRouter, CategoryValueServiceEdit)
 export class CategoryValueEdit extends ViewModelEditID<FacetValue, FacetGroup> {
     //Konfiguration für i18N
     locConfig = { ns: ['StammCategoryValue', 'translation'] };
 
     //C'tor
-    constructor(localize: I18N, aggregator: EventAggregator, dialog: DialogService, router: AppRouter, service: CategoryValueServiceEdit) {
-        super(localize, aggregator, dialog, "categoryvalue", router, service);
+    constructor(localize: I18N, aggregator: EventAggregator, validationController: ValidationController, dialog: DialogService, 
+                router: AppRouter, service: CategoryValueServiceEdit) {
+        //Aufrufen des Vater Constructors
+        super(localize, aggregator, validationController, dialog, "categoryvalue", router, service);
+
+        //Setzen des Identifiers für das Cancel-Alert
+        this.cancelAlertIdentifier = 'CategoryValue.Cancel.Success';
     }
 
     //Überprüft den Enabled State
     protected checkEnabledState(): void {
-        if (this.isBusy) {
-            this.isSavingEnabled = false;
-        }
-        else {
-            if (this.itemToEdit.entityAspect.hasValidationErrors) {
-                this.isSavingEnabled = false;
-            }
-            else {
-                this.isSavingEnabled = true;
-            }
-        }
     }
 
     //Wird aufgerufen wenn auf den Save-Button geklickt wird
@@ -42,20 +37,23 @@ export class CategoryValueEdit extends ViewModelEditID<FacetValue, FacetGroup> {
         this.setBusyState(true);
 
         try {
-          //Aufrufen der Speicherroutine
-          await this.service.saveChanges();
+          //Vor dem Speichern noch mal eine Validierung starten
+          await this.validationController.validate();
 
-          //Ausblenden der Busy-Box
-          this.setBusyState(false);
+          //Wenn keine Validierungsfehler anstehen, dann wird gespeichert
+          if (!this.hasValidationError) {
+             //Aufrufen der Speicherroutine
+             await this.itemToEdit.save();
 
-          //Ausgeben einer Erfolgsmeldung
-          this.showNotifySuccess(this.loc.tr('CategoryValue.Save.Success', { ns: 'Toasts' }));
+             //Ausblenden der Busy-Box
+             this.setBusyState(false);
 
-          //Die Event-Handler deregistrieren
-          this.unsubscribeEvents();
+             //Ausgeben einer Erfolgsmeldung
+             this.showNotifySuccess(this.loc.tr('CategoryValue.Save.Success', { ns: 'Toasts' }));
 
-          //Zurück zur Liste der Kategorien springen
-          this.router.navigate(this.routeForList + "/" + this.fatherItem.ID + "/" + this.itemToEdit.ID);
+             //Zurück zur Liste der Kategorien springen
+             this.router.navigate(this.routeForList + "/" + this.fatherItem.ID + "/" + this.itemToEdit.ID);
+          }
         }
         catch (ex) {
           //Ausblenden der Busy-Box
@@ -66,71 +64,20 @@ export class CategoryValueEdit extends ViewModelEditID<FacetValue, FacetGroup> {
           //weiter gemacht werden.
           //Wenn nicht muss eine entsprechende Fehlermeldung angezeigt werden,
           //dass das Speichern nicht funktioniert hat
-          if (!this.itemToEdit.entityAspect.hasValidationErrors) {
+          if (!this.hasValidationError) {
             this.showNotifyError(this.loc.tr('CategoryValue.Save.Error', { ns: 'Toasts' }));
           }
         }
     }
 
-    //Führt den tatsächlichen Cancel aus
-    private cancelChangesExecute(fromRouter: boolean): void {
-        //Verwerfen der Änderungen
-        if (!fromRouter) this.service.rejectChanges();
-                
-        //Benachrichtigung ausgeben
-        this.showNotifyInfo(this.loc.tr('CategoryValue.Cancel.Success', { ns: 'Toasts', context: this.editMode }));
-
-        //Die Event-Handler deregistrieren
-        this.unsubscribeEvents();
-
-        //Zurückkehren zur Liste der Kategorien
-        if (!fromRouter) {
+    //Wird aufgerufen wenn auf den Cancel-Button geklickt wird
+    public cancelChanges(): void {
           if (this.editMode == enViewModelEditMode.Edit) {
             this.router.navigate(this.routeForList + "/" + this.fatherItem.ID + "/" + this.itemToEdit.ID);
           }
           else {
             this.router.navigate(this.routeForList + "/" + this.fatherItem.ID);
           }
-        }
-    }
-
-    //Wird aufgerufen wenn auf den Cancel-Button geklickt wird
-    public async cancelChanges(fromRouter: boolean): Promise<void> {
-      if (!fromRouter) {
-        //Nur wenn sich auch etwas geändert hat oder es sich um einen neuen Eintrag handelt, dann wird auch eine
-        //Sicherheitsabfrage ausgegeben
-        if (this.editMode == enViewModelEditMode.New || (this.editMode == enViewModelEditMode.Edit && this.hasChanges())) {
-            //Anzeigen einer Sicherheitsabfrage ob wirklich abgebrochen werden soll
-            try {
-              await swal(
-                {
-                    titleText: this.loc.tr('Cancel_Edit.Question.Header', { ns: 'Alerts' }),
-                    text: this.loc.tr('Cancel_Edit.Question.Body', { ns: 'Alerts' }),
-                    type: 'warning',
-                    width: 600,
-                    showCancelButton: true,
-                    confirmButtonColor: '#DD6B55',
-                    confirmButtonText: this.loc.tr('Cancel_Edit.Question.Confirm_Button', { ns: 'Alerts' }),
-                    cancelButtonText: this.loc.tr('Cancel_Edit.Question.Cancel_Button', { ns: 'Alerts' }),
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                }
-              );
-
-              //Ausführen der eigentlichen Cancel-Prozedur
-              this.cancelChangesExecute(fromRouter);
-            }
-            catch(ex) {
-            }
-        }
-        else {
-            //Ausführen der eigentlichen Cancel-Prozedur
-            this.cancelChangesExecute(fromRouter);
-        }
-      }
-      else {
-        this.cancelChangesExecute(fromRouter)
-      }
     }
 
     //Wird hier nicht benötigt

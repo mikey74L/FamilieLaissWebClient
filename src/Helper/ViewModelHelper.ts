@@ -216,14 +216,14 @@ export abstract class GridViewModelStammdatenNormal<T extends Entity> extends Gr
 
 export abstract class GridViewModelStammdatenID<T extends Entity, F extends Entity> extends GridViewModelStammdaten<T> {
   //Members
-  service: ServiceModelStammdatenID<T>;
+  service: ServiceModelStammdatenID<T, F>;
   fatherItem: F;
   routeFather: string;
   isBackEnabled: boolean;
 
   //C'tor
   constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, 
-              routeForEdit: string, routeForFather: string, router: AppRouter, service: ServiceModelStammdatenID<T>) {
+              routeForEdit: string, routeForFather: string, router: AppRouter, service: ServiceModelStammdatenID<T, F>) {
     //Aufrufen des Konstruktors für die Vater Klasse
     super(loc, eventAggregator, validationController, dialogService, routeForEdit, router);
 
@@ -235,13 +235,10 @@ export abstract class GridViewModelStammdatenID<T extends Entity, F extends Enti
   //Laden der Daten über den Service
   protected async load(info: any): Promise<void> {
 		//Laden der Daten über den Service anstoßen
-    var ReturnValue: LoadDataWithFatherModel = await this.service.getData(info.idFather)
+    this.entities = await this.service.getData(info.idFather);
 
     //Übernehemen des Vaters
-    this.fatherItem = ReturnValue.fatherItem as F; 
-
-		//Übernehmen der Entities
-		this.entities = ReturnValue.entities as Array<T>;
+    this.fatherItem = await this.service.getDataFather(info.idFather);
 	}
 }
 
@@ -406,12 +403,12 @@ export abstract class ViewModelEditNormal<T extends Entity> extends ViewModelEdi
 
 export abstract class ViewModelEditID<T extends Entity, F extends Entity> extends ViewModelEdit<T> {
     //Members
-    service: ServiceModelStammdatenEditID<T>;
+    service: ServiceModelStammdatenEditID<T, F>;
     fatherItem: F;
 
     //C'tor
     constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, 
-                routeForList: string, router: AppRouter, service: ServiceModelStammdatenEditID<T>) {
+                routeForList: string, router: AppRouter, service: ServiceModelStammdatenEditID<T, F>) {
         //Aufrufen des Konstruktors für die Vater Klasse
         super(loc, eventAggregator, validationController, dialogService, routeForList, router);
 
@@ -426,12 +423,11 @@ export abstract class ViewModelEditID<T extends Entity, F extends Entity> extend
 
     //Laden der Daten über den Service
     protected async load(info: any): Promise<T> {
-        //Über Promise das Laden des zu editierenden Items anstoßen
-        var ResultSet: EditDataWithFatherModel = await this.service.getItem(info.id, info.idFather);
+        //Laden des Items
+        this.itemToEdit = await this.service.getItem(info.id);
 
-        //Übernehmen der Entity
-        this.itemToEdit = ResultSet.editItem as T;
-        this.fatherItem = ResultSet.fatherItem as F;
+        //Laden des Vaters
+        this.fatherItem = await this.service.getFather(info.idFather);
 
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);
@@ -446,7 +442,7 @@ export abstract class ViewModelEditID<T extends Entity, F extends Entity> extend
         this.fatherItem = await this.service.getFather(info.idFather) as F;
         
         //Promise zurückmelden
-        return this.itemToEdit;
+        return Promise.resolve(this.itemToEdit);
     }
 }
 
@@ -454,10 +450,11 @@ export abstract class ViewModelGeneralDataDelete<T extends Entity> extends ViewM
     //Members
     router: AppRouter;
     entities: Array<T>;
-    service: ServiceModelLoadDataDelete;
+    service: ServiceModelLoadDataDelete<T>;
 
     //C'tor
-    constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, router: AppRouter, service: ServiceModelLoadDataDelete) {
+    constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, 
+                router: AppRouter, service: ServiceModelLoadDataDelete<T>) {
         //Aufrufen des Konstruktors für die Vater Klasse
         super(loc, eventAggregator, validationController, dialogService);
 
@@ -490,7 +487,7 @@ export abstract class AssignViewModelStammdaten<T extends Entity, F extends Enti
     router: AppRouter;
     selectedFatherItem: F;
     entities: Array<T>;
-    service: ServiceModelAssign;
+    service: ServiceModelAssign<T>;
 
     isChooseAlbumEnabled: boolean;
     isAddEnabled: boolean;
@@ -499,7 +496,7 @@ export abstract class AssignViewModelStammdaten<T extends Entity, F extends Enti
 
     //C'tor
     constructor (loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, router: AppRouter, 
-                 service: ServiceModelAssign, routeForEdit: string) {
+                 service: ServiceModelAssign<T>, routeForEdit: string) {
         //Aufrufen des Konstruktors für die Vater-Klasse
         super(loc, eventAggregator, validationController, dialogService);
 
