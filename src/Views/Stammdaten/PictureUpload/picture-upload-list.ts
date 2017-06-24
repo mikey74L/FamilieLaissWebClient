@@ -2,7 +2,7 @@ import { UploadPictureItem } from './../../../Models/Entities/UploadPictureItem'
 import { SortCriteria } from './../../../Models/SortCriteria';
 import {ViewModelGeneralDataDelete} from '../../../Helper/ViewModelHelper';
 import {I18N} from 'aurelia-i18n';
-import {autoinject} from 'aurelia-dependency-injection';
+import {inject, NewInstance} from 'aurelia-dependency-injection';
 import {EventAggregator, Subscription} from 'aurelia-event-aggregator';
 import {AppRouter} from 'aurelia-router';
 import {DialogService} from 'aurelia-dialog';
@@ -13,8 +13,9 @@ import {PictureUploadService} from './picture-upload-service';
 import swal from 'sweetalert2';
 import 'syncfusion-javascript/content/ej/web/ej.widgets.core.material.less';
 import 'syncfusion-javascript/content/ej/web/material/ej.theme.less';
+import { ValidationController } from 'aurelia-validation';
 
-@autoinject()
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogService, AppRouter, PictureUploadService)
 export class PictureUploadList extends ViewModelGeneralDataDelete<UploadPictureItem> {
     //Config für i18N
     locConfig: any = { ns: 'StammPictureUpload' };
@@ -32,9 +33,10 @@ export class PictureUploadList extends ViewModelGeneralDataDelete<UploadPictureI
     subscribeDeleteEvent: Subscription;
 
     //C'tor
-    constructor(loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, router: AppRouter, service: PictureUploadService) {
+    constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, 
+                dialogService: DialogService, router: AppRouter, service: PictureUploadService) {
         //Aufrufen der Vater-Klasse
-        super(loc, eventAggregator, dialogService, router, service);
+        super(loc, eventAggregator, validationController, dialogService, router, service);
 
         //Befüllen der Liste der Sortkriterien
         var SortCriteriaAdd: SortCriteria;
@@ -145,11 +147,11 @@ export class PictureUploadList extends ViewModelGeneralDataDelete<UploadPictureI
             this.showNotifySuccess(this.loc.tr('PictureUpload.Delete.Success', { ns: 'Toasts' }));
           }
           catch (ex) {
+            //Logging ausgeben
+            console.log(ex);
+            
             //Ausblenden der Busy-Box
             this.setBusyState(false);
-
-            //Zurücknehmen der Änderungen (Delete-State)
-            this.service.rejectChanges();
 
             //Ausgeben einer Fehlermeldung
             this.showNotifyError(this.loc.tr('PictureUpload.Delete.Error', { ns: 'Toasts' }));

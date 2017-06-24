@@ -6,6 +6,7 @@ import { CustomValidationRuleHelper } from './../../Helper/CustomValidationRuleH
 import { autoinject } from 'aurelia-framework';
 import { MediaItem } from './MediaItem';
 import { UploadPictureImageProperty } from './UploadPictureImageProperty';
+import { enUploadPictureStatus } from '../../Enum/FamilieLaissEnum';
 
 @idProperty('ID')
 @name('UploadPictureItem')
@@ -30,7 +31,7 @@ export class UploadPictureItem extends Entity {
   public WidthOriginal: number;
 
   @type('number')
-  public Status: number;
+  public Status: enUploadPictureStatus;
 
   @association({collection: 'MediaItem'}) 
   public MediaItems: Array<MediaItem>;
@@ -41,24 +42,5 @@ export class UploadPictureItem extends Entity {
   constructor(rules: CustomValidationRuleHelper, localize: I18N) {
     //Den Vater-Konstruktor aufrufen
     super();
-
-    //Die Validierungsregeln hinzufügen
-    ValidationRules
-      .ensure((p: FacetValue) => p.ID_Group)
-      .displayName(localize.tr('Facet_Value.Group.DisplayName', { ns: ['Metadata'] }))
-      .required()
-      .ensure((p: FacetValue) => p.NameGerman)
-      .displayName(localize.tr('Facet_Value.Name_German.DisplayName', { ns: ['Metadata'] }))
-      .required()
-      .maxLength(50)
-      .then()
-      .satisfiesRule('valueAlreadyExists', 'ID', 'ID_Group', ValidationSettings.BaseURL + 'CheckFacetValueNameGerman')
-      .ensure((p: FacetValue) => p.NameEnglish)
-      .displayName(localize.tr('Facet_Value.Name_English.DisplayName', { ns: ['Metadata'] }))
-      .required()
-      .maxLength(50)
-      .then()
-      .satisfiesRule('valueAlreadyExists', 'ID', 'ID_Group', ValidationSettings.BaseURL + 'CheckFacetValueNameEnglish')
-      .on(this);
   }
 }

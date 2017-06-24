@@ -19,8 +19,8 @@
             <!-- Card Body -->
             <div class="card-body card-padding">
                 <!-- Validation-Summary ausgeben -->
-                <div class.bind="hasValidationErrors == true ? 'alert alert-danger' : 'alert alert-danger collapse'">
-                    <p repeat.for="validationError of validationErrors">${validationError.errorMessage}</p>
+                <div class.bind="hasValidationError ? 'alert alert-danger' : 'alert alert-danger collapse'">
+                    <p repeat.for="validateResult of validationController.error">${validateResult.message}</p>
                 </div>
 
                 <!-- Das Formular ausgeben -->

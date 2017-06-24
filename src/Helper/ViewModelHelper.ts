@@ -235,10 +235,10 @@ export abstract class GridViewModelStammdatenID<T extends Entity, F extends Enti
   //Laden der Daten über den Service
   protected async load(info: any): Promise<void> {
 		//Laden der Daten über den Service anstoßen
-    this.entities = await this.service.getData(info.idFather);
+    this.entities = await this.service.getData(Number(info.idFather));
 
     //Übernehemen des Vaters
-    this.fatherItem = await this.service.getDataFather(info.idFather);
+    this.fatherItem = await this.service.getDataFather(Number(info.idFather));
 	}
 }
 
@@ -385,7 +385,7 @@ export abstract class ViewModelEditNormal<T extends Entity> extends ViewModelEdi
     //Laden der Daten über den Service
     protected async load(info: any): Promise<T> {
         //Über Promise das Laden des zu editierenden Items anstoßen
-        this.itemToEdit = await this.service.getItem(info.id) as T;
+        this.itemToEdit = await this.service.getItem(Number(info.id)) as T;
 
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);
@@ -424,10 +424,10 @@ export abstract class ViewModelEditID<T extends Entity, F extends Entity> extend
     //Laden der Daten über den Service
     protected async load(info: any): Promise<T> {
         //Laden des Items
-        this.itemToEdit = await this.service.getItem(info.id);
+        this.itemToEdit = await this.service.getItem(Number(info.id));
 
         //Laden des Vaters
-        this.fatherItem = await this.service.getFather(info.idFather);
+        this.fatherItem = await this.service.getFather(Number(info.idFather));
 
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);
@@ -436,10 +436,10 @@ export abstract class ViewModelEditID<T extends Entity, F extends Entity> extend
     //Erstellt ein neues Item
     protected async createNew(info: any): Promise<T> {
         //Erzeugen einer neuen Entity
-        this.itemToEdit = this.service.createNew(info.idFather) as T;
+        this.itemToEdit = this.service.createNew(Number(info.idFather)) as T;
 
         //Ermitteln der Daten des Vaters
-        this.fatherItem = await this.service.getFather(info.idFather) as F;
+        this.fatherItem = await this.service.getFather(Number(info.idFather)) as F;
         
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);
@@ -573,7 +573,7 @@ export abstract class ViewModelAssignEdit<T extends Entity, F extends Entity> ex
     //Laden der Daten über den Service
     protected async load(info: any): Promise<T> {
         //Über Promise das Laden des zu editierenden Items anstoßen
-        var ResultSet: EditDataWithFatherModel = await this.service.getItem(info.id);
+        var ResultSet: EditDataWithFatherModel = await this.service.getItem(Number(info.id));
 
         //Übernehmen der Entity
         this.itemToEdit = ResultSet.editItem as T;
@@ -586,10 +586,10 @@ export abstract class ViewModelAssignEdit<T extends Entity, F extends Entity> ex
     //Erstellt ein neues Item
     protected async createNew(info: any): Promise<T> {
         //Erzeugen einer neuen Entity
-        this.itemToEdit = this.service.createNew(info.idFather) as T;
+        this.itemToEdit = this.service.createNew(Number(info.idFather)) as T;
 
         //Ermitteln der Daten des Vaters
-        this.fatherItem = await this.service.getFather(info.idFather) as F;
+        this.fatherItem = await this.service.getFather(Number(info.idFather)) as F;
         
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);

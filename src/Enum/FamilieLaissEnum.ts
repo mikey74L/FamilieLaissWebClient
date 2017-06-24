@@ -27,6 +27,11 @@ export enum enViewModelEditMode {
 export enum enEntityType {
   FacetGroup = <any>"FacetGroup",
   FacetValue = <any>"FacetValue",
-  MediaGroup = <any>"MediaGroup"
+  MediaGroup = <any>"MediaGroup",
+  UploadPictureItem = <any>"UploadPictureItem"
+}
 
+export enum enUploadPictureStatus {
+  Uploaded = 0,
+  Assigned = 1
 }

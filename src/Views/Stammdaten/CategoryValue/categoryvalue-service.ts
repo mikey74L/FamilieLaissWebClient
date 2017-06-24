@@ -25,7 +25,7 @@ export class CategoryValueService extends ServiceModelStammdatenID<FacetValue, F
       Query.equals(x => x.ID_Group, idFather);
 
       //Ermitteln der Daten
-      return this.repository.find(this.getQueryStringFromQuery(Query));
+      return this.repository.find(this.getQueryStringFromQuery<FacetValue>(Query));
     }
 }
 

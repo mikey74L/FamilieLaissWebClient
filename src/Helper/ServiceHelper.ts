@@ -47,8 +47,14 @@ export abstract class ServiceModelLoadDataDelete<T> extends ServiceModelLoadData
       super(manager);
     }
 
-    //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
-    public abstract async deleteItem(ID: number): Promise<Response>;
+    //Ein Item muss gelöscht werden
+    public async deleteItem(ID: number): Promise<Response> {
+      //Ermitteln des Items
+      let EntityToDelete: Entity = await this.repository.findOne(ID);
+
+      //Löschen des Items
+      return EntityToDelete.destroy();
+    }
 }
 
 export abstract class ServiceModelStammdaten<T extends Entity> extends ServiceModel<T> {
@@ -91,7 +97,7 @@ export abstract class ServiceModelStammdatenID<T extends Entity, F extends Entit
     //Ermitteln des richtigen Repositories
     public getRepositoryFather(identifier: enEntityType): void
     {
-        this.repository = this.entityManager.getRepository(identifier);
+        this.repositoryFather = this.entityManager.getRepository(identifier);
     }
 
     //Ermittelt alle Items für den gegebenen Vater (Ist abstract und muss überschrieben werden)
@@ -139,7 +145,7 @@ export abstract class ServiceModelStammdatenEditID<T extends Entity, F extends E
     //Ermitteln des richtigen Repositories
     public getRepositoryFather(identifier: enEntityType): void
     {
-        this.repository = this.entityManager.getRepository(identifier);
+        this.repositoryFather = this.entityManager.getRepository(identifier);
     }
 
     //Ermittelt die Daten zu einem bestimmten Item (Ist abstract und muss überschrieben werden)
