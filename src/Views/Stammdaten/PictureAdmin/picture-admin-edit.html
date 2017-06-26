@@ -18,8 +18,8 @@
             <!-- Card Body -->
             <div class="card-body card-padding">
                 <!-- Validation-Summary ausgeben -->
-                <div class.bind="hasValidationErrors == true ? 'alert alert-danger' : 'alert alert-danger collapse'">
-                    <p repeat.for="validationError of validationErrors">${validationError.errorMessage}</p>
+                <div class.bind="hasValidationError ? 'alert alert-danger' : 'alert alert-danger collapse'">
+                    <p repeat.for="validateResult of validationController.error">${validateResult.message}</p>
                 </div>
 
                 <!-- Das Formular ausgeben -->
@@ -96,7 +96,7 @@
                                 bootstrap-tooltip
                                 button-waves
                                 class="btn btn-primary btn-icon-text waves-effect"
-                                disabled.bind="!isSavingEnabled"
+                                disabled.bind="isBusy"
                                 data-toggle="tooltip"
                                 title=""
                                 data-original-title=""
@@ -111,7 +111,7 @@
                                 button-waves
                                 class="btn btn-danger btn-icon-text waves-effect"
                                 disabled.bind="isBusy"
-                                click.trigger="cancelChanges(false)"
+                                click.trigger="cancelChanges()"
                                 style="margin-left: 10px;"
                                 data-toggle="tooltip"
                                 title=""

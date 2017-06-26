@@ -97,11 +97,32 @@
     }
   },
   "Media_Item": {
-    "Name": {
-      "DisplayName": "Name"
+    "Group": {
+      "DisplayName": "Album"
     },
-    "Description": {
-      "DisplayName": "Beschreibung"
+    "Type": {
+      "DisplayName": "Typ"
+    },
+    "Name_German": {
+      "DisplayName": "Name (Deutsch)"
+    },
+    "Name_English": {
+      "DisplayName": "Name (Englisch)"
+    },
+    "Description_German": {
+      "DisplayName": "Beschreibung (Deutsch)"
+    },
+    "Description_English": {
+      "DisplayName": "Beschreibung (Englisch)"
+    },
+    "Only_Family": {
+      "DisplayName": "Familienmitglieder"
+    },
+    "Picture": {
+      "DisplayName": "Upload-Photo"
+    },
+    "Video": {
+      "DisplayName": "Upload-Video"
     }
   },
   "Upload_Video_Item": {
