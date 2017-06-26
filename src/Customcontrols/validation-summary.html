@@ -1,0 +1,5 @@
+<template>
+    <div class.bind="controller.errors.length > 0 ? 'alert alert-danger' : 'alert alert-danger collapse'">
+        <p repeat.for="validateResult of controller.errors">${validateResult.message}</p>
+    </div>
+<template>

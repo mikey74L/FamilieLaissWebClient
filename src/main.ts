@@ -45,6 +45,7 @@ export async function configure(aurelia: Aurelia) {
                       PLATFORM.moduleName('CustomControls/upload-control'),
                       PLATFORM.moduleName('CustomControls/picture-control'),
                       PLATFORM.moduleName('CustomControls/drop-down-control'),
+                      PLATFORM.moduleName('CustomControls/validation-summary'),
                       PLATFORM.moduleName('CustomAttributes/bootstrap-tooltip'), 
                       PLATFORM.moduleName('CustomAttributes/button-waves'), 
                       PLATFORM.moduleName('CustomAttributes/autosize-textarea'), 
