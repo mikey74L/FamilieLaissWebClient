@@ -164,42 +164,86 @@ export abstract class ServiceModelStammdatenEditID<T extends Entity, F extends E
     }
 }
 
-export abstract class ServiceModelAssign<T> extends ServiceModel<T> {
+export abstract class ServiceModelAssign<T extends Entity, F extends Entity> extends ServiceModel<T> {
+    //Members
+    protected repositoryFather: Repository;
+
     //C'tor
     constructor(manager: EntityManager) {
       super(manager);
+    }
+
+    //Ermitteln des richtigen Repositories
+    public getRepositoryFather(identifier: enEntityType): void
+    {
+        this.repositoryFather = this.entityManager.getRepository(identifier);
     }
 
     //Ermittelt alle Items (Ist abstract und muss überschrieben werden)
-    public abstract async getData(ID: number): Promise<Array<Entity>>;
+    public abstract async getData(idFather: number): Promise<Array<T>>;
 
     //Lädt die Alben (Ist abstract und muss überschrieben werden)
-    public abstract async loadAlben(): Promise<Array<Entity>>;
+    public abstract async loadAlben(): Promise<Array<F>>;
 
     //Ein Item muss gelöscht werden (Ist abstract und muss überschrieben werden)
-    public abstract async deleteItem(ID: number): Promise<Response>;
+    public async deleteItem(ID: number): Promise<Response> {
+      //Ermitteln des Items
+      let ItemToDelete: Entity = await this.repository.findOne(ID);
+
+      //Item löschen
+      return ItemToDelete.destroy();
+    }
 }
 
-export abstract class ServiceModelAssignEdit<T extends Entity> extends ServiceModelStammdatenEdit<T> {
+export abstract class ServiceModelAssignEdit<T extends Entity, Father extends Entity, Upload extends Entity, Category extends Entity> extends ServiceModelStammdatenEdit<T> {
+    //Members
+    protected repositoryFather: Repository;
+    protected repositoryUpload: Repository;
+    protected repositoryCategory: Repository;
+
     //C'tor
     constructor(manager: EntityManager) {
       super(manager);
     }
 
+    //Ermitteln des richtigen Repositories
+    public getRepositoryFather(identifier: enEntityType): void
+    {
+        this.repositoryFather = this.entityManager.getRepository(identifier);
+    }
+
+    //Ermitteln des richtigen Repositories
+    public getRepositoryUpload(identifier: enEntityType): void
+    {
+        this.repositoryUpload = this.entityManager.getRepository(identifier);
+    }
+
+    //Ermitteln des richtigen Repositories
+    public getRepositoryCategory(identifier: enEntityType): void
+    {
+        this.repositoryCategory = this.entityManager.getRepository(identifier);
+    }
+
     //Ermittelt das Item
-    public abstract async getItem(ID: number): Promise<EditDataWithFatherModel>;
+    public async getItem(ID: number): Promise<T> {
+      //Laden der Daten
+      return this.repository.findOne(ID);
+    }
 
     //Ermittelt alle Upload-Items die noch nicht zugeordnet wurden
-    public abstract async getUploadItems(): Promise<Array<Entity>>;
+    public abstract async getUploadItems(): Promise<Array<Upload>>;
 
     //Ermittelt alle Kategorien die zugeordnet werden können
-    public abstract async getCategories(): Promise<Array<Entity>>;
+    public abstract async getCategories(): Promise<Array<Category>>;
 
     //Ermittelt das Vater-Item
-    public abstract async getFather(ID: number):Promise<Entity>;
+    public async getFather(ID: number):Promise<Father> {
+      //Laden der Daten
+      return this.repositoryFather.findOne(ID);
+    }
 
     //Erzeugt ein neues Item
-    public abstract createNew(idFather: number): Entity;
+    public abstract createNew(idFather: number): T;
 
     //Erzeugt eine neue Zuweisung für einen Kategoriewert
     public abstract async createNewAssignedCategory(item: any, idCategory: number): Promise<Entity>;

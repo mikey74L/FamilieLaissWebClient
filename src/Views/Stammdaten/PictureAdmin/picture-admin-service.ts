@@ -1,187 +1,108 @@
-import { EntityBase } from './../../../Models/Entities/EntityBase';
-import { enMediaType, enFacetType } from '../../../Enum/FamilieLaissEnum';
-import { EntityManagerFactory } from '../../../Helper/EntityManagerFactory';
-import {ServiceModel, ServiceModelAssign, ServiceModelAssignEdit} from '../../../Helper/ServiceHelper'
-import {EditDataWithFatherModel, LoadDataWithFatherModel} from '../../../Models/LoadDataWithFatherModel';
-import {EntityQuery, Entity, Predicate, QueryResult, SaveResult} from 'breeze-client';
-import {autoinject} from 'aurelia-dependency-injection';
+import { MediaItemFacet } from './../../../Models/Entities/MediaItemFacet';
+import { FacetGroup } from './../../../Models/Entities/FacetGroup';
+import { UploadPictureItem } from './../../../Models/Entities/UploadPictureItem';
+import { EntityManager, Entity, Repository } from 'aurelia-orm';
+import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal } from '../../../Helper/ServiceHelper'
+import { autoinject } from 'aurelia-dependency-injection';
+import { enEntityType } from '../../../Enum/FamilieLaissEnum';
+import { ServiceModelAssign, ServiceModelAssignEdit } from '../../../Helper/ServiceHelper';
+import { MediaItem } from '../../../Models/Entities/MediaItem';
+import { MediaGroup } from '../../../Models/Entities/MediaGroup';
+import { enMediaType, enFacetType, enUploadPictureStatus } from '../../../Enum/FamilieLaissEnum';
+import { Expression } from '../../../Helper/ODataQueryBuilder/expression';
 
 @autoinject()
-export class PictureAdminService extends ServiceModelAssign {
+export class PictureAdminService extends ServiceModelAssign<MediaItem, MediaGroup> {
     //C'tor
-    constructor (emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor (manager: EntityManager) {
+      //Aufrufen des Vater Constructor
+      super(manager);
+
+      //Repository erstellen
+      this.getRepository(enEntityType.MediaItem);
+      this.getRepositoryFather(enEntityType.MediaGroup);
     }
 
     //Lädt die Photos für das Album mit der angegebenen ID
     //vom Server
-    public async getData(ID: number): Promise<Array<EntityBase>> {
-        //Predicate zusammenbauen
-        var PredicateValues: Predicate = Predicate
-            .create('ID_Group', '==', ID)
-            .and('Type', '==', enMediaType.Picture);
-
+    public async getData(idFather: number): Promise<Array<MediaItem>> {
         //Query zusammenbauen
-        var query: EntityQuery = new EntityQuery()
-            .from('MediaItems')
-            .where(PredicateValues)
-            .expand('UploadPicture.ImageProperty, MediaItemFacets');
+        let Query = this.getQueryBuilder<MediaItem>();
+        Query.equals(x => x.ID_Group, idFather).equals(x => x.Type, enMediaType.Picture);
 
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
-
-        //Query ausführen 
-        var Result: QueryResult = await this.manager.executeQuery(query);
-
-        //Funktionsergebnis
-        return Promise.resolve(Result.results);
+        //Ermitteln der Daten
+        return this.repository.find(this.getQueryStringFromQuery<MediaItem>(Query));
     }
 
     //Lädt alle Photo-Alben vom Server
-    public async loadAlben(): Promise<Array<EntityBase>> {
+    public async loadAlben(): Promise<Array<MediaGroup>> {
         //Query zusammenbauen
-        var query: EntityQuery = new EntityQuery()
-            .from('MediaGroups')
-            .where('Type', '==', enMediaType.Picture);
+        let Query = this.getQueryBuilder<MediaGroup>();
+        Query.equals(x => x.Type, enMediaType.Picture);
 
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
-
-        //Query ausführen 
-        var Result: QueryResult = await this.manager.executeQuery(query);
-
-        //Funktionsergebnis
-        return Promise.resolve(Result.results);
-    }
- 
-    //Löscht das Item aus der Datenbank
-    public async deleteItem(ID: number): Promise<SaveResult> {
-        //Ermitteln der Entity
-        var entityDelete = this.manager.getEntityByKey('MediaItem', ID);
-            
-        //Entfernen des Items aus dem Manager
-        entityDelete.entityAspect.setDeleted();
-
-        //Speichern der Änderungen
-        return this.manager.saveChanges();
+        //Query ausführen
+        return this.repositoryFather.find(this.getQueryStringFromQuery(Query));
     }
 }
 
 @autoinject()
-export class PictureAdminServiceEdit extends ServiceModelAssignEdit {
+export class PictureAdminServiceEdit extends ServiceModelAssignEdit<MediaItem, MediaGroup, UploadPictureItem, FacetGroup> {
     //C'tor
-    constructor (emFactory: EntityManagerFactory) {
-      super(emFactory);
-    }
+    constructor (manager: EntityManager) {
+      //Aufrufen des Vater Constructor
+      super(manager);
 
-    //Ermittelt die Daten für ein einzelnes Media-Item
-    //um dieses zu editieren
-    public async getItem(ID: number): Promise<EditDataWithFatherModel> {
-        //Query zusammenbauen
-        var query: EntityQuery = new EntityQuery()
-            .from('MediaItems')
-            .where('ID', '==', ID);
-
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
-
-        //Query ausführen
-        var Result: Array<any> = this.manager.executeQueryLocally(query);
-
-        //Funktionsergebnis zusammenstellen
-        var ReturnValue: EditDataWithFatherModel;
-        ReturnValue = new EditDataWithFatherModel();
-        ReturnValue.editItem = Result[0];
-        ReturnValue.fatherItem = Result[0].MediaGroup;
-        return Promise.resolve(ReturnValue);      
+      //Repository erstellen
+      this.getRepository(enEntityType.MediaItem);
+      this.getRepositoryFather(enEntityType.MediaGroup);
+      this.getRepositoryCategory(enEntityType.FacetGroup);
+      this.getRepositoryUpload(enEntityType.UploadPictureItem);
     }
 
     //Ermittelt die Upload-Photos vom Server
-    public async getUploadItems(): Promise<Array<EntityBase>> {
+    public async getUploadItems(): Promise<Array<UploadPictureItem>> {
         //Query zusammenbauen
-        var query: EntityQuery = new EntityQuery()
-            .from('UploadPictures')
-            .where('Status', '==', 0)
-            .expand('ImageProperty');
+        let Query = this.getQueryBuilder<UploadPictureItem>();
+        Query.equals(x => x.Status, enUploadPictureStatus.Uploaded);
   
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
-
-        //Ausführen der Query
-        var Result: QueryResult = await this.manager.executeQuery(query);
-
         //Funktionsergebnis
-        return Promise.resolve(Result.results);
+        return this.repositoryUpload.find(this.getQueryStringFromQuery(Query));
     }
 
     //Ermittelt die Kategorien
-    public async getCategories(): Promise<Array<EntityBase>> {
-        //Predicate zusammenbauen
-        var PredicateCategories: Predicate = Predicate
-            .create('Type', '==', enFacetType.Both)
-            .or('Type', '==', enFacetType.Picture);
-
+    public async getCategories(): Promise<Array<FacetGroup>> {
         //Query zusammenbauen
-        var query: EntityQuery = new EntityQuery()
-            .from('FacetGroups')
-            .where(PredicateCategories)
-            .expand('Values');
-
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
-
-        //Query in einem Promise ausführen
-        var Result: QueryResult = await this.manager.executeQuery(query);
- 
-        //Funktionsergebnis
-        return Promise.resolve(Result.results);
-    }
-
-    //Ermittelt das Vater-Item
-    public async getFather(ID: number):Promise<EntityBase> {
-        //Query zusammenbauen
-        var queryAlbum: EntityQuery = new EntityQuery()
-            .from('MediaGroups')
-            .where('ID', '==', ID);
- 
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
-
-        //Query für die Kategorie ausführen 
-        var Result: QueryResult = await this.manager.executeQuery(queryAlbum);
+        let Query = this.getQueryBuilder<FacetGroup>();
+        let expression = Expression.or(Expression.equals<FacetGroup, enFacetType>(x => x.Type, enFacetType.Picture), 
+                                       Expression.equals<FacetGroup, enFacetType>(x => x.Type, enFacetType.Both));
+        Query.filter(expression);                                      
 
         //Funktionsergebnis
-        return Promise.resolve(Result.results[0]);
+        return this.repositoryCategory.find(this.getQueryStringFromQuery(Query));
     }
-  
+
     //Erstellt eine neues Media-Item im Entity-Manager
-    public async createNew(idFather: number): Promise<EntityBase> {
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
-
+    public createNew(idFather: number): MediaItem {
         //Return-Value zusammenbauen
-        var RetVal: any = this.manager.createEntity('MediaItem');
+        var RetVal: MediaItem = this.repository.getNewEntity();
         RetVal.ID_Group = idFather;
         RetVal.Type = enMediaType.Picture;
         RetVal.NameGerman = 'Nicht benoetigt';
         RetVal.NameEnglish = 'Not needed';
 
         //Funktionsergebnis
-        return Promise.resolve(RetVal);
+        return RetVal;
     }
 
     //Erstellt eine neue Zuweisung für einen Kategorie-Wert
-    public async createNewAssignedCategory(item: any, idCategory: number): Promise<EntityBase> {
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
-
+    public createNewAssignedCategory(id: number, idCategory: number): MediaItemFacet {
         //Erstellen der Entität
-        var AssignedCategory: any = this.manager.createEntity('MediaItemFacet');
-        AssignedCategory.ID_MediaItem = item.ID;
+        let AssignedCategory: MediaItemFacet = this.reposi
+        AssignedCategory.ID_MediaItem = id;
         AssignedCategory.ID_FacetValue = idCategory;
 
         //Return-Value
-        return Promise.resolve(AssignedCategory);
+        return AssignedCategory;
     }
 
     //Entfernt eine Zuweisung für einen Kategorie-Wert

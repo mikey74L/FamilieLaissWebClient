@@ -4,6 +4,8 @@ import {EntityManager, Repository} from 'aurelia-orm';
 import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 import {ValidateResult} from 'aurelia-validation';
+import {Expression} from '../Helper/ODataQueryBuilder/expression';
+import {enFacetType} from '../Enum/FamilieLaissEnum';
 
 @autoinject()
 export class Home {
@@ -24,8 +26,12 @@ export class Home {
     // var returnValue: any;
 
     var TestQuery: QueryBuilder<FacetGroup> = new QueryBuilder<FacetGroup>();
+        let expression = Expression.or(Expression.equals<FacetGroup, enFacetType>(x => x.Type, enFacetType.Picture), 
+                                       Expression.equals<FacetGroup, enFacetType>(x => x.Type, enFacetType.Both));
+        TestQuery.filter(expression);                                      
 
-    var Filter = '?$filter=' + TestQuery.equals(x => x.NameGerman, 'Testkategorie').toQuery().$filter;
+
+    var Filter = '?$filter=' + TestQuery.toQuery().$filter;
 
     alert(Filter);
 
