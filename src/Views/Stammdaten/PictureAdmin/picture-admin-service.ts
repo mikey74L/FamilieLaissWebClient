@@ -123,7 +123,7 @@ export class PictureAdminServiceEdit extends ServiceModelAssignEdit<MediaItem, M
     }
 }
 
-autoinject()
+@autoinject()
 export class PictureAdminServiceEditExtend extends ServiceModel<UploadPictureImageProperty> {
     //C'tor
     constructor (manager: EntityManager) {

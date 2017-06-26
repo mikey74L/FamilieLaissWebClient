@@ -36,9 +36,14 @@ export class FacetValue extends Entity {
   @association({collection: 'MediaItemFacet'}) 
   public MediaItemFacets: Array<MediaItemFacet>;
 
+  private language: string;
+
   constructor(rules: CustomValidationRuleHelper, localize: I18N) {
     //Den Vater-Konstruktor aufrufen
     super();
+
+    //Aktuelle Sprache ermitteln
+    this.language = localize.i18next.language.substr(0, 2);
 
     //Die Validierungsregeln hinzufügen
     ValidationRules
@@ -61,6 +66,11 @@ export class FacetValue extends Entity {
   }
 
   get localizedName(): string {
-    return "";
+    if (this.language === 'de') {
+      return this.NameGerman;
+    }
+    else {
+      return this.NameEnglish;
+    }
   }
 }

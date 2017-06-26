@@ -32,9 +32,14 @@ export class FacetGroup extends Entity {
   @association({collection: 'FacetValue'}) 
   public Values: Array<FacetValue>;
 
+  private language: string;
+
   constructor(rules: CustomValidationRuleHelper, localize: I18N) {
     //Den Vater-Konstruktor aufrufen
     super();
+
+    //Aktuelle Sprache ermitteln
+    this.language = localize.i18next.language.substr(0, 2);
 
     //Die Validierungsregeln hinzufügen
     ValidationRules
@@ -56,7 +61,13 @@ export class FacetGroup extends Entity {
       .on(this);
   }
 
+  //Ermittelt den lokalisierten Namen der Facet-Group
   get localizedName(): string {
-    return "";
+    if (this.language === 'de') {
+      return this.NameGerman;
+    }
+    else {
+      return this.NameEnglish;
+    }
   }
 }

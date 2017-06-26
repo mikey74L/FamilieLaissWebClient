@@ -284,7 +284,7 @@ export class UploadControl {
        this.uploadingFile.withError = true;
 
        //Ausgeben eines Toasts
-       this.toastrHelper.showNotifySuccess(this.loc.tr('UploadControl.Upload.Error', { ns: 'Toasts', 'filename' : this.uploadingFile.fileName }));
+       this.toastrHelper.showNotifyError(this.loc.tr('UploadControl.Upload.Error', { ns: 'Toasts', 'filename' : this.uploadingFile.fileName }));
 
        //Aktualisieren des Grids
        this.refreshGrid();
@@ -353,7 +353,7 @@ export class UploadControl {
        this.uploadingFile.withError = true;
 
        //Ausgeben eines Toasts
-       this.toastrHelper.showNotifySuccess(this.loc.tr('UploadControl.Upload.Error', { ns: 'Toasts', 'filename' : this.uploadingFile.fileName }));
+       this.toastrHelper.showNotifyError(this.loc.tr('UploadControl.Upload.Error', { ns: 'Toasts', 'filename' : this.uploadingFile.fileName }));
 
        //Aktualisieren des Grids
        this.refreshGrid();
@@ -392,7 +392,7 @@ export class UploadControl {
        this.uploadingFile.withError = true;
 
        //Ausgeben eines Toasts
-       this.toastrHelper.showNotifySuccess(this.loc.tr('UploadControl.Upload.Error', { ns: 'Toasts', 'filename' : this.uploadingFile.fileName }));
+       this.toastrHelper.showNotifyError(this.loc.tr('UploadControl.Upload.Error', { ns: 'Toasts', 'filename' : this.uploadingFile.fileName }));
 
        //Aktualisieren des Grids
        this.refreshGrid();
