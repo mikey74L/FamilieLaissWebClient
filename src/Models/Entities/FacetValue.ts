@@ -59,4 +59,8 @@ export class FacetValue extends Entity {
       .satisfiesRule('valueAlreadyExists', 'ID', 'ID_Group', ValidationSettings.BaseURL + 'CheckFacetValueNameEnglish')
       .on(this);
   }
+
+  get localizedName(): string {
+    return "";
+  }
 }

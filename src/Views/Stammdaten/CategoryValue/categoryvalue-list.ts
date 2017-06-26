@@ -13,7 +13,6 @@ import 'syncfusion-javascript/content/ej/web/material/ej.theme.less';
 import * as $ from 'jquery';
 import { ForeignKeyData } from './../../../Models/ForeignKeyData';
 import swal from 'sweetalert2';
-import {LoadDataWithFatherModel} from '../../../Models/LoadDataWithFatherModel'
 import { ValidationController } from 'aurelia-validation';
 
 @inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogService, AppRouter, CategoryValueService)

@@ -6,22 +6,26 @@ import {inject, NewInstance } from 'aurelia-dependency-injection';
 import {I18N} from 'aurelia-i18n';
 import {EventAggregator, Subscription} from 'aurelia-event-aggregator';
 import { ValidationController } from 'aurelia-validation';
+import { ChooseUploadPictureDialogService } from './ChooseUploadPictureDialogService';
 
-@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogController)
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogController, ChooseUploadPictureDialogService)
 export class ChooseUploadPictureDialog extends ViewModelGeneralDialog {
     //Localize Options für i18N
     locOptions: any = {ns: ['Dialogs', 'translation']};
 
     //Members
     entities: Array<any>;
-    service: ServiceModelAssignEdit;
+    service: ChooseUploadPictureDialogService;
 
     subscribeChoosePicture: Subscription;
 
     //C'tor
-    constructor (localize: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogController: DialogController) {
+    constructor (localize: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogController: DialogController, service: ChooseUploadPictureDialogService) {
         //Aufrufen des Constructors der Vater-Klasse
         super(localize, eventAggregator, validationController, dialogController);
+
+        //Übernehmen des Service
+        this.service = service;
 
         //Registrieren für das "Choose-Picture-Dialog"
         this.subscribeChoosePicture = this.eventAggregator.subscribe(ChoosePictureEvent, (message: ChoosePictureEvent) => {
@@ -33,14 +37,11 @@ export class ChooseUploadPictureDialog extends ViewModelGeneralDialog {
     //Wird von Aurelia aufgerufen wenn der Dialog
     //aktiviert (angezeigt wird)
     protected async activateChild(info: any): Promise<void> {
-        //Übernehmen des Service
-        this.service = info;
-
         //Anzeigen der Busy-Box
         this.setBusyState(true);
 
         //Laden der Upload-Items
-        this.entities = await this.service.getUploadItems();
+        this.entities = await this.service.getData();
     }
 
     //Wird von Aurelia aufgerufen wenn die View zum DOM hinzugefügt wird

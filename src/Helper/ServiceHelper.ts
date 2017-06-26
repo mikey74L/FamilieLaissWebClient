@@ -1,6 +1,5 @@
 import { QueryBuilder } from './ODataQueryBuilder/query_builder';
 import { Entity, EntityManager, Repository } from 'aurelia-orm';
-import { LoadDataWithFatherModel, EditDataWithFatherModel } from '../Models/LoadDataWithFatherModel'
 import { enEntityType } from '../Enum/FamilieLaissEnum';
 
 export abstract class ServiceModel<T> {
@@ -253,8 +252,8 @@ export abstract class ServiceModelAssignEdit<T extends Entity, Father extends En
     public abstract createNew(idFather: number): T;
 
     //Erzeugt eine neue Zuweisung für einen Kategoriewert
-    public abstract createNewAssignedCategory (idMediaItem: number, idCategory: number): Assign;
+    public abstract createNewAssignedCategory (idMediaItem: number, idFacetValue: number): Assign;
 
     //Entfernt einen zugewießenen Kategoriewert
-    public abstract async removeAssignedCategory(idAssignment: number): Promise<Response>;
+    public abstract async removeAssignedCategory(idFacetValue: number): Promise<Response>;
 }

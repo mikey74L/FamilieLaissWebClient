@@ -1,14 +1,15 @@
-import {autoinject} from 'aurelia-dependency-injection';
+import {inject, NewInstance} from 'aurelia-dependency-injection';
 import {I18N} from 'aurelia-i18n';
 import {ViewModelGeneral} from '../Helper/ViewModelHelper';
 import {EventAggregator, Subscription} from 'aurelia-event-aggregator';
+import { ValidationController } from 'aurelia-validation';
 
-@autoinject()
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController))
 export class VideoShow extends ViewModelGeneral {
   //C'tor
-  constructor (localize: I18N, eventAggregator: EventAggregator) {
+  constructor (localize: I18N, eventAggregator: EventAggregator, validationController: ValidationController) {
     //Aufrufen des Vaters
-    super(localize, eventAggregator);
+    super(localize, eventAggregator, validationController);
   }
 
   //Wird von der Vater-Klasse aufgerufen wenn die View vom Router

@@ -7,7 +7,7 @@ import { MediaGroup } from './../../../Models/Entities/MediaGroup';
 import {ChangeImagePropertyStartArgs} from '../../../Models/ChangeImagePropertyStartArgs';
 import {ViewModelAssignEdit} from '../../../Helper/ViewModelHelper';
 import {AppRouter} from 'aurelia-router';
-import {autoinject} from 'aurelia-dependency-injection';
+import {inject, NewInstance} from 'aurelia-dependency-injection';
 import {I18N} from 'aurelia-i18n';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {DialogService, DialogCloseResult} from 'aurelia-dialog';
@@ -20,9 +20,10 @@ import {ChangeImagePropertiesDialog} from '../../../CustomDialogs/ChangeImagePro
 import {ShowPictureBigDialog} from '../../../CustomDialogs/ShowPictureBigDialog';
 import swal from 'sweetalert2';
 import {DropdownListData, DropdownListGroupItem, DropdownListValueItem} from '../../../Helper/DropDownListHelper';
+import { ValidationController } from 'aurelia-validation';
 
-@autoinject()
-export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup> {
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogService, AppRouter, PictureAdminServiceEdit, PictureAdminServiceEditExtend, PictureURLHelper)
+export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup, UploadPictureItem, FacetGroup, MediaItemFacet> {
     //Konfiguration für i18N
     locConfig: any = { ns: ['StammPictureAdmin', 'translation']};
 
@@ -42,10 +43,10 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
     serviceExtended: PictureAdminServiceEditExtend;
 
     //C'tor
-    constructor(loc:I18N, eventAggregator: EventAggregator, dialogService: DialogService, router: AppRouter, 
-                service: PictureAdminServiceEdit, serviceExtended: PictureAdminServiceEditExtend,urlHelper: PictureURLHelper) {
+    constructor(loc:I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, router: AppRouter, 
+                service: PictureAdminServiceEdit, serviceExtended: PictureAdminServiceEditExtend, urlHelper: PictureURLHelper) {
         //Aufrufen der Vater-Klasse
-        super(loc, eventAggregator, dialogService, "pictureadmin", router, service);
+        super(loc, eventAggregator, validationController, dialogService, "pictureadmin", router, service);
 
         //Übernehmen der Parameter
         this.URLHelper = urlHelper;
@@ -64,6 +65,9 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
 
         //Übernehmen des erweiterten Service
         this.serviceExtended = serviceExtended;
+
+        //Setzen des Identifiers für das Cancel-Alert
+        this.cancelAlertIdentifier = 'PictureAdmin.Cancel.Success';
     }
 
     //Anzeigen des Dialoges zur Auswahl eines Upload-Photos
@@ -71,7 +75,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
       //Aurelia-Dialog instanziieren
       try { 
         //Anzeigen des Dialoges zur Auswahl eines Albums
-        var Result: DialogCloseResult = await this.dialogService.open({viewModel: ChooseUploadPictureDialog, model: this.service})
+        var Result: DialogCloseResult = await this.dialogService.open({viewModel: ChooseUploadPictureDialog, model: null})
                                                                 .whenClosed((reason: DialogCloseResult) => { return reason;});
  
         //Ausgeben von Logging-Informationen
@@ -88,7 +92,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
         this.setCurrentPhotoURL();
 
         //Validierung erneut starten wenn ein Bild ausgewählt wurde
-        this.itemToEdit.entityAspect.validateEntity();
+        await this.validationController.validate();
 
         //Steuern der Buttons
         this.checkEnabledState();
@@ -112,7 +116,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
       //In einer Schleife durch alle Kategorien durchgehen
       for (var Item of CategoryResult) {
         //Kategorie hinzufügen
-        NewCategoryGroup = this.categoryList.addGroup(Item.ID, Item.NameGerman);
+        NewCategoryGroup = this.categoryList.addGroup(Item.ID, Item.localizedName);
 
         //In einer Schleife durch alle Kategorie-Werte durchgehen
         for (var Item2 of Item.Values) {
@@ -129,7 +133,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
           }
 
           //Hinzufügen des Facet-Values
-          NewCategoryGroup.addValue(Item2.ID, Item2.NameGerman, Assigned, Item2);
+          NewCategoryGroup.addValue(Item2.ID, Item2.localizedName, Assigned, Item2);
         }
       }
       
@@ -179,64 +183,14 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
     }
 
     //Wird aufgerufen wenn auf den Cancel-Button geklickt wird
-    public async cancelChanges(fromRouter: boolean): Promise<void> {
-      if (!fromRouter) {
-        //Nur wenn sich auch etwas geändert hat oder es sich um einen neuen Eintrag handelt, dann wird auch eine
-        //Sicherheitsabfrage ausgegeben
-        if (this.editMode == enViewModelEditMode.New || (this.editMode == enViewModelEditMode.Edit && this.service.hasChanges())) {
-            //Anzeigen einer Sicherheitsabfrage ob wirklich abgebrochen werden soll
-            try {
-              await swal(
-                {
-                    titleText: this.loc.tr('Cancel_Edit.Question.Header', { ns: 'Alerts' }),
-                    text: this.loc.tr('Cancel_Edit.Question.Body', { ns: 'Alerts' }),
-                    type: 'warning',
-                    width: 600,
-                    showCancelButton: true,
-                    confirmButtonColor: '#DD6B55',
-                    confirmButtonText: this.loc.tr('Cancel_Edit.Question.Confirm_Button', { ns: 'Alerts' }),
-                    cancelButtonText: this.loc.tr('Cancel_Edit.Question.Cancel_Button', { ns: 'Alerts' }),
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                }
-              );
-
-              //Ausführen der eigentlichen Cancel-Prozedur
-              this.cancelChangesExecute(fromRouter);
-            }
-            catch (ex) {
-            }
-        }
-        else {
-            //Ausführen der eigentlichen Cancel-Prozedur
-            this.cancelChangesExecute(fromRouter);
-        }
-      }
-      else {
-        this.cancelChangesExecute(fromRouter);
-      }
+    public cancelChanges(): void {
+      this.router.navigate(this.routeForList + "/" + this.fatherItem.ID);
     }
  
-    //Führt den tatsächlichen Cancel aus
-    private cancelChangesExecute(fromRouter: boolean): void {
-        //Verwerfen der Änderungen
-        if (!fromRouter) this.service.rejectChanges();
-                
-        //Benachrichtigung ausgeben
-        this.showNotifyInfo(this.loc.tr('PictureAdmin.Cancel.Success', { ns: 'Toasts', context: this.editMode }));
-
-        //Die Event-Handler deregistrieren
-        this.unsubscribeEvents();
-
-        //Zurückkehren zur Liste der Kategorien
-        if (!fromRouter) this.router.navigate(this.routeForList + "/" + this.fatherItem.ID);
-    }
-
     //Überprüft den Status der Buttons
     protected checkEnabledState(): void {
         //Überprüfen des Status für den Save-Button
         if (this.isBusy) {
-            this.isSavingEnabled = false;
             this.isChoosePictureEnabled = false;
             this.isChangeImageParameterEnabled = false;
         }
@@ -257,14 +211,6 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
             else {
                 this.isChangeImageParameterEnabled = false;
             }
-            
-            //Überprüfen des Status des Save-Buttons
-            if (this.itemToEdit.entityAspect.hasValidationErrors) {
-                this.isSavingEnabled = false;
-            }
-            else {
-                this.isSavingEnabled = true;
-            }
         }
     }
 
@@ -273,44 +219,47 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
         //Einblenden der Busy-Box
         this.setBusyState(true);
 
-        //Auswerten der Kategorie-Werte die sich geändert haben
-        var ChangedCategories: Array<DropdownListValueItem> = this.categoryList.getChangedValues();
-
-        //Alle neuen Kategorie-Werte dem Medien-Item zuweisen
-        for (var CategoryValue of ChangedCategories) {
-            if (CategoryValue.assigned) {
-                await this.service.createNewAssignedCategory(this.itemToEdit, CategoryValue.id);
-            }
-        }
-
-        //Für alle entfernten Kategoriewerte aus dem Medien-Item entfernen
-        for (var CategoryValue of ChangedCategories) {
-            if (!CategoryValue.assigned) {
-                await this.service.removeAssignedCategory(CategoryValue.originalItem);
-            }
-        }
-
-        //Den Name des Medien-Elements auf die ID des Upload-Items setzen,
-        //da es sonst zu einer PK-Veretzung kommt
-        this.itemToEdit.NameGerman = this.uploadItem.ID.toString();
-        this.itemToEdit.NameEnglish = this.uploadItem.ID.toString();
-        
         //Speichern des Medien-Items
         try {
+          //Vor dem Speichern noch mal eine Validierung starten
+          await this.validationController.validate();
+
+          //Wenn keine Validierungsfehler anstehen, dann wird gespeichert
+          if (!this.hasValidationError) {
+            //Den Name des Medien-Elements auf die ID des Upload-Items setzen,
+            //da es sonst zu einer PK-Veretzung kommt
+            this.itemToEdit.NameGerman = this.uploadItem.ID.toString();
+            this.itemToEdit.NameEnglish = this.uploadItem.ID.toString();
+
             //Speichern in der Datenbank
-            await this.service.saveChanges();
+            await this.itemToEdit.save();
   
+            //Auswerten der Kategorie-Werte die sich geändert haben
+            var ChangedCategories: Array<DropdownListValueItem> = this.categoryList.getChangedValues();
+
+            //Alle neuen Kategorie-Werte dem Medien-Item zuweisen
+            for (var CategoryValue of ChangedCategories) {
+              if (CategoryValue.assigned) {
+                await this.service.createNewAssignedCategory(this.itemToEdit.ID, CategoryValue.id).save();
+              }
+            }
+
+            //Für alle entfernten Kategoriewerte aus dem Medien-Item entfernen
+            for (var CategoryValue of ChangedCategories) {
+              if (!CategoryValue.assigned) {
+                await this.service.removeAssignedCategory(CategoryValue.originalItem);
+              }
+            }
+
             //Ausblenden der Busy-Box
             this.setBusyState(false);
 
             //Ausgeben einer Erfolgsmeldung
             this.showNotifySuccess(this.loc.tr('PictureAdmin.Save.Success', { ns: 'Toasts' }));
 
-            //Die Event-Handler deregistrieren
-            this.unsubscribeEvents();
-
             //Zurück zur Administrations-Liste der Bilder springen
             this.router.navigate(this.routeForList + "/" + this.fatherItem.ID);
+          }
         }
         catch (ex) {
             //Ausblenden der Busy-Box
@@ -321,7 +270,7 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup>
             //weiter gemacht werden.
             //Wenn nicht muss eine entsprechende Fehlermeldung angezeigt werden,
             //dass das Speichern nicht funktioniert hat
-            if (!this.itemToEdit.entityAspect.hasValidationErrors) {
+            if (!this.hasValidationError) {
                 this.showNotifyError(this.loc.tr('PictureAdmin.Save.Error', { ns: 'Toasts' }));
             }
         }

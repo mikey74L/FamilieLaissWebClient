@@ -40,7 +40,6 @@ export async function configure(aurelia: Aurelia) {
     .standardConfiguration()
     .developmentLogging()
     .globalResources([PLATFORM.moduleName('CustomControls/loading-indicator'), 
-                      PLATFORM.moduleName('CustomControls/input-text'), 
                       PLATFORM.moduleName('CustomControls/input-text-validation'),
                       PLATFORM.moduleName('CustomControls/input-textarea-validation'),
                       PLATFORM.moduleName('CustomControls/upload-control'),

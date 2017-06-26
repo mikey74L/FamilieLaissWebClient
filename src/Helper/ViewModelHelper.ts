@@ -11,7 +11,6 @@ import { AppRouter } from 'aurelia-router';
 import { DialogController } from 'aurelia-dialog';
 import swal from 'sweetalert2';
 import { enViewModelEditMode } from '../Enum/FamilieLaissEnum';
-import { LoadDataWithFatherModel, EditDataWithFatherModel} from '../Models/LoadDataWithFatherModel';
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal, 
          ServiceModelStammdatenID, ServiceModelStammdatenEditID,
          ServiceModelLoadDataDelete, ServiceModelAssign, ServiceModelAssignEdit } from './ServiceHelper'

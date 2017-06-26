@@ -97,22 +97,26 @@ export class PictureAdminServiceEdit extends ServiceModelAssignEdit<MediaItem, M
     }
 
     //Erstellt eine neue Zuweisung für einen Kategorie-Wert
-    public createNewAssignedCategory(idMediaItem: number, idCategory: number): MediaItemFacet {
+    public createNewAssignedCategory(idMediaItem: number, idFacetValue: number): MediaItemFacet {
         //Erstellen der Entität
         let AssignedCategory: MediaItemFacet = this.repositoryAssigned.getNewEntity();
 
         //Zuweisen der Properties
         AssignedCategory.ID_MediaItem = idMediaItem;
-        AssignedCategory.ID_FacetValue = idCategory;
+        AssignedCategory.ID_FacetValue = idFacetValue;
 
         //Return-Value
         return AssignedCategory;
     }
 
     //Entfernt eine Zuweisung für einen Kategorie-Wert
-    public async removeAssignedCategory(idAssignment: number): Promise<Response> {
+    public async removeAssignedCategory(idFacetValue: number): Promise<Response> {
+        //Query zusammenbauen
+        let Query = this.getQueryBuilder<MediaItemFacet>();
+        Query.equals(x => x.ID_FacetValue, idFacetValue);
+
         //Ermitteln der Entity
-        var entityDelete: MediaItemFacet = await this.repositoryAssigned.findOne(idAssignment);
+        var entityDelete: MediaItemFacet = await this.repositoryAssigned.findOne(this.getQueryStringFromQuery(Query));
 
         //Entfernen des Items aus dem Manager
         return entityDelete.destroy();

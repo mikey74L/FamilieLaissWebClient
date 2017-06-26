@@ -8,7 +8,7 @@ import {I18N} from 'aurelia-i18n';
 import {DialogService, DialogCloseResult} from 'aurelia-dialog';
 import {ChooseAlbumDialog } from '../../../CustomDialogs/ChooseAlbumDialog';
 import {AppRouter} from 'aurelia-router';
-import {enSortDirection} from '../../../Enum/FamilieLaissEnum';
+import {enSortDirection, enMediaType } from '../../../Enum/FamilieLaissEnum';
 import {DeletePictureEvent, EditPictureEvent} from '../../../Events/PictureEvents';
 import {PictureAdminService} from './picture-admin-service';
 import swal from 'sweetalert2';
@@ -174,7 +174,7 @@ export class PictureAdminList extends AssignViewModelStammdaten<MediaItem, Media
   public async chooseAlbum(): Promise<void> {
      try { 
        //Anzeigen des Dialoges zur Auswahl eines Albums
-       var Result: DialogCloseResult = await this.dialogService.open({viewModel: ChooseAlbumDialog, model: this.service})
+       var Result: DialogCloseResult = await this.dialogService.open({viewModel: ChooseAlbumDialog, model: enMediaType.Picture})
                                                                .whenClosed((reason: DialogCloseResult) => { return reason;});
 
        //Übernehmen des ausgewählten Albums

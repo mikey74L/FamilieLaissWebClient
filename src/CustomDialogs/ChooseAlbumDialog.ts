@@ -6,16 +6,19 @@ import { ViewModelGeneralDialog } from '../Helper/ViewModelHelper';
 import { DialogController } from 'aurelia-dialog';
 import { ServiceModelAssign } from '../Helper/ServiceHelper';
 import { ValidationController } from 'aurelia-validation';
+import { ChooseAlbumDialogService } from './ChooseAlbumDialogService';
+import { enMediaType } from '../Enum/FamilieLaissEnum';
 import 'syncfusion-javascript/content/ej/web/ej.widgets.core.material.less';
 import 'syncfusion-javascript/content/ej/web/material/ej.theme.less';
 
-@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogController)
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogController, ChooseAlbumDialogService)
 export class ChooseAlbumDialog extends ViewModelGeneralDialog {
     //Optionen für i18N
     locOptions = { ns: 'Dialogs' };
 
     //Members
-    service: ServiceModelAssign;
+    currentType: enMediaType;
+    service: ChooseAlbumDialogService;
     entities: Array<any>;
 
     gridFilterSettings: ej.Grid.FilterSettings;
@@ -30,9 +33,12 @@ export class ChooseAlbumDialog extends ViewModelGeneralDialog {
     isItemSelected: boolean;
 
     //C'tor
-    constructor (loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogController: DialogController) {
+    constructor (loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogController: DialogController, service: ChooseAlbumDialogService) {
       //Aufrufen des Constructors der Vater-Klasse
       super(loc, eventAggregator, validationController, dialogController);
+
+      //Übernehmen des Service
+      this.service = service;
 
       //Setzen der Filteroptionen für das Grid
       this.gridFilterSettings = { filterType : "excel"};
@@ -68,15 +74,15 @@ export class ChooseAlbumDialog extends ViewModelGeneralDialog {
     }
 
     //Wird von Aurelia aufgerufen wenn der Dialog angezeigt wird
-    protected async activateChild(info: any): Promise<void> {
-      //Übernehmen des Service
-      this.service = info;
+    protected async activateChild(info: enMediaType): Promise<void> {
+      //Übernehmen des Typs
+      this.currentType = info;
 
       //Anzeigen der Busy-Box
       this.setBusyState(true);
 
       //Laden der entsprechenden Alben
-      this.entities = await this.service.loadAlben();
+      this.entities = await this.service.getData(this.currentType);
 
       //Ausblenden der Busy-Box
       this.setBusyState(false);
