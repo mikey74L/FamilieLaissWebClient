@@ -3,7 +3,7 @@ import { MediaGroup } from './../../../Models/Entities/MediaGroup';
 import { AssignViewModelStammdaten } from '../../../Helper/ViewModelHelper';
 import {EventAggregator, Subscription} from 'aurelia-event-aggregator';
 import { SortCriteria } from './../../../Models/SortCriteria';
-import {autoinject} from 'aurelia-dependency-injection';
+import { inject, NewInstance } from 'aurelia-dependency-injection';
 import {I18N} from 'aurelia-i18n';
 import {DialogService, DialogCloseResult} from 'aurelia-dialog';
 import {ChooseAlbumDialog } from '../../../CustomDialogs/ChooseAlbumDialog';
@@ -12,8 +12,9 @@ import {enSortDirection} from '../../../Enum/FamilieLaissEnum';
 import {DeletePictureEvent, EditPictureEvent} from '../../../Events/PictureEvents';
 import {PictureAdminService} from './picture-admin-service';
 import swal from 'sweetalert2';
+import { ValidationController } from 'aurelia-validation';
 
-@autoinject()
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogService, AppRouter, PictureAdminService)
 export class PictureAdminList extends AssignViewModelStammdaten<MediaItem, MediaGroup> {
   //Konfiguration für i18N
   locConfig: any = { ns: ['StammPictureAdmin', 'translation']};
@@ -32,10 +33,10 @@ export class PictureAdminList extends AssignViewModelStammdaten<MediaItem, Media
   subscribeEditEvent: Subscription;
 
   //C'tor
-  constructor (loc: I18N, eventAggregator: EventAggregator, dialogService: DialogService, router: AppRouter, 
+  constructor (loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, router: AppRouter, 
                service: PictureAdminService) {
     //Aufrufen des Konstruktors der Vater-Klasse
-    super (loc, eventAggregator, dialogService, router, service, 'pictureadminedit');
+    super (loc, eventAggregator, validationController, dialogService, router, service, 'pictureadminedit');
 
     //Setzen des Textes für das Auswählen eines Albums
     this.albumChoosed = false;
@@ -253,11 +254,11 @@ export class PictureAdminList extends AssignViewModelStammdaten<MediaItem, Media
         this.showNotifySuccess(this.loc.tr('PictureAdmin.Delete.Success', { ns: 'Toasts', 'namePicture': NamePicture, 'nameAlbum': NameAlbum }));
       }
       catch (ex) {
+        //Logging
+        console.log(ex);
+        
         //Ausblenden der Busy-Box
         this.setBusyState(false);
-
-        //Zurücknehmen der Änderungen (Delete-State)
-        this.service.rejectChanges();
 
         //Ausgeben einer Fehlermeldung
         this.showNotifyError(this.loc.tr('PictureAdmin.Delete.Error', { ns: 'Toasts', 'namePicture': NamePicture, 'nameAlbum': NameAlbum }));

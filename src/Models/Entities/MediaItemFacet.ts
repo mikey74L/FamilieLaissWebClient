@@ -34,22 +34,11 @@ export class MediaItemFacet extends Entity {
     super();
 
     //Die Validierungsregeln hinzufügen
-    // ValidationRules
-    //   .ensure((p: FacetGroup) => p.Type)
-    //   .displayName(localize.tr('Facet_Group.Type.DisplayName', { ns: ['Metadata'] }))
-    //   .required()
-    //   .ensure((p: FacetGroup) => p.NameGerman)
-    //   .displayName(localize.tr('Facet_Group.Name_German.DisplayName', { ns: ['Metadata'] }))
-    //   .required()
-    //   .maxLength(70)
-    //   .then()
-    //   .satisfiesRule('valueAlreadyExists', 'ID', 'Type', ValidationSettings.BaseURL + 'CheckFacetGroupNameGerman')
-    //   .ensure((p: FacetGroup) => p.NameEnglish)
-    //   .displayName(localize.tr('Facet_Group.Name_English.DisplayName', { ns: ['Metadata'] }))
-    //   .required()
-    //   .maxLength(70)
-    //   .then()
-    //   .satisfiesRule('valueAlreadyExists', 'ID', 'Type', ValidationSettings.BaseURL + 'CheckFacetGroupNameEnglish')
-    //   .on(this);
+    ValidationRules
+      .ensure((p: MediaItemFacet) => p.ID_MediaItem)
+      .required()
+      .ensure((p: MediaItemFacet) => p.ID_FacetValue)
+      .required()
+      .on(this);
   }
 }

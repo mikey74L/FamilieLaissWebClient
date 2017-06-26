@@ -29,7 +29,9 @@ export enum enEntityType {
   FacetValue = <any>"FacetValue",
   MediaGroup = <any>"MediaGroup",
   MediaItem = <any>"MediaItem",
-  UploadPictureItem = <any>"UploadPictureItem"
+  MediaItemFacet = <any>"MediaItemFacet",
+  UploadPictureItem = <any>"UploadPictureItem",
+  UploadPictureImageProperty = <any>"UploadPictureImageProperty"
 }
 
 export enum enUploadPictureStatus {

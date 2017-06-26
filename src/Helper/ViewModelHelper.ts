@@ -487,7 +487,7 @@ export abstract class AssignViewModelStammdaten<T extends Entity, F extends Enti
     router: AppRouter;
     selectedFatherItem: F;
     entities: Array<T>;
-    service: ServiceModelAssign<T>;
+    service: ServiceModelAssign<T, F>;
 
     isChooseAlbumEnabled: boolean;
     isAddEnabled: boolean;
@@ -496,7 +496,7 @@ export abstract class AssignViewModelStammdaten<T extends Entity, F extends Enti
 
     //C'tor
     constructor (loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, router: AppRouter, 
-                 service: ServiceModelAssign<T>, routeForEdit: string) {
+                 service: ServiceModelAssign<T, F>, routeForEdit: string) {
         //Aufrufen des Konstruktors für die Vater-Klasse
         super(loc, eventAggregator, validationController, dialogService);
 
@@ -550,14 +550,14 @@ export abstract class AssignViewModelStammdaten<T extends Entity, F extends Enti
     }
 }
 
-export abstract class ViewModelAssignEdit<T extends Entity, F extends Entity> extends ViewModelEdit<T> {
+export abstract class ViewModelAssignEdit<T extends Entity, Father extends Entity, Upload extends Entity, Category extends Entity, Assign extends Entity> extends ViewModelEdit<T> {
     //Members
-    service: ServiceModelAssignEdit<T>;
-    fatherItem: F;
+    service: ServiceModelAssignEdit<T, Father, Upload, Category, Assign>;
+    fatherItem: Father;
 
     //C'tor
     constructor(loc: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, 
-                routeForList: string, router: AppRouter, service: ServiceModelAssignEdit<T>) {
+                routeForList: string, router: AppRouter, service: ServiceModelAssignEdit<T, Father, Upload, Category, Assign>) {
         //Aufrufen des Konstruktors für die Vater Klasse
         super(loc, eventAggregator, validationController, dialogService, routeForList, router);
 
@@ -573,11 +573,10 @@ export abstract class ViewModelAssignEdit<T extends Entity, F extends Entity> ex
     //Laden der Daten über den Service
     protected async load(info: any): Promise<T> {
         //Über Promise das Laden des zu editierenden Items anstoßen
-        var ResultSet: EditDataWithFatherModel = await this.service.getItem(Number(info.id));
+        this.itemToEdit = await this.service.getItem(Number(info.id));
 
-        //Übernehmen der Entity
-        this.itemToEdit = ResultSet.editItem as T;
-        this.fatherItem = ResultSet.fatherItem as F;
+        //Ermitteln des Vater-Items
+        this.fatherItem = await this.service.getFather(Number(info.idFather));
 
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);
@@ -589,7 +588,7 @@ export abstract class ViewModelAssignEdit<T extends Entity, F extends Entity> ex
         this.itemToEdit = this.service.createNew(Number(info.idFather)) as T;
 
         //Ermitteln der Daten des Vaters
-        this.fatherItem = await this.service.getFather(Number(info.idFather)) as F;
+        this.fatherItem = await this.service.getFather(Number(info.idFather)) as Father;
         
         //Promise zurückmelden
         return Promise.resolve(this.itemToEdit);

@@ -1,8 +1,9 @@
+import { UploadPictureImageProperty } from './../../../Models/Entities/UploadPictureImageProperty';
 import { MediaItemFacet } from './../../../Models/Entities/MediaItemFacet';
 import { FacetGroup } from './../../../Models/Entities/FacetGroup';
 import { UploadPictureItem } from './../../../Models/Entities/UploadPictureItem';
 import { EntityManager, Entity, Repository } from 'aurelia-orm';
-import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal } from '../../../Helper/ServiceHelper'
+import { ServiceModel, ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal } from '../../../Helper/ServiceHelper'
 import { autoinject } from 'aurelia-dependency-injection';
 import { enEntityType } from '../../../Enum/FamilieLaissEnum';
 import { ServiceModelAssign, ServiceModelAssignEdit } from '../../../Helper/ServiceHelper';
@@ -46,7 +47,7 @@ export class PictureAdminService extends ServiceModelAssign<MediaItem, MediaGrou
 }
 
 @autoinject()
-export class PictureAdminServiceEdit extends ServiceModelAssignEdit<MediaItem, MediaGroup, UploadPictureItem, FacetGroup> {
+export class PictureAdminServiceEdit extends ServiceModelAssignEdit<MediaItem, MediaGroup, UploadPictureItem, FacetGroup, MediaItemFacet> {
     //C'tor
     constructor (manager: EntityManager) {
       //Aufrufen des Vater Constructor
@@ -57,6 +58,7 @@ export class PictureAdminServiceEdit extends ServiceModelAssignEdit<MediaItem, M
       this.getRepositoryFather(enEntityType.MediaGroup);
       this.getRepositoryCategory(enEntityType.FacetGroup);
       this.getRepositoryUpload(enEntityType.UploadPictureItem);
+      this.getRepositoryAssigned(enEntityType.MediaItemFacet);
     }
 
     //Ermittelt die Upload-Photos vom Server
@@ -95,10 +97,12 @@ export class PictureAdminServiceEdit extends ServiceModelAssignEdit<MediaItem, M
     }
 
     //Erstellt eine neue Zuweisung für einen Kategorie-Wert
-    public createNewAssignedCategory(id: number, idCategory: number): MediaItemFacet {
+    public createNewAssignedCategory(idMediaItem: number, idCategory: number): MediaItemFacet {
         //Erstellen der Entität
-        let AssignedCategory: MediaItemFacet = this.reposi
-        AssignedCategory.ID_MediaItem = id;
+        let AssignedCategory: MediaItemFacet = this.repositoryAssigned.getNewEntity();
+
+        //Zuweisen der Properties
+        AssignedCategory.ID_MediaItem = idMediaItem;
         AssignedCategory.ID_FacetValue = idCategory;
 
         //Return-Value
@@ -106,41 +110,36 @@ export class PictureAdminServiceEdit extends ServiceModelAssignEdit<MediaItem, M
     }
 
     //Entfernt eine Zuweisung für einen Kategorie-Wert
-    public async removeAssignedCategory(assignedCategoryItem: any): Promise<void> {
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
-
+    public async removeAssignedCategory(idAssignment: number): Promise<Response> {
         //Ermitteln der Entity
-        var entityDelete = this.manager.getEntityByKey('MediaItemFacet', assignedCategoryItem.ID);
+        var entityDelete: MediaItemFacet = await this.repositoryAssigned.findOne(idAssignment);
 
         //Entfernen des Items aus dem Manager
-        entityDelete.entityAspect.setDeleted();
-    }
-
-    //Speichert die Änderungen auf dem Server
-    public async saveChanges(): Promise<SaveResult> {
-        return this.manager.saveChanges();
+        return entityDelete.destroy();
     }
 }
 
 autoinject()
-export class PictureAdminServiceEditExtend extends ServiceModel {
+export class PictureAdminServiceEditExtend extends ServiceModel<UploadPictureImageProperty> {
     //C'tor
-    constructor (emFactory: EntityManagerFactory) {
-      super(emFactory);
+    constructor (manager: EntityManager) {
+      //Aufrufen des Vater Constructor
+      super(manager);
+
+      //Repository erstellen
+      this.getRepository(enEntityType.UploadPictureImageProperty);
     }
 
     //Erstellt eine neue Image-Property
-    public async createImageProperty(uploadPicture: any, rotate: number): Promise<EntityBase> {
-        //Ermitteln des Entity-Manager
-        await this.getEntityManager();
-
+    public createImageProperty(uploadPicture: UploadPictureItem, rotate: number): UploadPictureImageProperty {
         //Erstellen der Entität
-        var NewImageProperty: any = this.manager.createEntity('UploadPictureImageProperty', {ID: uploadPicture.ID});
-        NewImageProperty.Rotate = rotate;
-        uploadPicture.ImageProperty = NewImageProperty;
+        let Result: UploadPictureImageProperty = this.repository.getNewEntity();
+
+        //Zuweisen der Properties
+        Result.Rotate = rotate;
+        Result.ID = uploadPicture.ID;
 
         //Return-Value
-        return Promise.resolve(NewImageProperty);
+        return Result;
     }
 }

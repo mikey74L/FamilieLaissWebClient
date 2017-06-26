@@ -195,11 +195,12 @@ export abstract class ServiceModelAssign<T extends Entity, F extends Entity> ext
     }
 }
 
-export abstract class ServiceModelAssignEdit<T extends Entity, Father extends Entity, Upload extends Entity, Category extends Entity> extends ServiceModelStammdatenEdit<T> {
+export abstract class ServiceModelAssignEdit<T extends Entity, Father extends Entity, Upload extends Entity, Category extends Entity, Assign extends Entity> extends ServiceModelStammdatenEdit<T> {
     //Members
     protected repositoryFather: Repository;
     protected repositoryUpload: Repository;
     protected repositoryCategory: Repository;
+    protected repositoryAssigned: Repository;
 
     //C'tor
     constructor(manager: EntityManager) {
@@ -224,6 +225,12 @@ export abstract class ServiceModelAssignEdit<T extends Entity, Father extends En
         this.repositoryCategory = this.entityManager.getRepository(identifier);
     }
 
+    //Ermitteln des richtigen Repositories
+    public getRepositoryAssigned(identifier: enEntityType): void
+    {
+        this.repositoryAssigned = this.entityManager.getRepository(identifier);
+    }
+
     //Ermittelt das Item
     public async getItem(ID: number): Promise<T> {
       //Laden der Daten
@@ -246,8 +253,8 @@ export abstract class ServiceModelAssignEdit<T extends Entity, Father extends En
     public abstract createNew(idFather: number): T;
 
     //Erzeugt eine neue Zuweisung für einen Kategoriewert
-    public abstract async createNewAssignedCategory(item: any, idCategory: number): Promise<Entity>;
+    public abstract createNewAssignedCategory (idMediaItem: number, idCategory: number): Assign;
 
     //Entfernt einen zugewießenen Kategoriewert
-    public abstract async removeAssignedCategory(assignedCategoryItem: any): Promise<void>;
+    public abstract async removeAssignedCategory(idAssignment: number): Promise<Response>;
 }
