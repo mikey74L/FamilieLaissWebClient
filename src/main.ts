@@ -126,7 +126,8 @@ export async function configure(aurelia: Aurelia) {
                   'AuthForgotPassword',
                   'AuthAdminAccount',
                   'AuthNewPassword',
-                  'Messages'],
+                  'Messages',
+                  'Exif'],
               defaultNS: 'translation'
           });
       });

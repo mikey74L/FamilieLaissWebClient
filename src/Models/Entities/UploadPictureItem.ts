@@ -6,6 +6,7 @@ import { CustomValidationRuleHelper } from './../../Helper/CustomValidationRuleH
 import { autoinject } from 'aurelia-framework';
 import { MediaItem } from './MediaItem';
 import { UploadPictureImageProperty } from './UploadPictureImageProperty';
+import { UploadPictureItemExif } from './UploadPictureItemExif';
 import { enUploadPictureStatus } from '../../Enum/FamilieLaissEnum';
 
 @idProperty('ID')
@@ -38,6 +39,9 @@ export class UploadPictureItem extends Entity {
 
   @association('UploadPictureImageProperty') 
   public ImageProperty: UploadPictureImageProperty;
+
+  @association('UploadPictureItemExif') 
+  public Exif_Data: UploadPictureItemExif;
 
   constructor(rules: CustomValidationRuleHelper, localize: I18N) {
     //Den Vater-Konstruktor aufrufen

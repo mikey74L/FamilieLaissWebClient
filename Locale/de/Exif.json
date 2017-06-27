@@ -1,0 +1,89 @@
+{
+  "Contrast": {
+    "Value_0": "Normal",
+    "Value_1": "Weich",
+    "Value_2": "Hart"
+  },
+  "Exposure": {
+    "Value_0": "Nicht definiert",
+    "Value_1": "Manuell",
+    "Value_2": "Normal",
+    "Value_3": "Zeitautomatik",
+    "Value_4": "Blendenautomatik",
+    "Value_5": "Kreativprogramm (bevorzugt Tiefenschärfe)",
+    "Value_6": "Aktionsprogramm (bevorzugt Belichtungszeit)",
+    "Value_7": "Hochformat",
+    "Value_8": "Querformat"
+  },
+  "Flash": {
+    "Value_0": "Ohne Blitzlicht",
+    "Value_1": "Blitzlicht",
+    "Value_5": "Blitz, ohne Stroboskop",
+    "Value_7": "Blitz, mit Stroboskop",
+    "Value_9": "Blitz, obligatorisch",
+    "Value_13": "Blitz, obligatorisch, kein Stroboskop",
+    "Value_15": "Blitz, obligatorisch, Stroboskop",
+    "Value_16": "Kein Blitz, obligatorisch",
+    "Value_24": "Kein Blitz, automatisch",
+    "Value_25": "Blitz, automatisch",
+    "Value_29": "Blitz, automatisch, kein Stroboskop",
+    "Value_31": "Blitz, automatisch, Stroboskop",
+    "Value_32": "Keine Blitzfunktion",
+    "Value_65": "Blitz, rote Augen",
+    "Value_69": "Blitz, rote Augen, kein Stroboskop",
+    "Value_71": "Blitz, rote Augen, Stroboskop",
+    "Value_73": "Blitz, obligatorisch, rote Augen",
+    "Value_77": "Blitz, obligatorisch, rote Augen, kein Stroboskop",
+    "Value_79": "Blitz, obligatorisch, rote Augen, Stroboskop",
+    "Value_89": "Blitz, automatisch, rote Augen",
+    "Value_93": "Blitz, automatisch, kein Stroboskop, rote Augen",
+    "Value_95": "Blitz, automatisch, Stroboskop, rote Augen"
+  },
+  "Light": {
+    "Value_0": "Unbekannt",
+    "Value_1": "Tageslicht",
+    "Value_2": "Leuchtstoffröhren",
+    "Value_3": "Kunstlicht",
+    "Value_4": "Blitzlicht",
+    "Value_9": "Schönes Wetter",
+    "Value_10": "Trübes Wetter",
+    "Value_11": "Schatten",
+    "Value_12": "Tageslicht Leuchtstoff (D5700-7100K)",
+    "Value_13": "Tageslicht weiß Leuchtstoff (N4600-5400K)",
+    "Value_14": "Kühles weiß Leuchtstoff (W3900-4500K)",
+    "Value_15": "Weiß Leuchtstoff (WW3200-3700K)",
+    "Value_17": "Standardilluminant A",
+    "Value_18": "Standardilluminant B",
+    "Value_19": "Standardilluminant C",
+    "Value_20": "D55",
+    "Value_21": "D65",
+    "Value_22": "D75",
+    "Value_23": "D50",
+    "Value_24": "D75",
+    "Value_255": "Andere Lichtquelle"
+  },
+  "Metering": {
+    "Value_0": "Unbekannt",
+    "Value_1": "Integral",
+    "Value_2": "Mittenbetont",
+    "Value_3": "Einpunkt",
+    "Value_4": "Mehrpunkt",
+    "Value_5": "Mehrfeld",
+    "Value_6": "Teilbereich",
+    "Value_255": "Andere"
+  },
+  "Saturation": {
+    "Value_0": "Normal",
+    "Value_1": "Niedrige Sättigung",
+    "Value_2": "Hohe Sättigung"
+  },
+  "Sharpness": {
+    "Value_0": "Normal",
+    "Value_1": "Weich",
+    "Value_2": "Hart"
+  },
+  "WhiteBalance": {
+    "Value_0": "Automatisch",
+    "Value_1": "Manuell"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "Contrast": {
+    "Value_0": "Normal",
+    "Value_1": "Soft",
+    "Value_2": "Hard"
+  },
+  "Exposure": {
+    "Value_0": "Not defined",
+    "Value_1": "Manually",
+    "Value_2": "Normal program",
+    "Value_3": "Aperture priority",
+    "Value_4": "Shutter priority",
+    "Value_5": "Creative programm (biased toward depth of field)",
+    "Value_6": "Action programm (biased toward fast shutter speed)",
+    "Value_7": "Portrait mode",
+    "Value_8": "Landscape mode"
+  },
+  "Flash": {
+    "Value_0": "No flash",
+    "Value_1": "Flashlight",
+    "Value_5": "Flash, without Strobe",
+    "Value_7": "Flash, with Strobe",
+    "Value_9": "Flash, compulsory",
+    "Value_13": "Flash, compulsory, without strobe",
+    "Value_15": "Flash, compulsory, strobe",
+    "Value_16": "No flash, compulsory",
+    "Value_24": "No flash, automatic",
+    "Value_25": "Flash, automatic",
+    "Value_29": "Flash, automatic, no strobe",
+    "Value_31": "Flash, automatic, strobe",
+    "Value_32": "No flash function",
+    "Value_65": "Flash, red eyes",
+    "Value_69": "Flash, red eyes, without strobe",
+    "Value_71": "Flash, red eyes, strobe",
+    "Value_73": "Flash, compulsory, red eyes",
+    "Value_77": "Flash, compulsory, red eyes, without strobe",
+    "Value_79": "Flash, compulsory, red eyes, strobe",
+    "Value_89": "Flash, automatic, red eyes",
+    "Value_93": "Flash, automatic, without strobe, red eyes",
+    "Value_95": "Flash, automatic, strobe, red eyes"
+  },
+  "Light": {
+    "Value_0": "Unknown",
+    "Value_1": "Daylight",
+    "Value_2": "Fluorescent",
+    "Value_3": "Tungsten (incandescent light)",
+    "Value_4": "Flash",
+    "Value_9": "Fine Weather",
+    "Value_10": "Cloudy Weather",
+    "Value_11": "Shade",
+    "Value_12": "Daylight fluorescent (D5700-7100K)",
+    "Value_13": "Day white fluorescent (N4600-5400K)",
+    "Value_14": "Cool white fluorescent (W3900-4500K)",
+    "Value_15": "White fluorescent (WW3200-3700K)",
+    "Value_17": "Standard light A",
+    "Value_18": "Standard light B",
+    "Value_19": "Standard light C",
+    "Value_20": "D55",
+    "Value_21": "D65",
+    "Value_22": "D75",
+    "Value_23": "D50",
+    "Value_24": "D75",
+    "Value_255": "Other light source"
+  },
+  "Metering": {
+    "Value_0": "Unknown",
+    "Value_1": "Integral",
+    "Value_2": "Center-weighted average",
+    "Value_3": "Single point",
+    "Value_4": "Multipoint",
+    "Value_5": "Multi-segment",
+    "Value_6": "Subarea",
+    "Value_255": "Other"
+  },
+  "Saturation": {
+    "Value_0": "Normally",
+    "Value_1": "Low saturation",
+    "Value_2": "High saturation"
+  },
+  "Sharpness": {
+    "Value_0": "Normally",
+    "Value_1": "Soft",
+    "Value_2": "Hard"
+  },
+  "WhiteBalance": {
+    "Value_0": "Automatically",
+    "Value_1": "Manually"
+  }
+}
