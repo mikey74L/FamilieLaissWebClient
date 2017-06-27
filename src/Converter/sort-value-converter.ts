@@ -1,3 +1,6 @@
+import { SortCriteria } from '../Models/SortCriteria';
+import { enSortDirection } from '../Enum/FamilieLaissEnum';
+
 export class SortValueConverter {
     naturalSort(a, b, options) {
         var re = /(^-?[0-9]+(\.?[0-9]*)[df]?e?[0-9]?$|^0x[0-9a-f]+$|[0-9]+)/gi;
@@ -42,8 +45,8 @@ export class SortValueConverter {
         return 0;
     }
 
-    toView(array, properties) {
-        var SortDescending = properties.direction === 'descending' ? true : false;
+    toView(array, properties: SortCriteria) {
+        var SortDescending = properties.direction === enSortDirection.Descending ? true : false;
         var PropertyName = properties.propertyName;
         var PropertyArray = [];
 

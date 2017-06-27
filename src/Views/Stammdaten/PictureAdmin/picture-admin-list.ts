@@ -29,6 +29,7 @@ export class PictureAdminList extends AssignViewModelStammdaten<MediaItem, Media
   albumContext: string;
   albumList: Array<MediaGroup> = [];
 
+  //Event-Aggregator
   subscribeDeleteEvent: Subscription;
   subscribeEditEvent: Subscription;
 

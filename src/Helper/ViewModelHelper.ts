@@ -5,6 +5,7 @@ import { DialogService } from 'aurelia-dialog';
 import { ValidationController, validateTrigger } from 'aurelia-validation';
 import { BSInputFieldErrorRenderer } from '../Renderer/BSInputFieldErrorRenderer';
 import { I18N } from 'aurelia-i18n';
+import { SortCriteria } from '../Models/SortCriteria';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { ShowBusyBoxEvent } from '../Events/ShowBusyBoxEvent';
 import { AppRouter } from 'aurelia-router';
@@ -97,6 +98,31 @@ export abstract class ViewModelGeneral {
   //Sind aktuell Validierungsfehler vorhanden
   protected get hasValidationError(): boolean {
     return this.validationController.errors.length > 0;
+  }
+}
+
+export abstract class ViewModelShow<T extends Entity, F extends Entity> extends ViewModelGeneral {
+  //Members für die Liste
+  sortCriteriaHeaderText: string;
+  currentSortCriteria: SortCriteria;
+  sortCriteriaList: Array<SortCriteria> = [];
+  
+  //Members
+  albumChoosed: boolean;
+  albumContext: string;
+  entities: Array<T> = [];
+
+  //Restliche
+  dialogService: DialogService;
+  router: AppRouter;
+
+  constructor (localize: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, router: AppRouter) {
+    //Aufrufen des Konstruktors der Vaterklasse
+    super(localize, eventAggregator, validationController)
+
+    //Übernehmen der Parameter
+    this.dialogService = dialogService;
+    this.router = router;
   }
 }
 

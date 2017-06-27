@@ -1,11 +1,11 @@
-import {QueryBuilder} from '../Helper/ODataQueryBuilder/query_builder';
-import {FacetGroup} from '../Models/Entities/FacetGroup';
+import {QueryBuilder} from '../../Helper/ODataQueryBuilder/query_builder';
+import {FacetGroup} from '../../Models/Entities/FacetGroup';
 import {EntityManager, Repository} from 'aurelia-orm';
 import {autoinject} from 'aurelia-framework';
 import {HttpClient} from 'aurelia-http-client';
 import {ValidateResult} from 'aurelia-validation';
-import {Expression} from '../Helper/ODataQueryBuilder/expression';
-import {enFacetType} from '../Enum/FamilieLaissEnum';
+import {Expression} from '../../Helper/ODataQueryBuilder/expression';
+import {enFacetType} from '../../Enum/FamilieLaissEnum';
 
 @autoinject()
 export class Home {

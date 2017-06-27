@@ -1,6 +1,6 @@
 import {inject, NewInstance} from 'aurelia-dependency-injection';
 import {I18N} from 'aurelia-i18n';
-import {ViewModelGeneral} from '../Helper/ViewModelHelper';
+import {ViewModelGeneral} from '../../Helper/ViewModelHelper';
 import {EventAggregator, Subscription} from 'aurelia-event-aggregator';
 import { ValidationController } from 'aurelia-validation';
 

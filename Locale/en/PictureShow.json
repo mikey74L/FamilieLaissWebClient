@@ -1,10 +1,28 @@
 {
+  "ChooseAlbum": "Bitte ein Album auswählen",
   "Header": {
-    "Text": ""
+    "Text": "Photos"
   },
   "Card": {
     "Header":{
-      "Text": ""
+      "Text_notchoosed": "Liste der Photos",
+      "Text_choosed": "Liste der Photos für das Album '{{album}}'",
+      "Description_notchoosed": "Hier können Sie Photos von ausgewählten Alben anschauen. Die Sortierreihenfolge der Photos kann angepasst werden, und es kann auch ein Anzeige-Filter gesetzt werden. ",
+      "Description_choosed": "Hier können Sie Photos von ausgewählten Alben anschauen. Die Sortierreihenfolge der Photos kann angepasst werden, und es kann auch ein Anzeige-Filter gesetzt werden.",
+      "Tooltips": {
+        "SelectAlbum": "Album auswählen für welches die Photos angezeigt werden sollen",
+        "ChooseFilter": "",
+        "Sort": "Sortierreihenfolge der Photos ändern",
+        "Refresh": "Liste der Photos des ausgewählten Albums aktualisieren"
+      },
+      "SortMenuItems": {
+        "NameAscending": "Name aufsteigend",
+        "NameDescending": "Name absteigend",
+        "AssignDateAscending": "Zuweisungs-Datum aufsteigend",
+        "AssignDateDescending": "Zuweisungs-Datum absteigend",
+        "UploadDateAscending": "Upload-Datum aufsteigend",
+        "UploadDateDescending": "Upload-Datum absteigend"
+      }
     }
   }
 }

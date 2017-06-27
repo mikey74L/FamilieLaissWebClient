@@ -204,22 +204,22 @@ export class FamilieLaissApp {
         var Item: MenuItemModel;
 
         //Route für "Home"
-        this.menuItemList.addItem(undefined, 'zmdi zmdi-home', ['', 'home'], 'home', PLATFORM.moduleName('./Views/Home'), true, 
+        this.menuItemList.addItem(undefined, 'zmdi zmdi-home', ['', 'home'], 'home', PLATFORM.moduleName('./Views/Home/Home'), true, 
                                   this.loc.tr('Home', {ns: 'Router'}), undefined, 
                                   {showNavigation: true, needAuthentication: false}, [], true );
 
         //Route für "Picture-Show"        
-        this.menuItemList.addItem(undefined, 'zmdi zmdi-image-alt', 'pictureshow', 'pictureshow', PLATFORM.moduleName('./Views/PictureShow'), true, 
+        this.menuItemList.addItem(undefined, 'zmdi zmdi-image-alt', 'pictureshow', 'pictureshow', PLATFORM.moduleName('./Views/Picture/PictureShow'), true, 
                                   this.loc.tr('Picture', {ns: 'Router'}), undefined, 
                                   {showNavigation: true, needAuthentication: false}, [], true );
 
         //Route für "Video-Show"        
-        this.menuItemList.addItem(undefined, 'zmdi zmdi-movie-alt', 'videoshow', 'videoshow', PLATFORM.moduleName('./Views/VideoShow'), true, 
+        this.menuItemList.addItem(undefined, 'zmdi zmdi-movie-alt', 'videoshow', 'videoshow', PLATFORM.moduleName('./Views/Video/VideoShow'), true, 
                                   this.loc.tr('Video', {ns: 'Router'}), undefined, 
                                   {showNavigation: true, needAuthentication: false}, [], true );
 
         //Route für "Blog"        
-        this.menuItemList.addItem(undefined, 'zmdi zmdi-blogger', 'blogshow', 'blogshow', PLATFORM.moduleName('./Views/BlogShow'), true, 
+        this.menuItemList.addItem(undefined, 'zmdi zmdi-blogger', 'blogshow', 'blogshow', PLATFORM.moduleName('./Views/Blog/BlogShow'), true, 
                                   this.loc.tr('Blog', {ns: 'Router'}), undefined, 
                                   {showNavigation: true, needAuthentication: false}, [], true );
 
