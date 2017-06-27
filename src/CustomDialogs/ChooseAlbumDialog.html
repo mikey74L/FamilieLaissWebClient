@@ -5,27 +5,13 @@
         </ux-dialog-header>
 
         <ux-dialog-body>
-          <div style="width: 800px; height: 500px;">
-            <ej-grid id="grid_Media_Group" e-data-source.bind="entities" e-allow-filtering=true 
-                     e-allow-sorting=true e-allow-scrolling=true e-allow-grouping=false
-                     e-allow-multi-sorting=true e-allow-reordering=false e-allow-resizing=true
-                     e-enable-header-hover=true e-enable-row-hover=true e-filter-settings.bind="gridFilterSettings"
-                     e-sort-settings.bind="gridSortSettings"
-                     e-edit-settings.bind="gridEditSettings" e-selection-settings.bind="gridSelectionSettings"
-                     e-scroll-settings.bind="gridScrollSettings"
-                     e-selection-type="single" e-enable-alt-row=false
-                     e-on-row-selected.trigger="rowHasBeenSelected($event.detail)">
-              <ej-column e-field="NameGerman" e-type="string" e-width=300 e-header-text="${ 'Media_Group.Name_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
-              <ej-column e-field="DescriptionGerman" e-type="string" e-width=400 e-header-text="${ 'Media_Group.Description_German.DisplayName' | t: { ns: 'Metadata' } }"></ej-column>
-            </ej-grid>  
-          </div>
-        </ux-dialog-body>
-
-        <ux-dialog-footer>
+          <div style="margin-bottom: 15px;" repeat.for="item of entities">
+            <h3>${item.localizedName}<small>${item.DDL_Create}</small></h3>
+            <p>${item.localizedDescription}</p>
             <button type="button"
-                    disabled.bind="!isOKEnabled"
-                    click.trigger="controller.ok(selectedAlbum)"
-                    class="btn btn-primary waves-effect"
+                    disabled.bind="isBusy"
+                    click.trigger="controller.ok(item)"
+                    class="btn btn-default waves-effect"
                     button-waves
                     data-dismiss="modal"
                     bootstrap-tooltip
@@ -33,9 +19,13 @@
                     title=""
                     data-original-title=""
                     data-trigger="hover"
-                    t="[data-original-title]ChooseAlbum.Tooltips.OK;[append]ChooseAlbum.Buttons.OK"
+                    t="[data-original-title]ChooseAlbum.Tooltips.Choose;[append]ChooseAlbum.Buttons.Choose"
                     t-params.bind="locOptions">
             </button>
+          </div>
+        </ux-dialog-body>
+
+        <ux-dialog-footer>
             <button type="button"
                     disabled.bind="isBusy"
                     click.trigger="controller.cancel()"

@@ -1,3 +1,4 @@
+import { IODataSettings } from './ODataQueryBuilder/interfaces/IODataSettings';
 import { QueryBuilder } from './ODataQueryBuilder/query_builder';
 import { Entity, EntityManager, Repository } from 'aurelia-orm';
 import { enEntityType } from '../Enum/FamilieLaissEnum';
@@ -25,8 +26,28 @@ export abstract class ServiceModel<T> {
     }
 
     //Ermittelt den Filter-String für eine OData-Abfrage aus einer Query
-    public getQueryStringFromQuery<Q>(query: QueryBuilder<Q>): string {
-       return '?$filter=' + query.toQuery().$filter;
+    public getQueryStringFromQuery<Q>(queryBuilder: QueryBuilder<Q>): string {
+      //Deklaration
+      let returnValue: string;
+      let query: IODataSettings;
+
+      //Erstellen der Konvertierten Query aus dem QueryBuilder
+      query = queryBuilder.toQuery();
+
+      //Wenn ein Filter existiert wird dieser ausgewertet
+      if (query.$filter.length > 0) {
+       returnValue = '?$filter=' + query.$filter;
+      }
+
+      //Auswerten eines OrderBy
+      if (query.$orderby.length > 0) {
+        if (returnValue.length > 0) {
+          returnValue += '&$orderby=' + query.$orderby;
+        }
+      }
+
+      //Zurückliefern des Ergebnisses
+      return returnValue;
     }
 }
 

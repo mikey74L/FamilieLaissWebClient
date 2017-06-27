@@ -62,9 +62,14 @@ export class MediaItem extends Entity {
   @association('UploadVideoItem') 
   public UploadVideo: UploadVideoItem;
 
+  private language: string;
+
   constructor(rules: CustomValidationRuleHelper, localize: I18N) {
     //Den Vater-Konstruktor aufrufen
     super();
+
+    //Aktuelle Sprache ermitteln
+    this.language = localize.i18next.language.substr(0, 2);
 
     //Die Validierungsregeln hinzufügen
     ValidationRules
@@ -104,5 +109,25 @@ export class MediaItem extends Entity {
       .required()
          .when((p: MediaItem) => p.Type === enMediaType.Video)
       .on(this);
+  }
+
+  //Ermittelt den lokalisierten Namen des Medien-Element
+  get localizedName(): string {
+    if (this.language === 'de') {
+      return this.NameGerman;
+    }
+    else {
+      return this.NameEnglish;
+    }
+  }
+
+  //Ermittelt die lokalisierte Beschreibung des Medien-Element
+  get localizedDescription(): string {
+    if (this.language === 'de') {
+      return this.DescriptionGerman;
+    }
+    else {
+      return this.DescriptionEnglish;
+    }
   }
 }

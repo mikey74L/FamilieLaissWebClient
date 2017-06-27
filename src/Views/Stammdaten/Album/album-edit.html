@@ -39,7 +39,8 @@
                     </div>
 
                     <!-- Input für Name (Deutsch) -->
-                    <input-text-validation is-busy.bind="isBusy"
+                    <input-text-validation auto-focus
+                                           is-busy.bind="isBusy"
                                            input-type.bind="'text'"
                                            label-identifier.bind="'Media_Group.Name_German.DisplayName'"
                                            value.two-way="itemToEdit.NameGerman & validate"></input-text-validation>

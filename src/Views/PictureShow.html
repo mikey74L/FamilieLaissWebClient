@@ -2,7 +2,7 @@
     <section class="au-animate">
         <!-- Überschrift ausgeben -->
         <div class="block-header">
-            <h2 t="PictureShow.Header.Text" t-params.bind="locConfig"></h2>
+            <h2 t="Header.Text" t-params.bind="locConfig"></h2>
         </div>
 
         <!-- Card ausgeben -->
@@ -12,8 +12,8 @@
                 <div class="card-header">
                     <!-- Ausgeben der Überschrift -->
                     <h2>
-                        ${ 'PictureShow.Card.Header.Text' | t: { ns: 'PictureShow', album: selectedFatherItem.NameGerman, context: albumContext}}
-                        <small>${ 'PictureShow.Card.Header.Description' | t: { ns: 'PictureShow', context: albumContext}}</small>
+                        ${ 'Card.Header.Text' | t: { ns: 'PictureShow', album: selectedFatherItem.NameGerman, context: albumContext}}
+                        <small>${ 'Card.Header.Description' | t: { ns: 'PictureShow', context: albumContext}}</small>
                     </h2>
                 </div>
             </div>

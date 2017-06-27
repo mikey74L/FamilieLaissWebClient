@@ -38,9 +38,14 @@ export class MediaGroup extends Entity {
   @association({collection: 'MediaItem'}) 
   public MediaItems: Array<MediaItem>;
 
+  private language: string;
+
   constructor(rules: CustomValidationRuleHelper, localize: I18N) {
     //Den Vater-Konstruktor aufrufen
     super();
+
+    //Aktuelle Sprache ermitteln
+    this.language = localize.i18next.language.substr(0, 2);
 
     //Die Validierungsregeln hinzufügen
     ValidationRules
@@ -66,5 +71,25 @@ export class MediaGroup extends Entity {
       .displayName(localize.tr('Media_Group.Description_English.DisplayName', { ns: ['Metadata'] }))
       .maxLength(300)
       .on(this);
+  }
+
+  //Ermittelt den lokalisierten Namen des Album
+  get localizedName(): string {
+    if (this.language === 'de') {
+      return this.NameGerman;
+    }
+    else {
+      return this.NameEnglish;
+    }
+  }
+
+  //Ermittelt die lokalisierte Beschreibung des Album
+  get localizedDescription(): string {
+    if (this.language === 'de') {
+      return this.DescriptionGerman;
+    }
+    else {
+      return this.DescriptionEnglish;
+    }
   }
 }

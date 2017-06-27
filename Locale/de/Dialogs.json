@@ -12,10 +12,12 @@
     "Title": "Album auswählen",
     "Buttons": {
       "OK": "OK",
+      "Choose": "Auswählen",
       "Cancel": "Abbrechen"
     },
     "Tooltips": {
-      "OK": "Album auswählen und den Dialog schließen",
+      "OK": "Selektiertes Album auswählen und den Dialog schließen",
+      "Choose": "Album auswählen und den Dialog schließen",
       "Cancel": "Dialog schließen ohne ein Album auszuwählen"
     }
   },

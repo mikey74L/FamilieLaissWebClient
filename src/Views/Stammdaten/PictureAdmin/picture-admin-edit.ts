@@ -168,14 +168,13 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup,
                                                                 .whenClosed((reason: DialogCloseResult) => { return reason;});
 
         //Ermitteln ob es schon eine Image-Property gibt
-        if (this.uploadItem.ImageProperty != null) {
-          //Setzen der Rotation
-          this.uploadItem.ImageProperty.Rotate = Result.output;
-        }
-        else {
+        if (this.uploadItem.ImageProperty == null) {
           //Eine neue Image-Property-Erstellen
-          await this.serviceExtended.createImageProperty(this.uploadItem, Result.output);
+          this.uploadItem.ImageProperty = await this.serviceExtended.createImageProperty(this.uploadItem, Result.output);
         }
+
+        //Setzen der Rotation
+        this.uploadItem.ImageProperty.Rotate = Result.output;
       }
       catch (ex) {
 
@@ -248,6 +247,13 @@ export class PictureAdminEdit extends ViewModelAssignEdit<MediaItem, MediaGroup,
             for (var CategoryValue of ChangedCategories) {
               if (!CategoryValue.assigned) {
                 await this.service.removeAssignedCategory(CategoryValue.originalItem);
+              }
+            }
+
+            //Speichern der Image-Parameter wenn vorhanden
+            if (this.uploadItem.ImageProperty != null) {
+              if (this.uploadItem.ImageProperty.isNew() || this.uploadItem.ImageProperty.isDirty()) {
+                await this.uploadItem.ImageProperty.save();
               }
             }
 

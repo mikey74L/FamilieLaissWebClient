@@ -6,6 +6,9 @@ import {ValidationController} from 'aurelia-validation';
 
 @inject(I18N, EventAggregator, NewInstance.of(ValidationController))
 export class PictureShow extends ViewModelGeneral {
+  //Konfiguration für i18N
+  locConfig: any = { ns: ['PictureShow', 'translation']};
+
   //C'tor
   constructor (localize: I18N, eventAggregator: EventAggregator, validationController: ValidationController) {
     //Aufrufen des Vaters
