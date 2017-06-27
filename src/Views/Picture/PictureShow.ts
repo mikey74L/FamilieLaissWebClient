@@ -9,16 +9,19 @@ import { MediaItem } from '../../Models/Entities/MediaItem';
 import {DialogService, DialogCloseResult} from 'aurelia-dialog';
 import {AppRouter} from 'aurelia-router';
 import { enSortDirection } from '../../Enum/FamilieLaissEnum';
+import { PictureShowService } from './PictureShowService';
 
-@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogService, AppRouter)
+@inject(I18N, EventAggregator, NewInstance.of(ValidationController), DialogService, AppRouter, PictureShowService)
 export class PictureShow extends ViewModelShow<MediaItem, MediaGroup> {
-  //Konfiguration für i18N
-  locConfig: any = { ns: ['PictureShow', 'translation']};
-
   //C'tor
-  constructor (localize: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, router: AppRouter) {
+  constructor (localize: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, router: AppRouter, 
+               service: PictureShowService) {
     //Aufrufen des Vaters
-    super(localize, eventAggregator, validationController, dialogService, router);
+    super(localize, eventAggregator, validationController, dialogService, router, service);
+
+    //Konfiguration für Lokalisierung
+    this.locConfig = { ns: ['PictureShow', 'translation']};
+    this.sortHeaderNamespace = 'PictureShow';
 
     //Setzen des Textes für das Auswählen eines Albums
     this.albumChoosed = false;

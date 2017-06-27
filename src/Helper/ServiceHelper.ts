@@ -3,7 +3,7 @@ import { QueryBuilder } from './ODataQueryBuilder/query_builder';
 import { Entity, EntityManager, Repository } from 'aurelia-orm';
 import { enEntityType } from '../Enum/FamilieLaissEnum';
 
-export abstract class ServiceModel<T> {
+export abstract class ServiceModel<T extends Entity> {
     //Members
     protected entityManager: EntityManager;
     protected repository: Repository;
@@ -51,7 +51,7 @@ export abstract class ServiceModel<T> {
     }
 }
 
-export abstract class ServiceModelLoadData<T> extends ServiceModel<T> {
+export abstract class ServiceModelLoadData<T extends Entity> extends ServiceModel<T> {
     //C'tor
     constructor(manager: EntityManager) {
       super(manager);
@@ -61,7 +61,31 @@ export abstract class ServiceModelLoadData<T> extends ServiceModel<T> {
     public abstract async getData(): Promise<Array<Entity>>;
 }
 
-export abstract class ServiceModelLoadDataDelete<T> extends ServiceModelLoadData<T> {
+export abstract class ServiceModelShow<T extends Entity, F extends Entity> extends ServiceModel<T> {
+    //Members
+    repositoryFather: Repository;
+
+    //C'tor
+    constructor(manager: EntityManager) {
+      super(manager);
+    }
+
+    //Ermitteln des richtigen Repositories
+    public getRepositoryFather(identifier: enEntityType): void
+    {
+        this.repositoryFather = this.entityManager.getRepository(identifier);
+    }
+
+    //Ermittelt die Items
+    public abstract async getData(idFather: number): Promise<Array<T>>;
+
+    //Ermittelt das Vater-Item
+    public async getDataFather(idFather: number): Promise<F> {
+      return this.repositoryFather.findOne(idFather);
+    }
+}
+
+export abstract class ServiceModelLoadDataDelete<T extends Entity> extends ServiceModelLoadData<T> {
     //C'tor
     constructor(manager: EntityManager) {
       super(manager);

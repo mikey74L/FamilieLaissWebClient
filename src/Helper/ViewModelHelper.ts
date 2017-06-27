@@ -9,12 +9,13 @@ import { SortCriteria } from '../Models/SortCriteria';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { ShowBusyBoxEvent } from '../Events/ShowBusyBoxEvent';
 import { AppRouter } from 'aurelia-router';
-import { DialogController } from 'aurelia-dialog';
+import { DialogController, DialogCloseResult } from 'aurelia-dialog';
+import { ChooseAlbumDialog } from '../CustomDialogs/ChooseAlbumDialog';
 import swal from 'sweetalert2';
-import { enViewModelEditMode } from '../Enum/FamilieLaissEnum';
+import { enViewModelEditMode, enMediaType } from '../Enum/FamilieLaissEnum';
 import { ServiceModelStammdatenNormal, ServiceModelStammdatenEditNormal, 
          ServiceModelStammdatenID, ServiceModelStammdatenEditID,
-         ServiceModelLoadDataDelete, ServiceModelAssign, ServiceModelAssignEdit } from './ServiceHelper'
+         ServiceModelLoadDataDelete, ServiceModelAssign, ServiceModelAssignEdit, ServiceModelShow } from './ServiceHelper'
 
 export abstract class ViewModelGeneral {
   //Members
@@ -102,27 +103,91 @@ export abstract class ViewModelGeneral {
 }
 
 export abstract class ViewModelShow<T extends Entity, F extends Entity> extends ViewModelGeneral {
+  //Member für Lokalisierung
+  locConfig: any;
+  sortHeaderNamespace: string;
+
   //Members für die Liste
   sortCriteriaHeaderText: string;
   currentSortCriteria: SortCriteria;
   sortCriteriaList: Array<SortCriteria> = [];
   
   //Members
+  selectedFatherItem: F;
   albumChoosed: boolean;
   albumContext: string;
   entities: Array<T> = [];
 
   //Restliche
+  mediaType: enMediaType;
+  service: ServiceModelShow<T, F>;
   dialogService: DialogService;
   router: AppRouter;
 
-  constructor (localize: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, router: AppRouter) {
+  constructor (localize: I18N, eventAggregator: EventAggregator, validationController: ValidationController, dialogService: DialogService, router: AppRouter, service: ServiceModelShow<T, F>) {
     //Aufrufen des Konstruktors der Vaterklasse
     super(localize, eventAggregator, validationController)
 
     //Übernehmen der Parameter
     this.dialogService = dialogService;
     this.router = router;
+    this.service = service;
+  }
+
+  //Wird aufgerufen wenn der Anwender im Dropdown den entsprechenden
+  //Sortiereintrag ausgewählt hat
+  private sortBy(sortCriteria: SortCriteria): void {
+    //Setzen des aktuellen Sortierkriteriums
+    this.currentSortCriteria = sortCriteria;
+
+    //Ermitteln des Textes für den Header
+    this.sortCriteriaHeaderText =
+      this.loc.tr('Card.Header.SortCriteriaHeader.Header',
+        { ns: this.sortHeaderNamespace, context: sortCriteria.localizeName + '_' + sortCriteria.direction });
+  }
+
+  //Wird aufgerufen wenn auf den Button zur Auswahl eines Albums gedrückt wird
+  public async chooseAlbum(): Promise<void> {
+     try { 
+       //Anzeigen des Dialoges zur Auswahl eines Albums
+       var Result: DialogCloseResult = await this.dialogService.open({viewModel: ChooseAlbumDialog, model: this.mediaType})
+                                                               .whenClosed((reason: DialogCloseResult) => { return reason;});
+
+       //Übernehmen des ausgewählten Albums
+       this.selectedFatherItem = Result.output;
+       this.albumContext = 'choosed';
+       this.albumChoosed = true;
+
+       //Leeren des Arrays für die bisherigen Picture-Einträge
+       this.entities = [];
+
+       //Anzeigen der Busy-Box
+       this.setBusyState(true);
+
+       //Laden der neuen Daten
+       this.entities = await this.service.getData(this.selectedFatherItem.getId());
+
+       //Startsortierung nach dem ersten Sortierkriterium
+       this.sortBy(this.sortCriteriaList[0]);
+
+       //Busy-Box ausblenden
+       this.setBusyState(false);
+     }
+     catch (ex) {
+       //Dialog wurde abgebrochen. Es muss nichts gemacht werden
+     }
+  }
+
+  //Wird aufgerufen wenn auf den Refresh-Button gedrückt wird
+  public async refreshList(): Promise<void> {
+    //Einblenden der Busy-Box
+    this.setBusyState(true);
+
+    //Laden der Bilder über ein Promise
+    this.entities = await this.service.getData(this.selectedFatherItem.getId());
+
+    //Ausblenden der Busy-Box
+    this.setBusyState(false);
   }
 }
 

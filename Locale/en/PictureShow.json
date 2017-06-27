@@ -22,6 +22,14 @@
         "AssignDateDescending": "Zuweisungs-Datum absteigend",
         "UploadDateAscending": "Upload-Datum aufsteigend",
         "UploadDateDescending": "Upload-Datum absteigend"
+      },
+      "SortCriteriaHeader": {
+        "Header_Name_ascending": "Liste ist aufsteigend nach dem Namen sortiert",
+        "Header_Name_descending": "Liste ist absteigend nach dem Namen sortiert",
+        "Header_AssignDate_ascending": "Liste ist aufsteigend nach dem Zuweisungs-Datum sortiert",
+        "Header_AssignDate_descending": "Liste ist absteigend nach dem Zuweisungs-Datum sortiert",
+        "Header_UploadDate_ascending": "Liste ist aufsteigend nach dem Upload-Datum sortiert",
+        "Header_UploadDate_descending": "Liste ist absteigend nach dem Upload-Datum sortiert"
       }
     }
   }
