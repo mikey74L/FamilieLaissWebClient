@@ -1,8 +1,6 @@
 ﻿{
   "Labels": {
-    "Header": "Familie Laiss - Anmeldung",
-    "Benutzername": "Benutzername",
-    "Passwort": "Passwort"
+    "Header": "Familie Laiss - Anmeldung"
   },
   "Buttons": {
     "Register": {

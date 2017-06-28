@@ -1,0 +1,50 @@
+<template>
+    <section class="au-animate">
+        <div class="login-content">
+            <div class="lc-block toggled" id="l-login">
+                <div class="lcb-form">
+                    <!-- Element für die Überschrift ausgeben -->
+                    <p style="font-size: 25px; font-weight:bold; margin-bottom: 45px;" t="Labels.Header" t-params.bind="locConfig"></p>
+
+                    <!-- Element für den Benutzernamen ausgeben -->
+                    <div class="input-group m-b-20">
+                        <span class="input-group-addon"></span>
+                        <input-text-validation is-busy.bind="isBusy"
+                                               input-type.bind="'text'"
+                                               label-identifier.bind="Login.UserName.DisplayName"
+                                               value.two-way="model.UserName & validate">
+                        </input-text-validation>
+                    </div>
+
+                    <!-- Element für Passwort ausgeben -->
+                    <div class="input-group m-b-20">
+                        <span class="input-group-addon"></span>
+                        <input-text-validation is-busy.bind="isBusy"
+                                               input-type.bind="'password'"
+                                               label-identifier.bind="Login.Password.DisplayName"
+                                               value.two-way="model.Password & validate">
+                        </input-text-validation>
+                    </div>
+
+                    <!-- Ausgeben des Login-Buttons -->
+                    <a href="" 
+                       class="btn btn-login btn-success btn-float" 
+                       click.delegate="login()"
+                       disabled.bind="isBusy"><i class="zmdi zmdi-arrow-forward"></i></a>
+                </div>
+                <div class="lcb-navigation">
+                    <a href="" 
+                       data-ma-action="login-switch" 
+                       data-ma-block="#l-register" 
+                       click.delegate="register()"
+                       disabled.bind="isBusy"><i class="zmdi zmdi-plus"></i> <span>${ 'Buttons.Register.Text' | t: { ns: 'AuthLogin' } }</span></a>
+                    <a href="" 
+                       data-ma-action="login-switch" 
+                       data-ma-block="#l-forget-password" 
+                       click.delegate="forgotPassword()"
+                       disabled.bind="isBusy"><i>?</i> <span>${ 'Buttons.ForgotPassword.Text' | t: { ns: 'AuthLogin' } }</span></a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>

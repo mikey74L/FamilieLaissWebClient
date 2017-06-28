@@ -162,5 +162,13 @@
     "Fehlertext": {
       "DisplayName": "Fehlertext"
     }
+  },
+  "Login": {
+    "UserName": {
+      "DisplayName": "Benutzername"
+    },
+    "Password": {
+      "DisplayName": "Passwort"
+    }
   }
 }

@@ -13,3 +13,13 @@ Es muss der GIT Credential Manger für Windows installiert sein
 
 
 npm start -- webpack.server.hmr
+
+
+
+Um zwischen den Apps zu springen folgendes aufrufen:
+====================================================
+
+this.router.navigate('route/in/x', { replace: true, trigger: false});
+this.router.reset();
+this.router.deactivate();
+this.aurelia.setRoot('x');
