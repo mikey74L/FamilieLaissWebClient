@@ -57,7 +57,7 @@ export class DropdownListData {
     }
 
     //Fügt eine Gruppe hinzu
-    public addGroup(id: number, name: string): DropdownListGroupItem {
+    public addGroup(id: number | string, name: string): DropdownListGroupItem {
         //Ein neues Gruppen-Objekt erzeugen
         var GroupItem: DropdownListGroupItem = new DropdownListGroupItem(id, name);
 
@@ -76,7 +76,7 @@ export class DropdownListData {
     }
 
     //Setzt den Assign-Status für ein Element
-    public setValue(id: number, value: boolean): void {
+    public setValue(id: number | string, value: boolean): void {
         //Wenn es sich um eine Liste für einen Single-Wert handelt werden
         //zuvor alle Werte zurückgesetzt
         if (!this.useMultipleValues) {
@@ -131,19 +131,19 @@ export class DropdownListData {
 
 export class DropdownListGroupItem {
     //Members
-    id: number;
+    id: number | string;
     name: string;
     values: Array<DropdownListValueItem> = [];
 
     //C'tor
-    constructor (id: number, name: string) {
+    constructor (id: number | string, name: string) {
         //Übernehmen der Parameter
         this.id = id;
         this.name = name;
     }
 
     //Fügt einen Wert zur Gruppe hinzu
-    public addValue(id: number, name: string, assigned: boolean, originalItem: any): void {
+    public addValue(id: number | string, name: string, assigned: boolean, originalItem: any): void {
         //Ein neues Value-Objekt erzeugen
         var newValue: DropdownListValueItem = new DropdownListValueItem(id, name, assigned, originalItem);
 
@@ -161,14 +161,14 @@ export class DropdownListGroupItem {
 
 export class DropdownListValueItem {
     //Members
-    id: number;
+    id: number | string;
     name: string;
     assigned: boolean;
     assignedOriginal: boolean;
     originalItem: any;
 
     //C'tor
-    constructor (id: number, name: string, assigned: boolean, originalItem: any) {
+    constructor (id: number | string, name: string, assigned: boolean, originalItem: any) {
         //Übernehmen der Parameter
         this.id = id;
         this.name = name;

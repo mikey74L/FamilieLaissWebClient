@@ -24,4 +24,32 @@ export class RouteConfigAuth {
   public static getLogoutRoute(): string {
     return RouteConfigAuth.baseURL + RouteConfigAuth.logoutRoute;
   }
+
+  public static getNewPwdRoute(): string {
+    return RouteConfigAuth.baseURL + RouteConfigAuth.NewPasswordRoute;
+  }
+
+  public static getConfirmAccountRoute(): string {
+    return RouteConfigAuth.baseURL + RouteConfigAuth.confirmAccountRoute;
+  }
+
+  public static getAllowAccountRoute(): string {
+    return RouteConfigAuth.baseURL + RouteConfigAuth.AllowAccountRoute;
+  }
+
+  public static getLockAccountRoute(): string {
+    return RouteConfigAuth.baseURL + RouteConfigAuth.LockAccountRoute;
+  }
+
+  public static getDeleteAccountRoute(): string {
+    return RouteConfigAuth.baseURL + RouteConfigAuth.DeleteAccountRoute;
+  }
+
+  public static getResetPasswordRoute(): string {
+    return RouteConfigAuth.baseURL + RouteConfigAuth.ResetPasswordRoute;
+  }
+
+  public static getUserInfoRoute(): string {
+    return RouteConfigAuth.baseURL + RouteConfigAuth.userInfoRoute;
+  }
 }
