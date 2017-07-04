@@ -1,17 +1,9 @@
 ﻿{
   "Labels": {
     "Header": "Familie Laiss - Registrierung",
-    "Benutzername": "Benutzername",
-    "Vorname": "Vorname",
-    "Familienname": "Familienname",
-    "Strasse": "Straße",
-    "Hausnummer": "Hausnummer",
-    "Postleitzahl": "Postleitzahl",
-    "Ort": "Ort",
-    "Passwort": "Passwort",
-    "PasswortConfirmation": "Passwort-Bestätigung",
-    "SecurityAnswer": "Sicherheitsantwort",
-    "eMail": "eMail"
+    "Gender": "Bitte ein Geschlecht auswählen",
+    "Country": "Bitte ein Land auswählen",
+    "Question": "Bitte eine Sicherheitsfrage auswählen"
   },
   "Gender": {
     "Male": "Männlich",

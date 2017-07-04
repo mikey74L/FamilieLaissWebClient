@@ -1,3 +1,5 @@
+import { RegisterUserDTO } from './../Models/Auth/DTO/RegisterUserDTO';
+import { RegisterModel } from './../Models/Auth/RegisterModel';
 import { SessionCache } from './SessionCache';
 import { HttpClient, HttpResponseMessage } from 'aurelia-http-client';
 import { I18N } from 'aurelia-i18n';
@@ -433,28 +435,31 @@ export class AuthorizationHelper {
   }
 
   //Neuen User registrieren
-  public register(data): Promise<HttpResponseMessage> {
+  public register(data: RegisterModel): Promise<HttpResponseMessage> {
+    //Deklaration
+    let DTO: RegisterUserDTO = new RegisterUserDTO();
+
+    //Übernehmen der Daten in das DTO
+    DTO.UserName = data.userName;
+    DTO.eMail = data.eMail;
+    DTO.Password = data.password;
+    DTO.Gender = data.gender;
+    DTO.FirstName = data.firstName;
+    DTO.FamilyName = data.familyName;
+    DTO.Street = data.street;
+    DTO.HNR = data.HNR;
+    DTO.PLZ = data.PLZ;
+    DTO.City = data.city;
+    DTO.Country = data.country;
+    DTO.SecurityQuestion = data.securityQuestion;
+    DTO.SecurityAnswer = data.securityAnswer;
+
     //Server kontaktieren
     return this.client
       .createRequest(RouteConfigAuth.getRegisterRoute())
       .asPost()
       .withHeader('Content-Type', 'application/json')
-      .withContent(JSON.stringify(
-                  {
-                      UserName : data.userName,
-                      eMail: data.eMail,
-                      Password: data.password,
-                      Gender: data.idGender,
-                      FirstName: data.firstName,
-                      FamilyName: data.familyName,
-                      Street: data.street,
-                      HNR: data.HNR,
-                      PLZ: data.PLZ,
-                      City: data.city,
-                      Country: data.idCountry,
-                      SecurityQuestion: data.idSecurityQuestion,
-                      SecurityAnswer: data.securityAnswer
-                  }))
+      .withContent(JSON.stringify(DTO))
       .send();
   }
 

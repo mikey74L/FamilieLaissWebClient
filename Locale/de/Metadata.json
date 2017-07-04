@@ -170,5 +170,40 @@
     "Password": {
       "DisplayName": "Passwort"
     }
+  },
+  "Register": {
+    "UserName": {
+      "DisplayName": "Benutzername"
+    },
+    "FirstName": {
+      "DisplayName": "Vorname"
+    },
+    "FamilyName": {
+      "DisplayName": "Familienname"
+    },
+    "Street": {
+      "DisplayName": "Straße"
+    },
+    "HNR": {
+      "DisplayName": "Hausnummer"
+    },
+    "PLZ": {
+      "DisplayName": "Postleitzahl"
+    },
+    "City": {
+      "DisplayName": "Ort"
+    },
+    "eMail": {
+      "DisplayName": "eMail-Adresse"
+    },
+    "Password": {
+      "DisplayName": "Passwort"
+    },
+    "PasswordConfirmation": {
+      "DisplayName": "Passwort-Bestätigung"
+    },
+    "SecurityAnswer": {
+      "DisplayName": "Sicherheitsantwort"
+    }
   }
 }

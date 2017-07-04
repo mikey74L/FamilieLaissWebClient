@@ -18,14 +18,14 @@ export class LoginModel {
     //Setzen der Validierungsregeln
     ValidationRules
       .ensure('UserName')
-      .displayName(this.loc.tr('Login.UserName.DisplayName', {ns: 'Metadata'}))
-      .required()
-      .maxLength(50)
+        .displayName(this.loc.tr('Login.UserName.DisplayName', {ns: 'Metadata'}))
+        .required()
+        .maxLength(50)
       .ensure('Password')
-      .displayName(this.loc.tr('Login.Password.DisplayName', {ns: 'Metadata'}))
-      .required()
-      .maxLength(20)
-      .on(this);
+        .displayName(this.loc.tr('Login.Password.DisplayName', {ns: 'Metadata'}))
+        .required()
+        .maxLength(20)
+    .on(this);
   }
 }
 

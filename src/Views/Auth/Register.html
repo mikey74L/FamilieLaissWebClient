@@ -1,0 +1,195 @@
+<template>
+    <section class="au-animate">
+        <div class="login-content">
+            <div class="lc-block-register toggled" id="l-register">
+                <div class="lcb-form">
+                    <!-- Element für die Überschrift ausgeben -->
+                    <p style="font-size: 25px; font-weight:bold; margin-bottom: 25px;" t="Labels.Header" t-params.bind="locConfig"></p>
+
+                    <!-- Element für den Benutzernamen ausgeben -->
+                    <div class="input-group">
+                        <span class="input-group-addon"></span>
+                        <input-text-validation is-busy.bind="isBusy"
+                                               input-type.bind="'text'"
+                                               label-identifier.bind="Register.UserName.DisplayName"
+                                               value.two-way="model.userName & validate">
+                        </input-text-validation>
+                    </div>
+
+                    <!-- Element für Geschlecht ausgeben -->
+                    <div class="input-group m-b-25">
+                        <span class="input-group-addon"></span>
+                        <drop-down-control id.bind="'selectGender'" 
+                                           data.bind="genderList" 
+                                           water-mark-text.bind="titleDropdownGender"
+                                           multiple-selection-allowed.bind="false"
+                                           allow-grouping.bind="false"
+                                           enable-filter-search.bind="false"
+                                           is-enabled.bind="!isBusy">
+                        </drop-down-control>
+                    </div>
+
+                    <!-- Element für Vorname ausgeben -->
+                    <div class="input-group m-b-5">
+                        <span class="input-group-addon"></span>
+                        <input-text-validation is-busy.bind="isBusy"
+                                               input-type.bind="'text'"
+                                               label-identifier.bind="Register.FirstName.DisplayName"
+                                               value.two-way="model.firstName & validate">
+                        </input-text-validation>
+                    </div>
+
+                    <!-- Element für Familienname ausgeben -->
+                    <div class="input-group m-b-5">
+                        <span class="input-group-addon"></span>
+                        <input-text-validation is-busy.bind="isBusy"
+                                               input-type.bind="'text'"
+                                               label-identifier.bind="Register.FamilyName.DisplayName"
+                                               value.two-way="model.familyName & validate">
+                        </input-text-validation>
+                    </div>
+
+                    <!-- Element für Straße ausgeben -->
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div class="input-group m-b-5">
+                                <span class="input-group-addon"></span>
+                                <input-text-validation is-busy.bind="isBusy"
+                                                       input-type.bind="'text'"
+                                                       label-identifier.bind="Register.Street.DisplayName"
+                                                       value.two-way="model.street & validate">
+                                </input-text-validation>
+                            </div>
+                        </div>
+                        <!-- Element für die Hausnummer ausgeben -->
+                        <div class="col-lg-3">
+                            <div class="input-group m-b-5">
+                                <span class="input-group-addon"></span>
+                                <input-text-validation is-busy.bind="isBusy"
+                                                       input-type.bind="'text'"
+                                                       label-identifier.bind="Register.HNR.DisplayName"
+                                                       value.two-way="model.HNR & validate">
+                                </input-text-validation>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Element für die Postleitzahl ausgeben -->
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="input-group">
+                                <span class="input-group-addon"></span>
+                                <input-text-validation is-busy.bind="isBusy"
+                                                       input-type.bind="'text'"
+                                                       label-identifier.bind="Register.PLZ.DisplayName"
+                                                       value.two-way="model.PLZ & validate">
+                                </input-text-validation>
+                            </div>
+                        </div>
+
+                        <!-- Element für die Stadt ausgeben -->
+                        <div class="col-lg-9">
+                            <div class="input-group">
+                                <span class="input-group-addon"></span>
+                                <input-text-validation is-busy.bind="isBusy"
+                                                       input-type.bind="'text'"
+                                                       label-identifier.bind="Register.City.DisplayName"
+                                                       value.two-way="model.city & validate">
+                                </input-text-validation>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Element für Land ausgeben -->
+                    <div class="input-group m-b-25">
+                        <span class="input-group-addon"></span>
+                        <drop-down-control id.bind="'selectCountry'" 
+                                           data.bind="countryList" 
+                                           water-mark-text.bind="titleDropdownCountry"
+                                           multiple-selection-allowed.bind="false"
+                                           allow-grouping.bind="false"
+                                           enable-filter-search.bind="true"
+                                           is-enabled.bind="!isBusy">
+                        </drop-down-control>
+                    </div>
+
+                    <!-- Element für eMail ausgeben -->
+                    <div class="input-group m-b-5">
+                        <span class="input-group-addon"></span>
+                        <input-text-validation is-busy.bind="isBusy"
+                                               input-type.bind="'email'"
+                                               label-identifier.bind="Register.eMail.DisplayName"
+                                               value.two-way="model.eMail & validate">
+                        </input-text-validation>
+                    </div>
+
+                    <!-- Element für Passwort ausgeben -->
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"></span>
+                                <input-text-validation is-busy.bind="isBusy"
+                                                       input-type.bind="'password'"
+                                                       label-identifier.bind="Register.Password.DisplayName"
+                                                       value.two-way="model.password & validate">
+                                </input-text-validation>
+                            </div>
+                        </div>
+
+                        <!-- Element für Passwort-Bestätigung ausgeben -->
+                        <div class="col-lg-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"></span>
+                                <input-text-validation is-busy.bind="isBusy"
+                                                       input-type.bind="'password'"
+                                                       label-identifier.bind="Register.PasswordConfirmation.DisplayName"
+                                                       value.two-way="model.passwordVerification & validate">
+                                </input-text-validation>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Element für Sicherheitsfrage ausgeben -->
+                    <div class="input-group m-b-25">
+                        <span class="input-group-addon"></span>
+                        <drop-down-control id.bind="'selectQuestion'" 
+                                           data.bind="securityQuestionList" 
+                                           water-mark-text.bind="titleDropdownQuestion"
+                                           multiple-selection-allowed.bind="false"
+                                           allow-grouping.bind="false"
+                                           enable-filter-search.bind="true"
+                                           is-enabled.bind="!isBusy">
+                        </drop-down-control>
+                    </div>
+
+                    <!-- Element für Sicherheitsantwort ausgeben -->
+                    <div class="input-group m-b-5">
+                        <span class="input-group-addon"></span>
+                        <input-text-validation is-busy.bind="isBusy"
+                                               input-type.bind="'text'"
+                                               label-identifier.bind="Register.SecurityAnswer.DisplayName"
+                                               value.two-way="model.securityAnswer & validate">
+                        </input-text-validation>
+                    </div>
+
+                    <a href="" 
+                       class="btn btn-login btn-success btn-float" 
+                       click.delegate="register()" 
+                       disabled.bind="isBusy"><i class="zmdi zmdi-check"></i></a>
+                </div>
+                <div class="lcb-navigation">
+                    <a href="" 
+                       data-ma-action="login-switch" 
+                       data-ma-block="#l-login" 
+                       click.delegate="login()"
+                       disabled.bind="isBusy"><i class="zmdi zmdi-long-arrow-right"></i> <span>${ 'Buttons.Login.Text' | t: { ns: 'AuthRegister' } }</span></a>
+                    <a href="" 
+                       data-ma-action="login-switch" 
+                       data-ma-block="#l-forget-password" 
+                       click.delegate="forgotPassword()"
+                       disabled.bind="isBusy"><i>?</i> <span>${ 'Buttons.ForgotPassword.Text' | t: { ns: 'AuthRegister' } }</span></a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
