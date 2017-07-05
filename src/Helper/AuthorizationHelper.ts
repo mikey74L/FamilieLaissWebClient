@@ -1,4 +1,6 @@
-import { ForgotPasswordDTO } from './../Models/Auth/DTO/ForgotPasswordDTO';
+import { NewPasswordDTO } from '../Models/Auth/DTO/NewPasswordDTO';
+import { NewPasswordModel } from '../Models/Auth/NewPasswordModel';
+import { ForgotPasswordDTO } from '../Models/Auth/DTO/ForgotPasswordDTO';
 import { ForgotPasswordModel } from '../Models/Auth/ForgotPasswordModel';
 import { LoginDTO } from '../Models/Auth/DTO/LoginDTO';
 import { RegisterUserDTO } from '../Models/Auth/DTO/RegisterUserDTO';
@@ -459,6 +461,25 @@ export class AuthorizationHelper {
       .send();
   }
 
+  //New Password
+  public newPassword(data: NewPasswordModel): Promise<HttpResponseMessage> {
+    //Deklaration
+    let DTO: NewPasswordDTO = new NewPasswordDTO();
+
+    //Übernehmen der Daten in das DTO
+    DTO.UserName = data.userName;
+    DTO.Token = data.token;
+    DTO.Password = data.password;
+
+    //Server kontaktieren
+    return this.client
+      .createRequest(RouteConfigAuth.getNewPwdRoute())
+      .asPost()
+      .withHeader('Content-Type', 'application/json')
+      .withContent(JSON.stringify(DTO))
+      .send();
+  }
+
   //Den User abmelden
   public async logout(): Promise<HttpResponseMessage> {
     //Ermitteln des Auth-Headers mit dem Bearer-Token
@@ -541,21 +562,6 @@ export class AuthorizationHelper {
       .withContent(JSON.stringify(
           {
               UserName : userName
-          }))
-      .send()
-    }
-
-  //New Password
-  public newPassword(data): Promise<HttpResponseMessage> {
-    return this.client
-      .createRequest(RouteConfigAuth.getNewPwdRoute())
-      .asPost()
-      .withHeader('Content-Type', 'application/json')
-      .withContent(JSON.stringify(
-          {
-              UserName : data.userName,
-              Token: data.token,
-              Password: data.password
           }))
       .send()
     }
