@@ -1,0 +1,21 @@
+<template>
+    <section class="au-animate">
+        <div class="login-content">
+            <div class="lc-block toggled" id="l-login">
+                <div class="lcb-form">
+                    <!-- Element für die Überschrift ausgeben -->
+                    <p style="font-size: 25px; font-weight:bold; margin-bottom: 45px;" t="Labels.Header" t-params.bind="locConfig"></p>
+
+                    <!-- Element für die Beschreibung ausgeben -->
+                    <p>${ 'Labels.Information' | t: { ns: 'AuthConfirmAccount', 'user': userID } }</p>
+
+                    <!-- Ausgeben des Confirm-Buttons -->
+                    <a href="" 
+                       class="btn btn-login btn-success btn-float" 
+                       click.delegate="confirmAccount()"
+                       disabled.bind="isBusy"><i class="zmdi zmdi-arrow-forward"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>

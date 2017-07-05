@@ -1,3 +1,5 @@
+import { ConfirmAccountDTO } from './../Models/Auth/DTO/ConfirmAccountDTO';
+import { ConfirmAccountModel } from '../Models/Auth/ConfirmAccountModel';
 import { NewPasswordDTO } from '../Models/Auth/DTO/NewPasswordDTO';
 import { NewPasswordModel } from '../Models/Auth/NewPasswordModel';
 import { ForgotPasswordDTO } from '../Models/Auth/DTO/ForgotPasswordDTO';
@@ -461,7 +463,7 @@ export class AuthorizationHelper {
       .send();
   }
 
-  //New Password
+  //New Password (Wird über die NewPasswort-Maske aufgerufen)
   public newPassword(data: NewPasswordModel): Promise<HttpResponseMessage> {
     //Deklaration
     let DTO: NewPasswordDTO = new NewPasswordDTO();
@@ -474,6 +476,24 @@ export class AuthorizationHelper {
     //Server kontaktieren
     return this.client
       .createRequest(RouteConfigAuth.getNewPwdRoute())
+      .asPost()
+      .withHeader('Content-Type', 'application/json')
+      .withContent(JSON.stringify(DTO))
+      .send();
+  }
+
+  //Den Account bestätigen (Wird über die ConfirmAccount-Maske aufgerufen)
+  public confirmAccount(data: ConfirmAccountModel): Promise<HttpResponseMessage> {
+    //Deklaration
+    let DTO: ConfirmAccountDTO = new ConfirmAccountDTO();
+
+    //Übernehmen der Daten in das DTO
+    DTO.UserName = data.userName;
+    DTO.Token = data.token;
+
+    //Server kontaktieren
+    return this.client
+      .createRequest(RouteConfigAuth.getConfirmAccountRoute())
       .asPost()
       .withHeader('Content-Type', 'application/json')
       .withContent(JSON.stringify(DTO))
@@ -509,20 +529,6 @@ export class AuthorizationHelper {
       throw ex;
     }
   }
-
-  //Den Account bestätigen (eMail)
-  public confirmAccount(data): Promise<HttpResponseMessage> {
-    return this.client
-      .createRequest(RouteConfigAuth.getConfirmAccountRoute())
-      .asPost()
-      .withHeader('Content-Type', 'application/json')
-      .withContent(JSON.stringify(
-          {
-              UserName : data.userName,
-              Token: data.token,
-          }))
-      .send()
-    }
 
   //Freischalten des Accounts
   public allowAccount(userName): Promise<HttpResponseMessage> {
