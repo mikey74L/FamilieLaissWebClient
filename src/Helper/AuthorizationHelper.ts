@@ -1,3 +1,5 @@
+import { ForgotPasswordDTO } from './../Models/Auth/DTO/ForgotPasswordDTO';
+import { ForgotPasswordModel } from '../Models/Auth/ForgotPasswordModel';
 import { LoginDTO } from '../Models/Auth/DTO/LoginDTO';
 import { RegisterUserDTO } from '../Models/Auth/DTO/RegisterUserDTO';
 import { RegisterModel } from '../Models/Auth/RegisterModel';
@@ -390,7 +392,7 @@ export class AuthorizationHelper {
       .send();
   }
 
-  //User anmelden
+  //User anmelden (Wird über die Login-Maske aufgerufen)
   public login(model: LoginModel): Promise<HttpResponseMessage> {
     //Deklaration
     let DTO: LoginDTO = new LoginDTO();
@@ -406,6 +408,54 @@ export class AuthorizationHelper {
       .asPost()
       .withContent($.param(DTO))
       .withHeader('Content-Type', 'application/x-www-form-urlencoded')
+      .send();
+  }
+
+  //Neuen User registrieren (Wird über die Registrierungsmaske aufgerufen)
+  public register(data: RegisterModel): Promise<HttpResponseMessage> {
+    //Deklaration
+    let DTO: RegisterUserDTO = new RegisterUserDTO();
+
+    //Übernehmen der Daten in das DTO
+    DTO.UserName = data.userName;
+    DTO.eMail = data.eMail;
+    DTO.Password = data.password;
+    DTO.Gender = data.gender;
+    DTO.FirstName = data.firstName;
+    DTO.FamilyName = data.familyName;
+    DTO.Street = data.street;
+    DTO.HNR = data.HNR;
+    DTO.PLZ = data.PLZ;
+    DTO.City = data.city;
+    DTO.Country = data.country;
+    DTO.SecurityQuestion = data.securityQuestion;
+    DTO.SecurityAnswer = data.securityAnswer;
+
+    //Server kontaktieren
+    return this.client
+      .createRequest(RouteConfigAuth.getRegisterRoute())
+      .asPost()
+      .withHeader('Content-Type', 'application/json')
+      .withContent(JSON.stringify(DTO))
+      .send();
+  }
+
+  //Reset Password (Wird über den Forgot-Password Maske aufgerufen)
+  public resetPassword(data: ForgotPasswordModel): Promise <HttpResponseMessage> {
+    //Deklaration
+    let DTO: ForgotPasswordDTO = new ForgotPasswordDTO();
+
+    //Übernehmen der Daten in das DTO
+    DTO.eMail = data.eMail;
+    DTO.SecurityQuestion = data.securityQuestion;
+    DTO.SecurityAnswer = data.securityAnswer;
+
+    //Server kontaktieren
+    return this.client
+      .createRequest(RouteConfigAuth.getResetPasswordRoute())
+      .asPost()
+      .withHeader('Content-Type', 'application/json')
+      .withContent(JSON.stringify(DTO))
       .send();
   }
 
@@ -437,35 +487,6 @@ export class AuthorizationHelper {
 
       throw ex;
     }
-  }
-
-  //Neuen User registrieren
-  public register(data: RegisterModel): Promise<HttpResponseMessage> {
-    //Deklaration
-    let DTO: RegisterUserDTO = new RegisterUserDTO();
-
-    //Übernehmen der Daten in das DTO
-    DTO.UserName = data.userName;
-    DTO.eMail = data.eMail;
-    DTO.Password = data.password;
-    DTO.Gender = data.gender;
-    DTO.FirstName = data.firstName;
-    DTO.FamilyName = data.familyName;
-    DTO.Street = data.street;
-    DTO.HNR = data.HNR;
-    DTO.PLZ = data.PLZ;
-    DTO.City = data.city;
-    DTO.Country = data.country;
-    DTO.SecurityQuestion = data.securityQuestion;
-    DTO.SecurityAnswer = data.securityAnswer;
-
-    //Server kontaktieren
-    return this.client
-      .createRequest(RouteConfigAuth.getRegisterRoute())
-      .asPost()
-      .withHeader('Content-Type', 'application/json')
-      .withContent(JSON.stringify(DTO))
-      .send();
   }
 
   //Den Account bestätigen (eMail)
@@ -520,21 +541,6 @@ export class AuthorizationHelper {
       .withContent(JSON.stringify(
           {
               UserName : userName
-          }))
-      .send()
-    }
-
-  //Reset Password
-  public resetPassword(data): Promise <HttpResponseMessage> {
-    return this.client
-      .createRequest(RouteConfigAuth.getResetPasswordRoute())
-      .asPost()
-      .withHeader('Content-Type', 'application/json')
-      .withContent(JSON.stringify(
-          {
-              eMail : data.eMail,
-              securityQuestion: data.securityQuestion,
-              securityAnswer: data.securityAnswer
           }))
       .send()
     }

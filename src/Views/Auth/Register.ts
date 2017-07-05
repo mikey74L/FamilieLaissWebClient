@@ -73,17 +73,32 @@ export class Register extends ViewModelGeneral {
     //Busy-Meldung setzen
     this.setBusyState(true);
 
+    //Übernehmen der ausgewählten Werte in den Combo-Boxen
+    try {
+      this.model.gender = this.genderList.getChangedValues()[0].id as number;
+    }
+    catch (ex) {
+      this.model.gender = null;
+    }
+    try {
+      this.model.country = this.countryList.getChangedValues()[0].id as string;
+    }
+    catch (ex) {
+      this.model.country = null;
+    }
+    try {
+      this.model.securityQuestion = this.securityQuestionList.getChangedValues()[0].id as number;
+    }
+    catch (ex) {
+      this.model.securityQuestion = null;
+    }
+    
     //Vor dem Speichern noch mal eine Validierung starten
     await this.validationController.validate();
         
     //Wenn keine Fehler aufgetreten sind, dann kann die
     //Registrierung durchgeführt werden
     if (this.validationController.errors.length == 0) {
-      //Übernehmen der ausgewählten Werte in den Combo-Boxen
-      this.model.gender = this.genderList.getChangedValues()[0].id as number;
-      this.model.country = this.countryList.getChangedValues()[0].id as string;
-      this.model.securityQuestion = this.securityQuestionList.getChangedValues()[0].id as number;
-
       try {
         //Durchführen der Registrierung
         Response = await this.authHelper.register(this.model);   
