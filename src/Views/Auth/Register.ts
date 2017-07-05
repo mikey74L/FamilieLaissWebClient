@@ -115,16 +115,17 @@ export class Register extends ViewModelGeneral {
       }
       catch (ex) {
         //Deklaration
-        let errors: Array<any> = [];
+        let ErrorResponse: HttpResponseMessage = ex as HttpResponseMessage;
+        let errors: Array<string> = [];
 
         //Busy-Meldung zurücksetzen
         this.setBusyState(false);
 
         //Auswerten etwaiger Fehlermeldungen bei einem Bad-Request
-        if (Response.statusCode == 400) {
-          for (var key in Response.content.modelState) {
-            for (var i = 0; i < Response.content.modelState[key].length; i++) {
-              errors.push(Response.content.modelState[key][i]);
+        if (ErrorResponse.statusCode == 400) {
+          for (var key in ErrorResponse.content.modelState) {
+            for (var i = 0; i < ErrorResponse.content.modelState[key].length; i++) {
+              errors.push(ErrorResponse.content.modelState[key][i]);
             }
           }
         }

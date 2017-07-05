@@ -1,11 +1,12 @@
-import { RegisterUserDTO } from './../Models/Auth/DTO/RegisterUserDTO';
-import { RegisterModel } from './../Models/Auth/RegisterModel';
+import { LoginDTO } from '../Models/Auth/DTO/LoginDTO';
+import { RegisterUserDTO } from '../Models/Auth/DTO/RegisterUserDTO';
+import { RegisterModel } from '../Models/Auth/RegisterModel';
 import { SessionCache } from './SessionCache';
 import { HttpClient, HttpResponseMessage } from 'aurelia-http-client';
 import { I18N } from 'aurelia-i18n';
 import { EventAggregator } from 'aurelia-event-aggregator';
 import { autoinject, singleton } from 'aurelia-framework';
-import { LoginModel } from './../Models/Auth/LoginModel';
+import { LoginModel } from '../Models/Auth/LoginModel';
 import { RouteConfigAuth } from '../Config/RouteConfigAuth';
 import { DropdownListData, DropdownListGroupItem } from '../Helper/DropDownListHelper';
 import { UserInfo } from '../Models/Auth/UserInfo';
@@ -318,7 +319,7 @@ export class AuthorizationHelper {
   }
 
   //Setzen der Auth-Info
-  private setAuthInfo(userName: string, firstName: string, familyName: string, roles: string, accessToken: string, persistent: boolean): void {
+  public setAuthInfo(userName: string, firstName: string, familyName: string, roles: string, accessToken: string, persistent: boolean): void {
     //Speichern des Tokens im Cache
     if (accessToken) {
       SessionCache.saveAccessToken(accessToken, persistent);
@@ -391,15 +392,19 @@ export class AuthorizationHelper {
 
   //User anmelden
   public login(model: LoginModel): Promise<HttpResponseMessage> {
+    //Deklaration
+    let DTO: LoginDTO = new LoginDTO();
+
+    //Übernehmen der Daten in das DTO
+    DTO.UserName = model.userName;
+    DTO.Password = model.password;
+    DTO.grant_type = 'password';
+
+    //Server kontaktieren
     return this.client
       .createRequest(RouteConfigAuth.getLoginRoute())
       .asPost()
-      .withContent($.param(
-      {
-                UserName: model.UserName,
-                Password: model.Password,
-                grant_type: 'password'
-      }))
+      .withContent($.param(DTO))
       .withHeader('Content-Type', 'application/x-www-form-urlencoded')
       .send();
   }

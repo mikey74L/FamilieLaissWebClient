@@ -5,8 +5,8 @@ import { ValidationRules } from 'aurelia-validation';
 @autoinject()
 export class LoginModel {
   //Properties
-  public UserName: string;
-  public Password: string;
+  public userName: string;
+  public password: string;
 
   private loc: I18N;
 
@@ -17,11 +17,11 @@ export class LoginModel {
 
     //Setzen der Validierungsregeln
     ValidationRules
-      .ensure('UserName')
+      .ensure((p: LoginModel) => p.userName)
         .displayName(this.loc.tr('Login.UserName.DisplayName', {ns: 'Metadata'}))
         .required()
         .maxLength(50)
-      .ensure('Password')
+      .ensure((p: LoginModel) => p.password)
         .displayName(this.loc.tr('Login.Password.DisplayName', {ns: 'Metadata'}))
         .required()
         .maxLength(20)
