@@ -1,3 +1,7 @@
+import { UserInfoDTO } from './../Models/Auth/DTO/UserInfoDTO';
+import { DeleteAccountDTO } from './../Models/Auth/DTO/DeleteAccountDTO';
+import { LockAccountDTO } from './../Models/Auth/DTO/LockAccountDTO';
+import { AllowAccountDTO } from './../Models/Auth/DTO/AllowAccountDTO';
 import { ConfirmAccountDTO } from './../Models/Auth/DTO/ConfirmAccountDTO';
 import { ConfirmAccountModel } from '../Models/Auth/ConfirmAccountModel';
 import { NewPasswordDTO } from '../Models/Auth/DTO/NewPasswordDTO';
@@ -43,12 +47,12 @@ export class AuthorizationHelper {
       this.getUserInfoFromServer()
         .then(message => {
           //Wandeln des Json-Strings in ein Object
-          var Result = $.parseJSON(message.response);
+          var Result: UserInfoDTO = $.parseJSON(message.response);
 
           //Übernehmen des Vorname und Familienname
           if (Result != null) {
             //Setzen der aktuellen User-Info
-            this.userInfo = new UserInfo(Result.userName, Result.firstName, Result.familyName, Result.roles);
+            this.userInfo = new UserInfo(Result.UserName, Result.FirstName, Result.FamilyName, Result.Roles);
           }
           else {
             this.userInfo = null;
@@ -532,43 +536,55 @@ export class AuthorizationHelper {
 
   //Freischalten des Accounts
   public allowAccount(userName): Promise<HttpResponseMessage> {
+    //Deklaration
+    let DTO: AllowAccountDTO = new AllowAccountDTO();
+
+    //Übernehmen der Daten in das DTO
+    DTO.UserName = userName;
+
+    //Server kontaktieren
     return this.client
       .createRequest(RouteConfigAuth.getAllowAccountRoute())
       .asPost()
       .withHeader('Content-Type', 'application/json')
       .withHeader('Authorization', this.getAuthHeader())
-      .withContent(JSON.stringify(
-          {
-              UserName : userName
-          }))
-      .send()
+      .withContent(JSON.stringify(DTO))
+      .send();
     }
 
   //Sperren des Accounts
   public lockAccount(userName): Promise<HttpResponseMessage> {
+    //Deklaration
+    let DTO: LockAccountDTO = new LockAccountDTO();
+
+    //Übernehmen der Daten in das DTO
+    DTO.UserName = userName;
+
+    //Server kontaktieren
     return this.client
       .createRequest(RouteConfigAuth.getLockAccountRoute())
       .asPost()
       .withHeader('Content-Type', 'application/json')
       .withHeader('Authorization', this.getAuthHeader())
-      .withContent(JSON.stringify(
-          {
-              UserName : userName
-          }))
-      .send()
+      .withContent(JSON.stringify(DTO))
+      .send();
     }
 
   //Löschen eines Accounts
   public deleteAccount(userName): Promise<HttpResponseMessage> {
+    //Deklaration
+    let DTO: DeleteAccountDTO = new DeleteAccountDTO();
+
+    //Übernehmen der Daten in das DTO
+    DTO.UserName = userName;
+
+    //Server kontaktieren
     return this.client
       .createRequest(RouteConfigAuth.getDeleteAccountRoute())
       .asPost()
       .withHeader('Content-Type', 'application/json')
       .withHeader('Authorization', this.getAuthHeader())
-      .withContent(JSON.stringify(
-          {
-              UserName : userName
-          }))
-      .send()
+      .withContent(JSON.stringify(DTO))
+      .send();
     }
 }

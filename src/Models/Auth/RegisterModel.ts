@@ -67,7 +67,7 @@ export class RegisterModel {
         .maxLength(256)
         .email()
         .then()
-          .satisfiesRule('valueAlreadyExists', '', '', ValidationSettings.BaseURL + 'CheckMail')
+          .satisfiesRule('valueAlreadyExists', '', '', ValidationSettings.BaseURL + 'CheckMailAdress')
       .ensure((p: RegisterModel) => p.securityAnswer)
         .displayName(this.loc.tr('Register.SecurityAnswer.DisplayName', {ns: 'Metadata'}))
         .required()
